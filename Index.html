@@ -3,710 +3,504 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Implementatieplanning — Systeem Transitie</title>
-
+<title>Procesflowchart - HubSpot &middot; Elfsquad &middot; Business Central</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --blue:#1A56DB;--blue-light:#EBF1FF;
-  --green:#0B7B5A;--green-light:#E3F5EE;
-  --amber:#B45309;--amber-light:#FEF3C7;
-  --red:#9B1C1C;--red-light:#FEE2E2;
-  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
-  --g400:#9CA3AF;--g500:#6B7280;--g600:#4B5563;--g700:#374151;
-  --g800:#1F2937;--g900:#111827;--r:10px;
+--hs:#1A56DB;--hs-l:#EBF1FF;--hs-d:#1240a8;
+--es:#0B7B5A;--es-l:#E3F5EE;--es-d:#065F46;
+--bc:#B45309;--bc-l:#FEF3C7;--bc-d:#92400E;
+--auto:#6D28D9;--auto-l:#EDE9FE;
+--g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g300:#CBD5E1;
+--g400:#94A3B8;--g500:#64748B;--g600:#475569;--g700:#334155;--g800:#1E293B;--g900:#0F172A;
+--green:#16A34A;--green-l:#DCFCE7;
+--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+--shadow-md:0 4px 12px rgba(0,0,0,.08);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:var(--g800);background:var(--g50);min-height:100vh}
-
-.topbar{background:var(--g900);color:white;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.tl{display:flex;align-items:center;gap:12px}
-.tlogo{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:white}
-.ttitle{font-size:14px;font-weight:500}
-.tsub{font-size:12px;color:var(--g400);margin-left:4px}
-.tright{font-size:12px;color:var(--g400);font-family:monospace}
-
-.layout{display:grid;grid-template-columns:270px 1fr;min-height:calc(100vh - 56px)}
-
-.sidebar{background:white;border-right:1px solid var(--g200);padding:1.25rem 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
-.sb-sec{padding:0 .75rem;margin-bottom:.25rem}
-.sb-btn{display:flex;align-items:flex-start;gap:10px;width:100%;padding:.5rem .75rem;border:none;background:transparent;border-radius:8px;cursor:pointer;text-align:left;transition:background .15s}
-.sb-btn:hover,.sb-btn.on{background:var(--g100)}
-.sb-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.sb-name{font-size:12px;font-weight:500;color:var(--g700);line-height:1.3}
-.sb-wk{font-size:11px;color:var(--g400);margin-top:1px}
-.sb-tasks{padding-left:2rem;margin-top:.1rem}
-.sb-task{display:block;width:100%;padding:.3rem .5rem;border:none;background:transparent;border-radius:6px;cursor:pointer;text-align:left;font-size:12px;color:var(--g500);transition:all .15s;line-height:1.4}
-.sb-task:hover{background:var(--g100);color:var(--g700)}
-.sb-task.on{background:var(--blue-light);color:var(--blue);font-weight:500}
-.sb-div{height:1px;background:var(--g200);margin:.75rem .75rem}
-.sb-prog{padding:.75rem 1.25rem}
-.sb-plbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--g400);margin-bottom:.5rem}
-.sb-pr{display:flex;align-items:center;gap:8px;margin-bottom:.4rem}
-.sb-pt{flex:1;height:4px;background:var(--g100);border-radius:2px;overflow:hidden}
-.sb-pf{height:100%;border-radius:2px;transition:width .3s}
-.sb-pp{font-size:10px;color:var(--g400);min-width:28px;text-align:right;font-family:monospace}
-
-.main{padding:2rem;overflow-y:auto}
-
-.bc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g400);margin-bottom:1.5rem;flex-wrap:wrap}
-.bcl{cursor:pointer;transition:color .15s}.bcl:hover{color:var(--blue)}
-.bcs{color:var(--g300)}.bcc{color:var(--g700);font-weight:500}
-
-.ov-h{margin-bottom:2rem}
-.ov-h h1{font-size:26px;font-weight:600;color:var(--g900);margin-bottom:6px}
-.ov-h p{font-size:14px;color:var(--g500);max-width:600px;line-height:1.7}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
-.sc{background:white;border:1px solid var(--g200);border-radius:var(--r);padding:1rem 1.25rem}
-.sc .n{font-size:28px;font-weight:600;color:var(--g900);line-height:1}
-.sc .l{font-size:12px;color:var(--g500);margin-top:4px}
-
-.alert{background:#FFF7ED;border:1px solid #FED7AA;border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;gap:12px;align-items:flex-start}
-.ai{font-size:18px;flex-shrink:0;line-height:1.4}
-.at{font-size:13px;color:#92400E;line-height:1.6}
-.at strong{font-weight:600}
-
-.gantt-card{background:white;border:1px solid var(--g200);border-radius:var(--r);padding:1.5rem;margin-bottom:2rem;overflow-x:auto}
-.gantt-card h2{font-size:14px;font-weight:600;color:var(--g700);margin-bottom:1.25rem}
-.gi{min-width:580px}
-.gr{display:grid;grid-template-columns:155px 1fr;gap:10px;align-items:center;margin-bottom:5px}
-.gl{font-size:11px;color:var(--g500);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.gt{position:relative;height:20px;background:var(--g100);border-radius:4px}
-.gb{position:absolute;top:1px;bottom:1px;border-radius:3px;cursor:pointer;display:flex;align-items:center;padding:0 8px;font-size:10px;font-weight:500;color:white;white-space:nowrap;overflow:hidden;transition:opacity .15s}
-.gb:hover{opacity:.82}
-.gwh{display:grid;grid-template-columns:155px 1fr;gap:10px;margin-bottom:6px}
-.gws{display:flex}
-.gwl{flex:1;font-size:10px;color:var(--g400);text-align:center;font-family:monospace}
-
-.pg{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.pc{background:white;border:1px solid var(--g200);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .15s}
-.pc:hover{box-shadow:0 4px 12px rgba(0,0,0,.10);transform:translateY(-2px)}
-.pch{padding:1rem 1.25rem;border-bottom:1px solid var(--g100);display:flex;align-items:center;gap:12px}
-.pci{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.pcn{font-size:13px;font-weight:600}
-.pcp{font-size:11px;color:var(--g400);margin-top:2px}
-.pcb{padding:1rem 1.25rem}
-.pct{font-size:12px;color:var(--g500);list-style:none}
-.pct li{padding:2px 0;display:flex;align-items:flex-start;gap:6px}
-.pct li::before{content:"→";color:var(--g300);flex-shrink:0}
-.pca{padding:.65rem 1.25rem;display:flex;justify-content:flex-end;font-size:12px;color:var(--blue);font-weight:500;border-top:1px solid var(--g100)}
-
-.phh{border-radius:var(--r);padding:1.5rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:1rem}
-.phi{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(255,255,255,.45);flex-shrink:0}
-.phh h1{font-size:20px;font-weight:600;margin-bottom:4px}
-.phh p{font-size:13px;opacity:.8;line-height:1.6}
-.phpills{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.4)}
-
-.dod{background:white;border:1px solid var(--g200);border-radius:var(--r);padding:1.25rem;margin-bottom:1.5rem}
-.dod h2{font-size:13px;font-weight:600;color:var(--g700);margin-bottom:1rem}
-.dodg{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
-.dodc h3{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem}
-.dodc ul{list-style:none}
-.dodc ul li{font-size:12px;color:var(--g600);padding:5px 0 5px 18px;position:relative;border-bottom:1px solid var(--g100);line-height:1.4}
-.dodc ul li:last-child{border-bottom:none}
-.dodc ul li::before{content:"✓";position:absolute;left:0;font-size:11px;color:var(--g400)}
-
-.ts h2{font-size:14px;font-weight:600;color:var(--g700);margin-bottom:1rem}
-.tc{background:white;border:1px solid var(--g200);border-radius:var(--r);margin-bottom:10px;overflow:hidden;transition:box-shadow .15s}
-.tc:hover{box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.tch{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.25rem;cursor:pointer;user-select:none}
-.tcl{display:flex;align-items:center;gap:12px}
-.tnum{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
-.tname{font-size:13px;font-weight:500;color:var(--g800)}
-.tmeta{display:flex;align-items:center;gap:8px;margin-top:3px;flex-wrap:wrap}
-.twk{font-size:11px;color:var(--g400);font-family:monospace}
-.wtag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500}
-.wt{background:#EBF5FF;color:#1A56DB}
-.wa{background:#FEF3C7;color:#92400E}
-.wm{background:#F5F3FF;color:#5B21B6}
-.tcr{display:flex;align-items:center;gap:12px}
-.tpw{width:60px;height:4px;background:var(--g100);border-radius:2px;overflow:hidden}
-.tpf{height:100%;border-radius:2px}
-
-.tdh{background:white;border:1px solid var(--g200);border-radius:var(--r);padding:1.5rem;margin-bottom:1.5rem}
-.tdh h1{font-size:20px;font-weight:600;color:var(--g900);margin-bottom:8px}
-.tdm{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
-.tdd{font-size:14px;color:var(--g600);line-height:1.7}
-.tdw{background:var(--g50);border-left:3px solid var(--g300);padding:.75rem 1rem;margin-top:1rem;border-radius:0 6px 6px 0}
-.tdw p{font-size:13px;color:var(--g600);line-height:1.6}
-.tdw strong{color:var(--g700)}
-
-.abox{background:white;border:1px solid var(--g200);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
-.abox h2{font-size:13px;font-weight:600;color:var(--g700);margin-bottom:1rem}
-.aitem{display:flex;align-items:flex-start;gap:12px;padding:.65rem 0;border-bottom:1px solid var(--g100)}
-.aitem:last-child{border-bottom:none}
-.ach{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--g300);flex-shrink:0;margin-top:2px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;user-select:none}
-.ach.done{background:var(--green);border-color:var(--green)}
-.ach.done::after{content:"✓"}
-.atxt{font-size:13px;color:var(--g700);line-height:1.5;flex:1}
-.atxt.done{text-decoration:line-through;color:var(--g400)}
-.atag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;flex-shrink:0;margin-top:2px}
-
-.nav2{display:flex;justify-content:space-between;margin-top:1rem;gap:8px}
-.nbtn{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:transparent;border:none;cursor:pointer;padding:.5rem 1rem;border-radius:8px;transition:background .15s;color:var(--g500)}
-.nbtn:hover{background:var(--g100);color:var(--g700)}
-.nbtn.nx{color:var(--blue)}.nbtn.nx:hover{background:var(--blue-light)}
-
-@media(max-width:768px){
-  .layout{grid-template-columns:1fr}
-  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--g200)}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .pg{grid-template-columns:1fr}
-  .dodg{grid-template-columns:1fr}
+html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--g100);color:var(--g900)}
+.hdr{height:52px;background:var(--g900);display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:200}
+.hdr-logo{width:30px;height:30px;background:var(--hs);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:white;flex-shrink:0}
+.hdr-title{font-size:13px;font-weight:600;color:white}
+.hdr-div{width:1px;height:18px;background:rgba(255,255,255,.12);margin:0 2px}
+.hdr-sub{font-size:12px;color:#94A3B8}
+.main{display:grid;grid-template-columns:1fr 340px;height:calc(100vh - 52px);overflow:hidden}
+.chart-wrap{overflow:auto;padding:24px;background:var(--g100)}
+.chart-card{background:white;border-radius:14px;border:1px solid var(--g200);padding:24px;min-width:560px;box-shadow:var(--shadow)}
+.sc-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.sc-tab{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--g200);background:white;color:var(--g500);transition:all .15s;font-family:inherit}
+.sc-tab:hover{border-color:var(--g400);color:var(--g700)}
+.sc-tab.on{background:var(--g900);color:white;border-color:var(--g900)}
+.legend{display:flex;gap:16px;margin-bottom:20px;padding:10px 14px;background:var(--g50);border-radius:8px;border:1px solid var(--g200);flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g600)}
+.leg-manual{width:14px;height:14px;border-radius:4px;border:2px solid var(--g400);background:white;flex-shrink:0}
+.leg-auto{width:14px;height:14px;border-radius:4px;background:var(--auto-l);border:2px solid var(--auto);flex-shrink:0}
+.leg-decision{width:14px;height:14px;transform:rotate(45deg);background:var(--green-l);border:2px solid var(--green);flex-shrink:0}
+.leg-hs{width:10px;height:10px;border-radius:2px;background:var(--hs);flex-shrink:0}
+.leg-es{width:10px;height:10px;border-radius:2px;background:var(--es);flex-shrink:0}
+.leg-bc{width:10px;height:10px;border-radius:2px;background:var(--bc);flex-shrink:0}
+.slt{width:100%;border-collapse:collapse;position:relative}
+.slt-head th{padding:8px 12px;font-size:11px;font-weight:700;text-align:center;border-bottom:2px solid}
+.th-hs{background:var(--hs-l);color:var(--hs-d);border-color:var(--hs)}
+.th-es{background:var(--es-l);color:var(--es-d);border-color:var(--es)}
+.th-bc{background:var(--bc-l);color:var(--bc-d);border-color:var(--bc)}
+.th-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;font-size:9px;font-weight:800;color:white;margin-right:5px;vertical-align:middle}
+.slt td{padding:6px 10px;vertical-align:top;width:33.33%;border-right:1px solid var(--g100)}
+.slt td:last-child{border-right:none}
+.lane-hs{background:rgba(26,86,219,.02)}
+.lane-es{background:rgba(11,123,90,.02)}
+.lane-bc{background:rgba(180,83,9,.02)}
+.slt tr.sep-row td{height:6px;padding:0;background:var(--g50)}
+.fc-node{border-radius:9px;padding:10px 12px;cursor:pointer;border:1.5px solid;transition:all .15s;position:relative;text-align:left;width:100%;background:white;font-family:inherit}
+.fc-node:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.fc-node.active{box-shadow:0 0 0 3px rgba(26,86,219,.2)}
+.fc-node.dimmed{opacity:.28;filter:grayscale(.3)}
+.fn-manual{border-color:var(--g300);background:white}
+.fn-manual.fc-node-hs.active{border-color:var(--hs);box-shadow:0 0 0 3px var(--hs-l)}
+.fn-manual.fc-node-es.active{border-color:var(--es);box-shadow:0 0 0 3px var(--es-l)}
+.fn-manual.fc-node-bc.active{border-color:var(--bc);box-shadow:0 0 0 3px var(--bc-l)}
+.fn-auto{border-color:var(--auto);background:var(--auto-l)}
+.fn-auto .fn-label{color:var(--auto)}
+.fn-decision{border-color:var(--green);background:var(--green-l)}
+.fn-decision .fn-label{color:#15803D}
+.fn-type-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;opacity:.6}
+.fn-label{font-size:11px;font-weight:600;line-height:1.3;color:var(--g800)}
+.fn-sub{font-size:10px;color:var(--g500);margin-top:2px;line-height:1.3}
+.ni-manual::before{content:'&#128100;';font-size:9px;margin-right:2px}
+.ni-auto::before{content:'';font-size:9px;margin-right:2px}
+.ni-decision::before{content:'&#9670;';font-size:8px;margin-right:2px;color:var(--green)}
+.lane-empty{height:100%;display:flex;align-items:center;justify-content:center}
+.lane-dot-line{border-top:1.5px dashed var(--g200);width:80%;margin:auto}
+.conn-cell{height:24px;position:relative;padding:0}
+.conn-svg{width:100%;height:100%;overflow:visible;display:block}
+.detail{background:white;border-left:1px solid var(--g200);display:flex;flex-direction:column;overflow:hidden}
+.dp-top{padding:20px 20px 0;border-bottom:1px solid var(--g100)}
+.dp-scenario{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:6px}
+.dp-title{font-size:17px;font-weight:700;color:var(--g900);line-height:1.3;margin-bottom:8px}
+.dp-sys-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:10px}
+.dp-progress{padding:12px 20px;border-bottom:1px solid var(--g100)}
+.dp-prog-label{display:flex;justify-content:space-between;font-size:10px;color:var(--g400);margin-bottom:5px;font-weight:500}
+.dp-prog-track{height:4px;background:var(--g100);border-radius:2px;overflow:hidden}
+.dp-prog-fill{height:100%;border-radius:2px;transition:width .3s ease;background:var(--hs)}
+.dp-body{flex:1;overflow-y:auto;padding:16px 20px}
+.dp-sect{margin-bottom:18px}
+.dp-sect-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:8px}
+.dp-desc{font-size:13px;color:var(--g600);line-height:1.7}
+.dp-items{display:flex;flex-direction:column;gap:4px}
+.dp-item{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:7px;font-size:12px;color:var(--g700);background:var(--g50);border:1px solid var(--g100);line-height:1.4}
+.dp-item-icon{flex-shrink:0;font-size:11px;margin-top:1px;color:var(--g400)}
+.dp-type-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:500;margin-bottom:14px}
+.dp-nav{padding:14px 20px;border-top:1px solid var(--g100);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.dp-nav-count{font-size:11px;color:var(--g400);font-weight:500}
+.dp-nav-btns{display:flex;gap:6px}
+.dp-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.dp-btn-s{background:var(--g100);color:var(--g700)}.dp-btn-s:hover{background:var(--g200)}
+.dp-btn-p{background:var(--hs);color:white}.dp-btn-p:hover{background:var(--hs-d)}
+.dp-pills{padding:10px 20px;border-top:1px solid var(--g100);display:flex;flex-wrap:wrap;gap:4px;flex-shrink:0}
+.dp-pill{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--g200);background:white;color:var(--g500);transition:all .12s;font-family:inherit}
+.dp-pill:hover{border-color:var(--g400);color:var(--g700)}
+.dp-pill.on{background:var(--g900);color:white;border-color:var(--g900)}
+.dp-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;color:var(--g400)}
+.dp-empty-icon{width:48px;height:48px;border-radius:12px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.dp-empty p{font-size:13px;line-height:1.6;max-width:200px}
+@media(max-width:880px){
+.main{grid-template-columns:1fr;height:auto}
+.detail{height:420px;border-left:none;border-top:1px solid var(--g200)}
+.chart-wrap{height:auto;overflow:visible}
 }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="tl">
-    <div class="tlogo">S</div>
-    <span class="ttitle">Systeem Transitie — Implementatieplanning</span>
-    <span class="tsub">HubSpot · Elfsquad · Business Central</span>
-  </div>
-  <div class="tright">40 weken · 15+ personen</div>
+<div class="hdr">
+<div class="hdr-logo">E</div>
+<span class="hdr-title">ENC - Systeem Transitie</span>
+<div class="hdr-div"></div>
+<span class="hdr-sub">Interactieve procesflowchart</span>
 </div>
-<div class="layout">
-  <aside class="sidebar" id="sidebar"></aside>
-  <main class="main" id="main"></main>
+<div class="main">
+<div class="chart-wrap">
+<div class="chart-card">
+<div class="sc-tabs" id="sc-tabs">
+<button class="sc-tab on" onclick="setScenario('offline',this)">Offline deal</button>
+<button class="sc-tab" onclick="setScenario('online',this)">Online deal (website)</button>
+<button class="sc-tab" onclick="setScenario('montage',this)">Met montage</button>
+</div>
+<div class="legend">
+<div class="leg-item"><div class="leg-manual"></div>Handmatig (mens)</div>
+<div class="leg-item"><div class="leg-auto"></div>Automatisch (systeem)</div>
+<div class="leg-item"><div class="leg-decision"></div>Beslismoment</div>
+<div class="leg-item"><div class="leg-hs"></div>HubSpot</div>
+<div class="leg-item"><div class="leg-es"></div>Elfsquad</div>
+<div class="leg-item"><div class="leg-bc"></div>Business Central</div>
+</div>
+<div id="fc-root"></div>
+</div>
+</div>
+<div class="detail" id="detail-panel">
+<div class="dp-empty" id="dp-empty">
+<div class="dp-empty-icon">&larr;</div>
+<p>Klik op een stap in de flowchart om de details te zien</p>
+</div>
+<div id="dp-filled" style="display:none;flex-direction:column;flex:1;overflow:hidden;display:none"></div>
+<div class="dp-pills" id="dp-pills"></div>
+</div>
 </div>
 <script>
-const W=40;
-const PH=[
-  {
-    id:0,emoji:"🔍",name:"Fase 1 — Fundament leggen",color:"#1A56DB",bg:"#EBF1FF",
-    weeks:"Week 1 – 7",ws:0,wd:7,
-    intro:"Voordat er iets technisch gebouwd wordt, moet het fundament op orde zijn. In deze fase weet je precies wat er moet, wie het gaat doen, en begrijpt het team waarom deze verandering nodig is.",
-    dod:{
-      tech:[
-        "Er is een technische partij gekozen én schriftelijk bevestigd voor de HubSpot-koppelingen",
-        "Er is een technische partij gekozen én schriftelijk bevestigd voor Business Central",
-        "Beide partijen hebben een planning afgegeven met een startdatum voor de bouw",
-        "Het is op papier vastgelegd welke gegevens tussen de drie systemen worden uitgewisseld",
-        "Er is een testomgeving beschikbaar waarmee zonder risico geoefend kan worden"
-      ],
-      adoptie:[
-        "Alle medewerkers zijn persoonlijk geïnformeerd over de verandering en het waarom",
-        "Elke medewerker weet wat zijn of haar nieuwe rol wordt en wat er concreet verandert",
-        "Er is één intern aanspreekpunt aangewezen voor dit project",
-        "Medewerkers hebben de ruimte gehad om vragen en zorgen te uiten",
-        "Er is een vast, terugkerend overlegmoment ingepland voor de duur van het project"
-      ]
-    },
-    tasks:[
-      {
-        id:"1-1",name:"Technische partij selecteren voor HubSpot-koppelingen",week:"Week 1 – 3",ws:0,wd:3,who:"mgmt",
-        desc:"Je hebt een externe partij nodig die de automatische koppelingen bouwt tussen HubSpot, Elfsquad en Business Central. Dit is gespecialiseerd maatwerk — het gaat om API-verbindingen die foutloos moeten werken. Zonder een bevestigde partij staat alles stil.",
-        why:"Dit is de meest urgente actie van het hele project. Zonder technische partij kan de bouw niet starten, schuift alles op en mis je je deadline van 6 maanden.",
-        actions:[
-          {t:"Maak een shortlist van minimaal 3 partijen die gespecialiseerd zijn in HubSpot-integraties. Zoek via het HubSpot Solutions Partner-programma op hubspot.com/solutions-partners.",who:"mgmt"},
-          {t:"Controleer voor elke partij op hun website of zij ervaring hebben met koppelingen naar ERP-systemen of configuratietools zoals Elfsquad.",who:"mgmt"},
-          {t:"Stuur elke partij een e-mail met minimaal de volgende informatie: jullie willen de drie systemen HubSpot, Elfsquad en Business Central automatisch met elkaar laten communiceren; het gaat om 15 of meer gebruikers; de gewenste livegang is binnen 6 maanden; vraag een offerte inclusief aanpak, doorlooptijd en twee referenties van vergelijkbare projecten.",who:"mgmt"},
-          {t:"Vraag elke partij een offerte op te stellen inclusief: geschatte doorlooptijd, aanpak, indicatief budget en minimaal 2 referenties van vergelijkbare projecten.",who:"mgmt"},
-          {t:"Bel de opgegeven referenties na: is de partij betrouwbaar, halen ze deadlines, hoe communiceren ze?",who:"mgmt"},
-          {t:"Vergelijk de drie offertes op prijs, beschikbaarheid, doorlooptijd en kwaliteit van de aanpak.",who:"mgmt"},
-          {t:"Kies één partij en bevestig de samenwerking schriftelijk met een duidelijke scope en startdatum.",who:"mgmt"},
-          {t:"Plan binnen één week na de schriftelijke bevestiging een eerste werksessie in om de technische details door te spreken.",who:"mgmt"}
-        ],
-        dod:{tech:["Partij gekozen, schriftelijk bevestigd, eerste werksessie ingepland"],adoptie:[]}
-      },
-      {
-        id:"1-2",name:"Technische partij selecteren voor Business Central",week:"Week 1 – 3",ws:0,wd:3,who:"mgmt",
-        desc:"Business Central vereist een gecertificeerde Microsoft-partner. Dit kan dezelfde partij zijn als voor HubSpot, maar dat hoeft niet. Vraag eerst je huidige BC-leverancier of zij dit ook kunnen.",
-        why:"BC is een Microsoft-product met specifieke kennis vereist. Een partij die dit niet kent maakt fouten in de orderadministratie — dat kost je veel meer tijd dan het selectieproces nu.",
-        actions:[
-          {t:"Neem contact op met je huidige Business Central-leverancier en vraag of zij ook koppelingen met externe systemen kunnen bouwen via API.",who:"mgmt"},
-          {t:"Stel in het gesprek de volgende concrete vraag: hebben jullie een koppeling gebouwd waarbij een extern systeem automatisch een verkooporder aanmaakt in Business Central op basis van een statuswijziging in een ander systeem? Vraag om een concreet voorbeeld.",who:"mgmt"},
-          {t:"Als je huidige BC-leverancier dit niet kan of te duur is: zoek een alternatieve gecertificeerde Microsoft-partner via appsource.microsoft.com.",who:"mgmt"},
-          {t:"Beslis bewust: ga je met één partij voor alles (HubSpot + BC) of twee aparte partijen? Één partij is eenvoudiger te coördineren; twee partijen kunnen elk hun specialisme inzetten.",who:"mgmt"},
-          {t:"Bevestig de BC-partij schriftelijk met scope: zij ontvangen orders vanuit HubSpot, maken klanten en orders aan in BC, en sturen het BC-ordernummer terug.",who:"mgmt"},
-          {t:"Zorg dat de HubSpot-partij en de BC-partij binnen één week na bevestiging een gezamenlijk afstemmingsgesprek hebben om te bepalen wie welke kant van de koppeling bouwt.",who:"mgmt"}
-        ],
-        dod:{tech:["BC-partij gekozen en bevestigd","Afstemming tussen HubSpot-partij en BC-partij heeft plaatsgevonden"],adoptie:[]}
-      },
-      {
-        id:"1-3",name:"Intern projectverantwoordelijke aanwijzen",week:"Week 1",ws:0,wd:2,who:"mgmt",
-        desc:"Één persoon intern stuurt dit project aan. Niet technisch per se, maar iemand met overzicht, beslissingsbevoegdheid en voldoende tijd. Bij 15+ medewerkers en meerdere externe partijen is dit geen luxe maar noodzaak.",
-        why:"Zonder intern aanspreekpunt gaat communicatie verloren, worden beslissingen uitgesteld en komen externe partijen vragen stellen bij de verkeerde persoon. Dat vertraagt alles.",
-        actions:[
-          {t:"Wijs intern één persoon aan als projectverantwoordelijke voor deze transitie.",who:"mgmt"},
-          {t:"Leg schriftelijk vast wat deze persoon mag beslissen zonder escalatie en wanneer hij of zij toestemming nodig heeft van het management.",who:"mgmt"},
-          {t:"Reserveer voor deze persoon minimaal 4 uur per week in zijn of haar agenda specifiek voor dit project.",who:"mgmt"},
-          {t:"Stel wekelijks een vast moment in waarop de projectverantwoordelijke kort overlegt met de technische partijen — 30 minuten is genoeg.",who:"mgmt"},
-          {t:"Communiceer de naam, rol en bereikbaarheid van de projectverantwoordelijke aan alle medewerkers én de externe partijen.",who:"mgmt"}
-        ],
-        dod:{tech:[],adoptie:["Projectverantwoordelijke aangewezen en gecommuniceerd aan team en externe partijen"]}
-      },
-      {
-        id:"1-4",name:"Vastleggen welke gegevens tussen systemen worden uitgewisseld",week:"Week 2 – 4",ws:1,wd:3,who:"mgmt",
-        desc:"Voordat de technische partij ook maar één regel code schrijft, moet helder zijn welke gegevens van welk systeem naar welk systeem gaan. Dit is de blauwdruk voor alles wat erna komt.",
-        why:"Als dit niet op papier staat, gaan de technische partijen aannames maken. Aannames leiden tot fouten. Fouten kosten tijd en geld om achteraf te herstellen.",
-        actions:[
-          {t:"Benoem per systeem de rol: HubSpot is het startpunt voor klant- en dealinformatie. Elfsquad is de centrale plek voor offertes en productconfiguratie. Business Central is uitsluitend voor orderadministratie.",who:"mgmt"},
-          {t:"Schrijf op welke klantgegevens vanuit HubSpot naar Elfsquad moeten: bedrijfsnaam, factuuradres, afleveradres, BTW-nummer, taal van de klant, valuta en betaalcondities.",who:"mgmt"},
-          {t:"Schrijf op welke contactpersoongegevens meegaan: voornaam, achternaam, e-mailadres en telefoonnummer.",who:"mgmt"},
-          {t:"Schrijf op welke dealinformatie meegaat: de naam van de deal, het unieke deal-ID vanuit HubSpot en de verwachte sluitingsdatum.",who:"mgmt"},
-          {t:"Schrijf op wat Elfsquad terugstuurt naar HubSpot: het offerte-ID, de offertestatus (concept / verzonden / geaccepteerd / geweigerd), het versienummer, het totaalbedrag en de offerte-PDF als bijlage.",who:"tech"},
-          {t:"Schrijf op wat er naar Business Central gaat: alleen bij een gewonnen deal — klantgegevens, adres, BTW, betaalcondities, en de orderregels met productcode, omschrijving, aantal en prijs.",who:"tech"},
-          {t:"Schrijf op wat BC teruggeeft: het BC-ordernummer dat in HubSpot wordt opgeslagen bij de betreffende deal.",who:"tech"},
-          {t:"Stuur het gegevensoverzicht per e-mail naar beide technische partijen met de vraag: kloppen de velden en de richting van de koppelingen? Zijn er velden die ontbreken of die technisch niet haalbaar zijn? Verwacht binnen vijf werkdagen een schriftelijke bevestiging of een lijst met opmerkingen.",who:"tech"}
-        ],
-        dod:{tech:["Gegevensoverzicht klaar, bevestigd door technische partijen"],adoptie:[]}
-      },
-      {
-        id:"1-5",name:"Kick-off sessie met het hele team",week:"Week 2 – 4",ws:1,wd:3,who:"adopt",
-        desc:"15+ mensen die verrast worden door een nieuwe werkwijze is een recept voor weerstand. Vroeg communiceren, het waarom uitleggen en ruimte geven voor vragen maakt het verschil tussen adoptie en sabotage.",
-        why:"Weerstand bij de livegang is bijna altijd te herleiden naar mensen die zich niet gehoord voelden. Voorkom dit nu, niet achteraf.",
-        actions:[
-          {t:"Plan een sessie van 1,5 uur voor alle betrokken medewerkers: binnendienst, buitendienst en werkvoorbereiders.",who:"mgmt"},
-          {t:"Bereid vier onderdelen voor: (1) wat gaat er nu mis in het huidige proces, (2) hoe ziet de nieuwe werkwijze eruit, (3) wat verandert er concreet per rol, (4) wat is de planning en wanneer wordt wat verwacht.",who:"mgmt"},
-          {t:"Leg uit dat BC straks alleen nog voor orders is — geen offertes meer — en dat Elfsquad de enige plek is voor offertes. Licht toe waarom dit minder werk en minder fouten oplevert.",who:"mgmt"},
-          {t:"Leg per rol in twee zinnen uit wat er verandert. Binnendienst: geen voorraad of montage meer plannen. Buitendienst: offertes via Elfsquad, geen after-sales. Werkvoorbereider: ontvangt dossier pas bij een gewonnen deal.",who:"mgmt"},
-          {t:"Geef 20 minuten de tijd voor vragen en reacties. Schrijf elke vraag en opmerking letterlijk op een whiteboard of gedeeld scherm zodat iedereen ziet dat het wordt genoteerd. Sluit elke opmerking af met: dit nemen we mee, of: dit kunnen we niet aanpassen en hier is waarom.",who:"mgmt"},
-          {t:"Sluit af met de concrete volgende stap: wanneer horen ze de volgende update en wie kunnen ze tussentijds benaderen.",who:"mgmt"},
-          {t:"Stuur binnen 24 uur een korte samenvatting naar alle aanwezigen: dit bespraken we, dit zijn de vervolgstappen.",who:"mgmt"},
-          {t:"Stuur een anonieme poll van 3 vragen: hoe duidelijk is de verandering voor jou (1–5), hoe zeker voel je je over je nieuwe rol (1–5), wat is je grootste zorg (open vraag).",who:"mgmt"},
-          {t:"Bekijk de pollresultaten per vraag. Bereken het gemiddelde per vraag. Plan voor elke medewerker die op vraag 1 of vraag 3 een score van 2 of lager heeft gegeven een persoonlijk gesprek van 15 minuten in binnen drie werkdagen. Vraag in dat gesprek: wat mist er voor jou om je zeker te voelen?",who:"mgmt"}
-        ],
-        dod:{tech:[],adoptie:["Kick-off gehouden, alle medewerkers aanwezig of achteraf bijgepraat","Poll afgenomen en resultaten besproken","Extra gesprekken gepland voor medewerkers met score onder 3"]}
-      },
-      {
-        id:"1-6",name:"Nieuwe rollen en taken per medewerker vastleggen",week:"Week 4 – 6",ws:3,wd:3,who:"mgmt",
-        desc:"Iedereen moet weten wat zijn of haar nieuwe rol precies inhoudt. Niet globaal, maar concreet: welke stap doe jij, wanneer geef je het over aan de volgende, en wat doe je niet meer.",
-        why:"Onduidelijkheid over rollen leidt tot fouten, dubbel werk en conflicten. Leg het nu vast zodat er tijdens de training geen discussie over is.",
-        actions:[
-          {t:"Schrijf voor de binnendienst een takenlijst van maximaal één pagina: klant en deal aanmaken in HubSpot, offerte laten aanmaken in Elfsquad, terugkoppeling ontvangen en de deal opvolgen, bij een gewonnen deal het dossier overdragen aan de werkvoorbereider.",who:"mgmt"},
-          {t:"Noteer expliciet wat de binnendienst niet meer doet: voorraad controleren, montage inplannen, after-sales afhandelen.",who:"mgmt"},
-          {t:"Schrijf voor de buitendienst een takenlijst: klant bezoeken, wensen bespreken, offerte aanmaken in Elfsquad, offerte versturen, deal opvolgen in HubSpot, bij akkoord het dossier overdragen.",who:"mgmt"},
-          {t:"Noteer expliciet wat de buitendienst niet meer doet: after-sales, operationele taken, voorraad of montage.",who:"mgmt"},
-          {t:"Schrijf voor de werkvoorbereider een takenlijst: gewonnen deal ontvangen, klant- en orderdata controleren, voorraad checken, montage plannen, eventueel facturatie controleren in BC.",who:"mgmt"},
-          {t:"Laat elke medewerker zijn of haar eigen takenlijst lezen en bevestigen via een kort bericht of gesprek: klopt dit, mis je iets?",who:"mgmt"},
-          {t:"Loop de ontvangen reacties door. Pas de taakomschrijving aan voor elk punt waarover twee of meer medewerkers opmerking maakten. Noteer punten die je niet aanpast en schrijf er één zin bij met de reden. Stuur de definitieve versie binnen vijf werkdagen na ontvangst van de laatste reactie.",who:"mgmt"}
-        ],
-        dod:{tech:[],adoptie:["Takenlijst per rol klaar en bevestigd door minimaal één medewerker per rol"]}
-      }
-    ]
-  },
-  {
-    id:1,emoji:"⚙️",name:"Fase 2 — Technische bouw",color:"#0B7B5A",bg:"#E3F5EE",
-    weeks:"Week 8 – 20",ws:7,wd:13,
-    intro:"De technische partijen bouwen de koppelingen. Jouw rol als opdrachtgever is de voortgang bewaken, tussendoor testen en ervoor zorgen dat het team ziet wat er wordt gebouwd. De bouw duurt langer dan je denkt — plan buffer in.",
-    dod:{
-      tech:[
-        "HubSpot is ingericht met de juiste dealstages, verplichte velden en geautomatiseerde workflows",
-        "Koppeling HubSpot naar Elfsquad werkt: klantdata gaat automatisch door bij de juiste trigger",
-        "Koppeling Elfsquad naar HubSpot werkt: offerte-ID, PDF en status komen automatisch terug",
-        "Koppeling HubSpot naar BC werkt: alleen bij een gewonnen deal wordt een order aangemaakt",
-        "BC stuurt het ordernummer terug naar het deal-record in HubSpot",
-        "Dezelfde trigger twee keer uitvoeren leidt niet tot dubbele klanten of orders",
-        "Alle koppelingen zijn getest en goedgekeurd in een testomgeving"
-      ],
-      adoptie:[
-        "Het team heeft een live demo gezien van de volledige nieuwe flow",
-        "Feedback van de demo is door de technische partij verwerkt of formeel gedocumenteerd",
-        "Medewerkers weten hoe de nieuwe schermen in HubSpot eruitzien"
-      ]
-    },
-    tasks:[
-      {
-        id:"2-1",name:"HubSpot inrichten: dealstages, velden en workflows",week:"Week 8 – 11",ws:7,wd:4,who:"tech",
-        desc:"HubSpot is het startpunt van de hele keten. Als hier iets niet klopt, werkt alles erachter ook niet. De technische partij voert de inrichting uit — jij controleert of het aansluit op hoe jullie werken.",
-        why:"Een goed ingerichte HubSpot voorkomt dat medewerkers handmatig velden moeten bijhouden of fouten maken die doorwerken in Elfsquad en BC.",
-        actions:[
-          {t:"Instructeer de technische partij: voeg een nieuwe dealstage toe met de naam 'Offerte geaccepteerd / Gewonnen' aan de bestaande sales-pipeline.",who:"tech"},
-          {t:"Stel in dat alleen medewerkers met de rol Binnendienst of Sales Lead een deal naar de status Gewonnen mogen verplaatsen.",who:"tech"},
-          {t:"Voeg de volgende velden toe aan het bedrijfsrecord in HubSpot: factuurstraat, factuurhuisnummer, factuurpostcode, factuurplaats, factuurland, BTW-nummer, KvK-nummer, factuure-mailadres, taal van de klant, valuta.",who:"tech"},
-          {t:"Voeg de volgende velden toe aan het deal-record in HubSpot: offerte-ID (gevuld vanuit Elfsquad), offertestatus, versienummer van de offerte, totaalbedrag, link naar de PDF, bestand-ID van de PDF, BC-ordernummer.",who:"tech"},
-          {t:"Stel in dat een deal pas naar de status Gewonnen mag als het offerte-ID, de offertestatus en de PDF-link zijn ingevuld. Zonder deze drie velden blokkeert het systeem de statuswijziging.",who:"tech"},
-          {t:"Maak een geautomatiseerde workflow die bij de status Gewonnen de volgende velden vergrendelt zodat ze niet meer gewijzigd kunnen worden: factuuradres, valuta, BTW-nummer, betaalcondities en totaalbedrag.",who:"tech"},
-          {t:"Maak een geautomatiseerde workflow die bij de status Gewonnen een notitie aanmaakt in de tijdlijn van de deal met het tijdstip en de naam van de persoon die de status heeft gezet.",who:"tech"},
-          {t:"Test de inrichting intern: maak een testbedrijf en een testdeal aan, doorloop alle stappen, controleer of de validaties werken en de velden vergrendelen bij Gewonnen.",who:"tech"},
-          {t:"Laat één medewerker van de binnendienst de nieuwe schermen bekijken en bevestigen dat de workflow voor hem of haar logisch aanvoelt.",who:"mgmt"}
-        ],
-        dod:{tech:["Alle velden aanwezig en correct ingesteld","Validaties blokkeren de status Gewonnen bij ontbrekende velden","Workflow vergrendelt velden bij Gewonnen","Testdeal succesvol doorlopen"],adoptie:["Binnendienst heeft de schermen gezien en feedback gegeven"]}
-      },
-      {
-        id:"2-2",name:"Koppeling bouwen: HubSpot naar Elfsquad",week:"Week 9 – 13",ws:8,wd:5,who:"tech",
-        desc:"Zodra een salesperson in HubSpot aangeeft dat er een offerte nodig is, gaan alle klant- en dealgegevens automatisch naar Elfsquad. Geen handmatig overtypen meer.",
-        why:"Elke keer dat iemand gegevens handmatig overtypt ontstaan fouten. Een klant met een verkeerd BTW-nummer of adres op de offerte geeft een slechte indruk en kost tijd om te corrigeren.",
-        actions:[
-          {t:"Beslis samen met de technische partij welke actie in HubSpot de koppeling start: de dealstage 'Offerte aangevraagd' of een handmatige knop in het deal-record. Kies de optie die het beste past bij hoe jullie werken.",who:"mgmt"},
-          {t:"Laat de technische partij een controle inbouwen vóór het versturen: zijn alle verplichte bedrijfsvelden gevuld? Als een veld mist, krijgt de medewerker een foutmelding in HubSpot met de naam van het ontbrekende veld.",who:"tech"},
-          {t:"Laat de koppeling de volgende klantgegevens doorsturen naar Elfsquad: bedrijfsnaam, factuuradres, afleveradres, BTW-nummer, taal van de klant, valuta en betaalcondities.",who:"tech"},
-          {t:"Laat de koppeling ook de contactpersoon doorsturen: voornaam, achternaam, e-mailadres en telefoonnummer.",who:"tech"},
-          {t:"Laat de koppeling de dealinformatie doorsturen: het unieke HubSpot deal-ID, de naam van de deal en de verwachte sluitingsdatum.",who:"tech"},
-          {t:"Bouw foutpreventie in: als dezelfde deal een tweede keer wordt verstuurd, mag er in Elfsquad geen tweede klant of offerte worden aangemaakt. Gebruik het HubSpot deal-ID als unieke sleutel om duplicaten te herkennen.",who:"tech"},
-          {t:"Test de koppeling met een nep-klant: stuur een testdeal door en controleer in Elfsquad of alle velden correct zijn aangekomen — inclusief taal en valuta.",who:"tech"},
-          {t:"Test een foutscenario: stuur dezelfde testdeal nog een keer door en controleer dat er geen tweede klant of offerte wordt aangemaakt in Elfsquad.",who:"tech"},
-          {t:"Test een foutmelding: laat een verplicht veld leeg en controleer of de medewerker een duidelijke foutmelding te zien krijgt.",who:"tech"}
-        ],
-        dod:{tech:["Testdata correct aangekomen in Elfsquad","Foutpreventie werkt: tweede trigger maakt geen duplicaat","Foutmelding zichtbaar bij ontbrekende velden"],adoptie:[]}
-      },
-      {
-        id:"2-3",name:"Koppeling bouwen: Elfsquad naar HubSpot",week:"Week 13 – 16",ws:12,wd:4,who:"tech",
-        desc:"Zodra Elfsquad iets wijzigt aan een offerte — de status, het bedrag, of de PDF — komt die informatie automatisch terug in het deal-record in HubSpot. Sales hoeft niet in Elfsquad te kijken.",
-        why:"Als de offertestatus en PDF niet automatisch terugkomen in HubSpot, moeten medewerkers handmatig schakelen tussen twee systemen. Dat is precies wat je wilt voorkomen.",
-        actions:[
-          {t:"Laat de technische partij in Elfsquad een automatisch bericht instellen dat verstuurd wordt bij elke statuswijziging van een offerte: concept, verzonden, geaccepteerd of geweigerd.",who:"tech"},
-          {t:"Dit bericht komt binnen in HubSpot en werkt automatisch vier velden bij in het deal-record: het offerte-ID, de status, het versienummer en het totaalbedrag.",who:"tech"},
-          {t:"Bouw een extra stap: zodra Elfsquad een PDF genereert, wordt die PDF automatisch geüpload naar HubSpot en als bijlage gekoppeld aan de betreffende deal.",who:"tech"},
-          {t:"De PDF moet zichtbaar zijn in de tijdlijn van de deal in HubSpot — niet alleen als bestand ergens in het systeem, maar direct zichtbaar wanneer je de deal opent.",who:"tech"},
-          {t:"Test de volledige flow: maak een testofferte aan in Elfsquad, zet de status op Verzonden, genereer de PDF. Controleer daarna in HubSpot of het offerte-ID, de status, het bedrag en de PDF correct zijn bijgewerkt.",who:"tech"},
-          {t:"Test het versienummer: maak een tweede versie van de testofferte in Elfsquad en controleer of het versienummer in HubSpot wordt bijgewerkt van 1 naar 2.",who:"tech"},
-          {t:"Test een geweigerde offerte: zet de status op Geweigerd in Elfsquad en controleer of de status Geweigerd correct verschijnt in HubSpot.",who:"tech"}
-        ],
-        dod:{tech:["Offerte-ID, status, versie en bedrag komen correct terug in HubSpot","PDF is zichtbaar als bijlage in de deal","Versienummer wordt correct bijgewerkt"],adoptie:[]}
-      },
-      {
-        id:"2-4",name:"Koppeling bouwen: HubSpot naar Business Central",week:"Week 16 – 19",ws:15,wd:4,who:"tech",
-        desc:"Alleen wanneer een deal in HubSpot de status Gewonnen krijgt, wordt er automatisch een order aangemaakt in BC. BC bevat daarna alleen echte orders — geen offertes die nooit orders worden.",
-        why:"Op dit moment vervuilt BC met offertes die nooit order worden. Dat maakt rapportages onbetrouwbaar en zorgt voor verwarring. De nieuwe koppeling maakt BC schoon.",
-        actions:[
-          {t:"Laat de technische partij de volgende trigger instellen in HubSpot: zodra een deal de status Gewonnen krijgt, start er automatisch een bericht naar BC.",who:"tech"},
-          {t:"Bouw een validatiecheck in vóór het versturen naar BC: is het offerte-ID aanwezig, is de offertestatus Geaccepteerd, is er een PDF aanwezig, en zijn alle klantvelden compleet? Als een van deze vier niet klopt, wordt het bericht tegengehouden en krijgt de medewerker een melding.",who:"tech"},
-          {t:"Stuur naar BC de volgende klantgegevens: bedrijfsnaam, factuuradres, afleveradres, BTW-nummer, valuta en betaalcondities. Gebruik het HubSpot bedrijfs-ID als unieke sleutel zodat BC herkent of de klant al bestaat.",who:"tech"},
-          {t:"Stuur naar BC ook de orderinformatie: het Elfsquad offerte-ID als referentie, en de orderregels met voor elke regel de productcode, omschrijving, aantal en eenheidsprijs.",who:"tech"},
-          {t:"Laat de BC-partij het volgende realiseren: BC ontvangt de data, controleert via het unieke bedrijfs-ID of de klant al bestaat, maakt de klant aan als die nieuw is of gebruikt de bestaande klant, en maakt vervolgens de order aan.",who:"tech"},
-          {t:"Laat BC na het aanmaken van de order het ordernummer automatisch terugsturen naar HubSpot, zodat het wordt opgeslagen in het veld BC-ordernummer in de deal.",who:"tech"},
-          {t:"Test de volledige keten: zet een testdeal op Gewonnen, wacht op de order in BC, en controleer of het BC-ordernummer terugkomt in HubSpot.",who:"tech"},
-          {t:"Test de foutpreventie: zet dezelfde deal nogmaals op Gewonnen en controleer dat er geen tweede order wordt aangemaakt in BC.",who:"tech"}
-        ],
-        dod:{tech:["Order correct aangemaakt in BC bij status Gewonnen","BC ordernummer verschijnt in HubSpot","Geen dubbele orders bij herhaalde trigger"],adoptie:[]}
-      },
-      {
-        id:"2-5",name:"Live demo voor het hele team",week:"Week 19 – 20",ws:18,wd:2,who:"adopt",
-        desc:"Halverwege de bouw laat je het team de volledige nieuwe flow zien. Ze hoeven nu nog niets zelf te doen — alleen kijken, vragen stellen en feedback geven. Dit verlaagt de drempel voor de training later.",
-        why:"Medewerkers die voor het eerst de nieuwe flow zien tijdens de training hebben weinig tijd om te wennen. Een vroege demo maakt de training efficiënter en vermindert weerstand.",
-        actions:[
-          {t:"Plan een sessie van 1 uur voor alle betrokken medewerkers. Als dat logistiek niet lukt, organiseer dan twee aparte sessies: één voor binnendienst en één voor buitendienst en werkvoorbereiders.",who:"mgmt"},
-          {t:"Vraag de technische partij om de volledige flow live te demonstreren: een deal aanmaken in HubSpot, de data zien verschijnen in Elfsquad, de offerte terugzien in HubSpot, de deal op Gewonnen zetten en de order controleren in BC.",who:"mgmt"},
-          {t:"Laat tijdens de demo één medewerker per rol één stap zelf uitvoeren — niet om te leren, maar om het echt te voelen.",who:"mgmt"},
-          {t:"Stel na de demo drie vragen aan de groep: wat valt jullie op aan de nieuwe flow? Wat is onduidelijk of verwarrend? Wat missen jullie in wat je net hebt gezien? Schrijf elk antwoord letterlijk op een gedeeld scherm of whiteboard, zichtbaar voor iedereen in de zaal.",who:"mgmt"},
-          {t:"Maak na de sessie een overzicht van alle verzamelde punten. Zet achter elk punt één van drie labels: aanpassen vóór livegang, aanpassen ná livegang, of niet aanpassen. Schrijf bij elk punt dat niet wordt aangepast een korte reden zodat het team begrijpt waarom.",who:"mgmt"},
-          {t:"Stuur het overzicht van alle punten inclusief de labels en redenen binnen 48 uur naar alle aanwezigen via e-mail of jullie interne berichtenapp. Begin de boodschap met: dit hebben we gehoord, dit pakken we op, dit niet en hier is waarom.",who:"mgmt"}
-        ],
-        dod:{tech:["Technische feedback verwerkt of formeel vastgelegd"],adoptie:["Demo gehouden, alle medewerkers hebben de flow gezien","Feedbacklijst verstuurd naar het team"]}
-      }
-    ]
-  },
-  {
-    id:2,emoji:"🎓",name:"Fase 3 — Training & adoptie",color:"#B45309",bg:"#FEF3C7",
-    weeks:"Week 21 – 30",ws:20,wd:10,
-    intro:"Dit is de meest kritische fase. Met 15+ medewerkers is adoptie het zwaarste deel van het project. Techniek werkt alleen als mensen er goed mee omgaan. Neem hier ruim de tijd voor.",
-    dod:{
-      tech:[
-        "Een stap-voor-stap werkinstructie beschikbaar per rol, maximaal één pagina, voorzien van screenshots",
-        "Een overzichtskaart voor HubSpot: welke velden zijn verplicht en wanneer",
-        "Een overzichtskaart voor Elfsquad: hoe maak ik in vijf stappen een offerte aan",
-        "Een testomgeving beschikbaar waarmee medewerkers kunnen oefenen zonder echte klantdata te raken"
-      ],
-      adoptie:[
-        "Elke medewerker heeft de training gevolgd die past bij zijn of haar rol",
-        "Elke medewerker heeft minimaal drie volledige scenario's zelfstandig doorlopen in de testomgeving",
-        "Alle vragen zijn beantwoord en vastgelegd in een overzicht",
-        "Een anonieme poll is afgenomen: gemiddelde score op 'ik voel me klaar voor livegang' is 3,5 of hoger",
-        "Medewerkers met een score onder 3 hebben een extra begeleidingsgesprek gehad",
-        "Er is een buddy of aanspreekpunt aangewezen voor de eerste vier weken na livegang"
-      ]
-    },
-    tasks:[
-      {
-        id:"3-1",name:"Werkinstructies en overzichtskaarten maken",week:"Week 21 – 23",ws:20,wd:3,who:"mgmt",
-        desc:"Medewerkers willen geen uitgebreid handboek raadplegen als ze een vraag hebben. Ze willen een simpele kaart die ze op hun bureau kunnen leggen of op hun telefoon opslaan.",
-        why:"Hoe makkelijker de instructie, hoe sneller mensen zelfstandig werken. Investeer nu een dag in een goede instructie en bespaar daarna weken aan vragen en fouten.",
-        actions:[
-          {t:"Schrijf voor de binnendienst een stap-voor-stap werkinstructie: hoe maak ik een klant en deal aan in HubSpot, hoe trigger ik de offerte naar Elfsquad, hoe volg ik de deal op na terugkoppeling, en hoe draag ik het dossier over aan de werkvoorbereider bij een gewonnen deal.",who:"mgmt"},
-          {t:"Zet in de binnendienst-instructie ook duidelijk wat er NIET meer bij hun taken hoort: voorraad controleren, montage inplannen en after-sales afhandelen.",who:"mgmt"},
-          {t:"Schrijf voor de buitendienst een stap-voor-stap werkinstructie: hoe maak ik een offerte aan in Elfsquad, hoe verstuur ik die offerte, hoe volg ik de dealstatus op in HubSpot en hoe draag ik het dossier over na akkoord.",who:"mgmt"},
-          {t:"Zet in de buitendienst-instructie ook wat er NIET meer bij hoort: after-sales, operationele taken en voorraad.",who:"mgmt"},
-          {t:"Schrijf voor de werkvoorbereider een stap-voor-stap instructie: hoe ontvang ik een gewonnen deal, wat controleer ik als eerste, hoe check ik voorraad in BC en hoe plan ik de montage.",who:"mgmt"},
-          {t:"Maak een overzichtskaart voor HubSpot op A5-formaat: twee kolommen — links het veld, rechts wanneer het verplicht ingevuld moet zijn. Gebruik screenshots van de echte schermen.",who:"mgmt"},
-          {t:"Maak een overzichtskaart voor Elfsquad op A5-formaat: vijf stappen om een offerte aan te maken, met een screenshot per stap.",who:"mgmt"},
-          {t:"Geef de werkinstructie voor de binnendienst aan één binnendienst-medewerker die hem nog niet heeft gezien. Laat die persoon de instructie lezen zonder hulp en vraag daarna: was elke stap duidelijk zonder extra uitleg? Waar moest je even nadenken of twijfelen? Doe hetzelfde met één buitendienst-medewerker voor de buitendienst-instructie en één werkvoorbereider voor de werkvoorbereider-instructie.",who:"mgmt"},
-          {t:"Pas de instructie aan op basis van de opmerkingen van de testlezer. Maak een definitieve versie in een tekstverwerker of presentatieprogramma. Sla op als PDF. Stuur de PDF via e-mail naar alle betrokkenen en druk voor elke medewerker één exemplaar af dat op de werkplek beschikbaar is.",who:"mgmt"}
-        ],
-        dod:{tech:["Werkinstructies en overzichtskaarten klaar, gereviewed en gedistribueerd"],adoptie:["Minimaal één medewerker per rol heeft de instructie gevalideerd"]}
-      },
-      {
-        id:"3-2",name:"Training binnendienst",week:"Week 23 – 25",ws:22,wd:3,who:"adopt",
-        desc:"Een praktijkgerichte training van twee uur voor alle binnendienst-medewerkers. Geen theorie over systemen — oefenen met echte scenario's in de testomgeving.",
-        why:"De binnendienst heeft het meeste contact met alle drie de systemen en is het eerste aanspreekpunt voor klanten. Fouten hier zijn direct zichtbaar voor de klant.",
-        actions:[
-          {t:"Plan een aparte trainingssessie van twee uur specifiek voor de binnendienst. Houd dit apart van de buitendienst zodat de training volledig rol-specifiek is.",who:"mgmt"},
-          {t:"Begin met vijf minuten: dit zijn jouw nieuwe taken, dit doe je niet meer. Geen lange uitleg — gewoon de feiten.",who:"mgmt"},
-          {t:"Oefening 1: Maak een nieuw bedrijf aan in HubSpot. Vul alle verplichte velden in: naam, adres, BTW-nummer, taal en valuta. Probeer de deal aan te maken zonder een verplicht veld — controleer of de foutmelding verschijnt.",who:"mgmt"},
-          {t:"Oefening 2: Maak een deal aan en zet die op de status Offerte aangevraagd. Kijk samen live wat er automatisch verschijnt in Elfsquad.",who:"mgmt"},
-          {t:"Oefening 3: Ontvang de terugkoppeling vanuit Elfsquad in HubSpot. Controleer dat het offerte-ID, de status, het bedrag en de PDF correct zijn ingevuld in de deal.",who:"mgmt"},
-          {t:"Oefening 4: Stuur de offerte door naar de klant via HubSpot, met de PDF als bijlage.",who:"mgmt"},
-          {t:"Oefening 5: Zet de deal op Gewonnen. Controleer eerst of alle verplichte velden zijn gevuld. Kijk of de validatie werkt. Controleer daarna of het BC-ordernummer terugkomt.",who:"mgmt"},
-          {t:"Oefening 6: Draag het dossier over aan de werkvoorbereider. Bespreek wat je communiceert en via welk kanaal.",who:"mgmt"},
-          {t:"Laat elke medewerker het volledige scenario van begin tot eind nogmaals zelfstandig doorlopen. Noteer waar ze vastlopen.",who:"mgmt"},
-          {t:"Sluit af met een rondje: wat vond je makkelijk, wat was moeilijk? Noteer de antwoorden en verwerk de meest voorkomende knelpunten in de overzichtskaart.",who:"mgmt"}
-        ],
-        dod:{tech:[],adoptie:["Alle binnendienst-medewerkers hebben de training gevolgd","Elk persoon heeft het volledige scenario zelfstandig doorlopen","Knelpunten gedocumenteerd en verwerkt in de instructie"]}
-      },
-      {
-        id:"3-3",name:"Training buitendienst",week:"Week 23 – 25",ws:22,wd:3,who:"adopt",
-        desc:"Een praktijkgerichte training van twee uur voor alle buitendienst-medewerkers. Focus op Elfsquad voor offertes en HubSpot voor dealopvolging.",
-        why:"De buitendienst is veel onderweg en heeft weinig tijd voor systemen. De training moet snel, praktisch en direct toepasbaar zijn.",
-        actions:[
-          {t:"Plan een aparte trainingssessie van twee uur specifiek voor de buitendienst.",who:"mgmt"},
-          {t:"Begin met vijf minuten: dit zijn jouw nieuwe taken, dit doe je niet meer. Geen after-sales, geen montage, geen voorraad.",who:"mgmt"},
-          {t:"Oefening 1: Open een bestaande testdeal in HubSpot en bekijk welke informatie beschikbaar is.",who:"mgmt"},
-          {t:"Oefening 2: Maak een offerte aan in Elfsquad op basis van de testdeal vanuit HubSpot. Doorloop de stappen uit de overzichtskaart.",who:"mgmt"},
-          {t:"Oefening 3: Voeg een product toe aan de offerte in Elfsquad en bekijk hoe de prijs automatisch wordt berekend.",who:"mgmt"},
-          {t:"Oefening 4: Verstuur de offerte vanuit Elfsquad. Controleer daarna in HubSpot of de status en het bedrag zijn bijgewerkt.",who:"mgmt"},
-          {t:"Oefening 5: Zet de deal op Gewonnen in HubSpot en draag het dossier over.",who:"mgmt"},
-          {t:"Bespreek: hoe werk je samen met de binnendienst als je hulp nodig hebt bij een complexe offerte?",who:"mgmt"},
-          {t:"Laat elke medewerker het volledige scenario zelfstandig doorlopen en noteer waar ze vastlopen.",who:"mgmt"}
-        ],
-        dod:{tech:[],adoptie:["Alle buitendienst-medewerkers hebben de training gevolgd","Elfsquad offerte aanmaken en versturen geoefend","Dealopvolging in HubSpot geoefend"]}
-      },
-      {
-        id:"3-4",name:"Training werkvoorbereider",week:"Week 25 – 27",ws:24,wd:3,who:"adopt",
-        desc:"Een gerichte training van anderhalf uur voor de werkvoorbereiders. Focus op het ontvangen van een gewonnen deal en wat je daarmee doet.",
-        why:"De werkvoorbereider is de schakel tussen commercieel en operationeel. Als de overdracht hier niet goed gaat, worden fouten pas zichtbaar bij de klant.",
-        actions:[
-          {t:"Plan een trainingssessie van anderhalf uur voor de werkvoorbereider of projectcoördinator.",who:"mgmt"},
-          {t:"Bespreek het overdrachtsmoment: wanneer ontvang je een gewonnen deal, hoe word je hiervan op de hoogte gesteld en via welk kanaal?",who:"mgmt"},
-          {t:"Oefening 1: Ontvang een melding dat een deal gewonnen is. Ga in HubSpot naar het deal-record en controleer of de volgende informatie aanwezig is: bedrijfsnaam, factuuradres, BTW-nummer, totaalbedrag, offerte-PDF als bijlage en het BC-ordernummer.",who:"mgmt"},
-          {t:"Oefening 2: Ga naar Business Central, zoek de order op via het ordernummer dat in HubSpot staat. Controleer of de volgende informatie correct is: klantnaam, factuuradres, BTW-nummer, en de orderregels met productomschrijving, aantal en prijs.",who:"mgmt"},
-          {t:"Oefening 3: Controleer de voorraad in BC voor de producten in de order en noteer wat eventueel besteld moet worden.",who:"mgmt"},
-          {t:"Oefening 4: Bepaal op basis van de orderinformatie een realistische montagedatum. Stuur een kort bericht naar de monteur of uitvoerder met de klantlocatie, de gewenste montagedatum en de te monteren producten uit de order. Gebruik hiervoor het kanaal dat jullie normaal gebruiken voor planningscommunicatie.",who:"mgmt"},
-          {t:"Bespreek: wat doe je als orderdata niet klopt of incompleet is? Antwoord: je koppelt terug aan de binnendienst — je past niets zelf aan in BC.",who:"mgmt"},
-          {t:"Bespreek welke toegangsrechten de werkvoorbereider heeft in BC en wat hij of zij wel en niet kan wijzigen.",who:"mgmt"}
-        ],
-        dod:{tech:[],adoptie:["Werkvoorbereider heeft de training gevolgd","BC-gebruik en facturatie-check geoefend","Overdrachtsproces duidelijk voor alle betrokkenen"]}
-      },
-      {
-        id:"3-5",name:"Oefenweek: zelfstandig oefenen in testomgeving",week:"Week 27 – 29",ws:26,wd:3,who:"adopt",
-        desc:"Training is geen garantie voor beheersing. Medewerkers moeten de kans hebben zelfstandig te oefenen en te ontdekken waar ze vastlopen — vóórdat het live gaat.",
-        why:"Bij 15+ medewerkers wil je niet dat iedereen op de eerste dag na livegang tegelijk met vragen komt. Een oefenweek voorkomt dat.",
-        actions:[
-          {t:"Zorg dat de testomgeving voor alle medewerkers toegankelijk is met hun eigen inloggegevens en volledig los staat van de productieomgeving.",who:"tech"},
-          {t:"Maak drie oefenscenario's die medewerkers zelfstandig doorlopen: (1) een standaard offerte die gewonnen wordt, (2) een offerte waarbij de klant een aangepaste versie vraagt, (3) een offerte die verloren gaat.",who:"mgmt"},
-          {t:"Stuur het team een bericht via jullie interne communicatiekanaal (e-mail, Teams of WhatsApp): deze week oefenen jullie zelfstandig in de testomgeving. De inloggegevens zijn dezelfde als jullie normale inloggegevens. Vragen stel je aan de projectverantwoordelijke. Stel vragen nu — niet pas bij de livegang.",who:"mgmt"},
-          {t:"Houd elke dag een inloopmoment van 30 minuten beschikbaar voor vragen, bij voorkeur 's ochtends.",who:"mgmt"},
-          {t:"Noteer elke vraag die tijdens het inloopmoment wordt gesteld in een simpel lijstje: datum, vraag, antwoord. Als dezelfde vraag twee of meer keer voorkomt, staat er een gat in de training of de overzichtskaart. Pas de overzichtskaart of werkinstructie direct aan zodat die vraag voortaan beantwoord wordt zonder dat iemand hoeft te vragen.",who:"mgmt"},
-          {t:"Verwerk de meest gestelde vragen in een kort FAQ-document en deel dit met het hele team aan het einde van de week.",who:"mgmt"}
-        ],
-        dod:{tech:["Testomgeving stabiel en toegankelijk voor alle medewerkers"],adoptie:["Alle medewerkers hebben de drie scenario's doorlopen","FAQ-document opgesteld en gedeeld"]}
-      },
-      {
-        id:"3-6",name:"Readiness check: go of geen go?",week:"Week 30",ws:29,wd:1,who:"mgmt",
-        desc:"Je gaat niet live op gevoel. Je gaat live op basis van een eerlijk beeld van hoe klaar het team is. Een lage score betekent dat je de training uitbreidt — niet dat je doordubt.",
-        why:"Eén medewerker die niet weet wat hij of zij doet bij livegang kan klantproblemen, foute orders of verloren data veroorzaken. Dat kost meer dan een extra trainingsweek.",
-        actions:[
-          {t:"Maak een anonieme poll van vijf vragen. Gebruik Microsoft Forms als jullie Microsoft 365 hebben (forms.office.com), of Google Forms als jullie Google Workspace gebruiken (forms.google.com). Zet de instelling op anoniem zodat medewerkers eerlijk antwoorden. Deel de link via e-mail of jullie interne berichtenapp en geef twee werkdagen de tijd om te reageren.",who:"mgmt"},
-          {t:"Vraag 1: Hoe zeker voel jij je in HubSpot? Geef een score van 1 (helemaal niet zeker) tot 5 (volledig zeker).",who:"mgmt"},
-          {t:"Vraag 2: Hoe zeker voel jij je in het gebruik van Elfsquad, als dat onderdeel is van jouw rol? Geef een score van 1 tot 5.",who:"mgmt"},
-          {t:"Vraag 3: Is je nieuwe rol en takenpakket volledig duidelijk voor jou? Score van 1 tot 5.",who:"mgmt"},
-          {t:"Vraag 4: Zijn er situaties die je nog niet weet hoe je ze moet aanpakken? Beschrijf ze kort.",who:"mgmt"},
-          {t:"Vraag 5: Ben jij klaar om morgen live te gaan met de nieuwe werkwijze? Score van 1 tot 5.",who:"mgmt"},
-          {t:"Bereken het gemiddelde van vraag 5. Bij een gemiddelde van 3,5 of hoger: ga door naar de testfase. Bij een lager gemiddelde: plan extra trainingssessies in voor de onderdelen met de laagste scores.",who:"mgmt"},
-          {t:"Bespreek elke individuele score van 2 of lager op vraag 5 in een persoonlijk gesprek van 15 minuten: wat heeft deze persoon nodig?",who:"mgmt"},
-          {t:"Communiceer de beslissing (go of geen go) aan het hele team met een korte toelichting.",who:"mgmt"}
-        ],
-        dod:{tech:[],adoptie:["Poll afgenomen bij alle medewerkers","Gemiddelde score op vraag 5 is 3,5 of hoger","Alle medewerkers met score 2 of lager hebben een gesprek gehad","Go of geen go gecommuniceerd aan het team"]}
-      }
-    ]
-  },
-  {
-    id:3,emoji:"🚀",name:"Fase 4 — Testfase & livegang",color:"#9B1C1C",bg:"#FEE2E2",
-    weeks:"Week 31 – 40",ws:30,wd:10,
-    intro:"Pas als het team klaar is en de techniek is goedgekeurd, ga je testen met echte data. De livegang is een bewuste beslissing — niet een sprong in het diepe. Zorg voor een zachte landing.",
-    dod:{
-      tech:[
-        "Drie testscenario's zijn volledig doorlopen zonder blokkerende fouten",
-        "Minimaal drie echte deals zijn verwerkt van begin tot eind via de nieuwe flow",
-        "Er zijn geen blokkerende problemen meer na de pilotfase",
-        "Er is een automatisch waarschuwingssysteem actief dat melding geeft bij een mislukte koppeling",
-        "Er is een terugvalplan op papier: wat doen we als de koppeling uitvalt?"
-      ],
-      adoptie:[
-        "Alle medewerkers verwerken nieuwe deals zelfstandig via de nieuwe werkwijze",
-        "Er is een intern aanspreekpunt beschikbaar voor vragen gedurende de eerste vier weken",
-        "Er is een evaluatiesessie gehouden na twee weken livegang",
-        "Actiepunten uit de evaluatie zijn opgepakt en ingepland"
-      ]
-    },
-    tasks:[
-      {
-        id:"4-1",name:"Interne testfase: zoek actief naar fouten",week:"Week 31 – 34",ws:30,wd:4,who:"tech",
-        desc:"Doorloop de volledige keten met testdata. Zoek actief naar fouten — ga er vanuit dat er iets mis gaat en bewijs het tegendeel. Documenteer alles.",
-        why:"De eerste keer dat iets echt fout gaat mag niet bij een echte klant zijn. Test nu grondig zodat de pilotfase soepel verloopt.",
-        actions:[
-          {t:"Stel drie testscenario's op: (1) een standaard deal die gewonnen wordt en een order oplevert in BC, (2) een deal waarbij een tweede versie van de offerte wordt gemaakt vóórdat de deal gewonnen wordt, (3) een deal die verloren gaat zonder dat er een order in BC wordt aangemaakt.",who:"tech"},
-          {t:"Doorloop testscenario 1 volledig: maak een testbedrijf en testdeal aan in HubSpot, stuur door naar Elfsquad, maak een offerte, ontvang de terugkoppeling in HubSpot, zet de deal op Gewonnen, controleer de order in BC en het ordernummer in HubSpot.",who:"tech"},
-          {t:"Doorloop testscenario 2: maak een tweede versie van de offerte in Elfsquad en controleer of het versienummer in HubSpot bijspringt van 1 naar 2 voordat je de deal op Gewonnen zet.",who:"tech"},
-          {t:"Doorloop testscenario 3: zet de deal op Verloren en controleer dat er geen bericht naar BC is gegaan en geen order is aangemaakt.",who:"tech"},
-          {t:"Test de foutpreventie: zet dezelfde testdeal twee keer op Gewonnen en controleer dat er in BC maar één order staat.",who:"tech"},
-          {t:"Laat één binnendienst-medewerker en één buitendienst-medewerker meedoen aan de test. Noteer bij elke stap waar ze aarzelen of vastlopen — dat zijn de risicopunten bij livegang.",who:"mgmt"},
-          {t:"Maak een lijst van alle gevonden problemen. Zet per probleem: is dit blokkerend (de flow werkt niet zonder fix) of niet-blokkerend (vervelend maar werkbaar). Blokkerende problemen moeten opgelost zijn vóór de pilotfase.",who:"tech"},
-          {t:"Laat de technische partij alle blokkerende problemen oplossen en test daarna opnieuw totdat er geen blokkerende problemen meer zijn.",who:"tech"}
-        ],
-        dod:{tech:["Drie scenario's zonder blokkerende fouten doorlopen","Probleemlijst opgesteld, alle blokkerende problemen opgelost"],adoptie:["Medewerkers hebben meegedaan en bevindingen zijn gedocumenteerd"]}
-      },
-      {
-        id:"4-2",name:"Pilotfase: eerste echte deals via nieuwe flow",week:"Week 35 – 38",ws:34,wd:4,who:"adopt",
-        desc:"Selecteer bewust twee of drie eenvoudige, echte deals voor de pilot. Begeleid de medewerkers actief. Documenteer alles wat niet soepel loopt.",
-        why:"De stap van testdata naar productie is groot. Een gecontroleerde pilot geeft je de kans problemen te vinden en op te lossen zonder dat het alle 15+ medewerkers tegelijk raakt.",
-        actions:[
-          {t:"Selecteer twee of drie echte klantdeals voor de pilot. Kies bewust kleine, eenvoudige orders — niet de grootste of meest complexe klant.",who:"mgmt"},
-          {t:"Informeer de betrokken medewerkers vooraf: deze deal gaat als pilot via de nieuwe flow. We begeleiden jullie stap voor stap.",who:"mgmt"},
-          {t:"Begeleid de binnendienst-medewerker actief bij het aanmaken van de klant en deal in HubSpot. Laat hem of haar de stappen zelf uitvoeren terwijl jij meekijkt.",who:"mgmt"},
-          {t:"Begeleid de buitendienst-medewerker bij het aanmaken van de offerte in Elfsquad. Grijp alleen in als het echt vastloopt.",who:"mgmt"},
-          {t:"Controleer na elke stap of de data correct is doorgekomen: na HubSpot naar Elfsquad, na Elfsquad naar HubSpot, na Gewonnen naar BC.",who:"tech"},
-          {t:"Vraag de betrokken medewerkers na elke deal te reflecteren: wat ging goed, wat was onduidelijk, wat zou je anders willen?",who:"mgmt"},
-          {t:"Maak een lijst van alle bevindingen verdeeld in: blokkerend voor livegang, op te lossen ná livegang en wens voor de toekomst.",who:"mgmt"},
-          {t:"Zorg dat alle blokkerende bevindingen zijn opgelost voordat je livegaat.",who:"tech"}
-        ],
-        dod:{tech:["Minimaal drie echte deals verwerkt zonder blokkerende fouten"],adoptie:["Medewerkers hebben de pilot zelfstandig uitgevoerd met begeleiding","Bevindingen gedocumenteerd en besproken"]}
-      },
-      {
-        id:"4-3",name:"Livegang en de eerste weken daarna",week:"Week 39 – 40",ws:38,wd:2,who:"mgmt",
-        desc:"Vanaf de livegang gaan alle nieuwe deals via de nieuwe werkwijze. Zorg voor een zachte landing: duidelijke communicatie, een aanspreekpunt en een plan voor als er iets mis gaat.",
-        why:"De livegang is geen eindpunt — het is het begin van de nieuwe werkwijze. De eerste twee weken zijn cruciaal voor het vertrouwen van het team.",
-        actions:[
-          {t:"Communiceer de exacte livegangdatum minimaal één week van tevoren aan het hele team via een bericht in jullie communicatiekanaal.",who:"mgmt"},
-          {t:"Stuur op de ochtend van de livegang een bericht via jullie interne communicatiekanaal: vanaf vandaag verwerken we alle nieuwe deals via de nieuwe werkwijze in HubSpot en Elfsquad. Business Central ontvangt alleen nog orders bij een gewonnen deal. Vragen? Neem contact op met de projectverantwoordelijke. De overzichtskaarten liggen op jullie werkplek en staan ook in de gezamenlijke map.",who:"mgmt"},
-          {t:"Zorg dat alle medewerkers op dag één hun overzichtskaart en werkinstructie bij de hand hebben, zowel digitaal als op papier.",who:"mgmt"},
-          {t:"Laat de technische partij een waarschuwingssysteem inrichten: zodra een API-koppeling mislukt, ontvangt de projectverantwoordelijke automatisch een melding via e-mail of een ander kanaal.",who:"tech"},
-          {t:"Archiveer of sluit alle openstaande offertes in BC die via de oude werkwijze zijn aangemaakt, zodat BC vanaf nu alleen echte orders bevat.",who:"tech"},
-          {t:"Schrijf een terugvalplan van één pagina: wat doen we als de koppeling uitvalt? Wie belt de technische partij, wat doen medewerkers in de tussentijd, hoe worden orders tijdelijk handmatig verwerkt?",who:"mgmt"},
-          {t:"Plan de eerste week na livegang elke ochtend een check-in van tien minuten: hoe ging het gisteren, zijn er problemen?",who:"mgmt"},
-          {t:"Wijs één intern aanspreekpunt aan voor de eerste vier weken na livegang. Deze persoon pakt spoedvragen op binnen één werkdag.",who:"mgmt"},
-          {t:"Plan na twee weken livegang een evaluatiesessie van één uur met het hele team: wat werkt goed, wat kan beter, wat moet aangepast?",who:"mgmt"},
-          {t:"Verwerk de actiepunten uit de evaluatie in een korte lijst met naam van de verantwoordelijke en een deadline per punt.",who:"mgmt"}
-        ],
-        dod:{tech:["Waarschuwingssysteem actief","Terugvalplan op papier aanwezig"],adoptie:["Alle medewerkers werken via de nieuwe flow","Evaluatiesessie na twee weken gehouden","Actiepunten ingepland met verantwoordelijke en deadline"]}
-      }
-    ]
-  }
-];
-
-let view={page:'overview',phaseId:null,taskId:null};
-let checks=JSON.parse(localStorage.getItem('stt_checks')||'{}');
-function save(){localStorage.setItem('stt_checks',JSON.stringify(checks))}
-
-function wtag(w){
-  if(w==='tech') return {l:'Techniek',c:'wt'};
-  if(w==='adopt') return {l:'Adoptie',c:'wa'};
-  return {l:'Management',c:'wm'};
+// -- DATA --------------------------------------------------
+// type: 'manual' | 'auto' | 'decision'
+// lane: 'hs' | 'es' | 'bc'
+var SC = {
+offline:{
+label:'Offline deal',
+steps:[
+{id:'o1',lane:'hs',type:'manual',
+label:'Klant + deal aanmaken',sub:'Binnendienst',
+sys:'HubSpot',
+title:'Klant en deal aanmaken in HubSpot',
+typeNote:'Handmatige actie - binnendienst',
+desc:'De binnendienst ontvangt een aanvraag van Easy Noise Control (bijv. telefonisch of per mail). Ze maakt direct een nieuw bedrijf en deal aan in HubSpot met alle benodigde gegevens.',
+items:['Bedrijfsnaam: Easy Noise Control','Factuuradres + BTW-nummer invullen','Taal: NL &middot; Valuta: EUR','Contactpersoon: Jan de Vries koppelen','Deal: "4 plafondeilanden" aanmaken']},
+{id:'o2',lane:'hs',type:'decision',
+label:'Status: Offerte aangevraagd',sub:'Trigger naar Elfsquad',
+sys:'HubSpot',
+title:'Status instellen: Offerte aangevraagd',
+typeNote:'Beslismoment - sales zet status',
+desc:'Sales zet de dealstatus op "Offerte aangevraagd". Dit is het offici&euml;le startpunt van de offerteflow. HubSpot valideert of alle verplichte velden zijn ingevuld voordat de trigger afgaat.',
+items:['Alle verplichte velden gecontroleerd','Status gezet op "Offerte aangevraagd"','Klantdata automatisch klaargemaakt voor Elfsquad','Trigger geactiveerd - koppeling start']},
+{id:'o3',lane:'hs',type:'auto',
+label:'Klantdata -&gt; Elfsquad',sub:'Automatische koppeling',
+sys:'HubSpot -&gt; Elfsquad',
+title:'Klantdata automatisch naar Elfsquad',
+typeNote:'Automatisch - koppeling HubSpot -&gt; Elfsquad',
+desc:'HubSpot stuurt automatisch alle klant- en dealgegevens door naar Elfsquad. Geen handmatig overtypen - de koppeling doet het werk in seconden.',
+items:['Bedrijfsnaam, adres, BTW naar Elfsquad','Taal en valuta correct meegestuurd','Deal-ID als unieke referentie meegestuurd','Contactpersoon (naam + e-mail) meegestuurd','Elfsquad klaar voor offerte opmaak']},
+{id:'o4',lane:'es',type:'manual',
+label:'Offerte opmaken',sub:'4 plafondeilanden + opties',
+sys:'Elfsquad',
+title:'Offerte opmaken in Elfsquad',
+typeNote:'Handmatige actie - sales of binnendienst',
+desc:'In Elfsquad worden de producten geconfigureerd: 4 plafondeilanden geselecteerd, afmetingen en opties ingesteld. De prijs wordt automatisch berekend. Montage kan hier worden aan- of uitgevinkt.',
+items:['4x Plafondeiland XL geconfigureerd','Afmetingen en akoestische opties geselecteerd','Prijs automatisch berekend: &euro;8.400 excl. BTW','Montage: ja of nee selecteren','PDF automatisch gegenereerd']},
+{id:'o5',lane:'es',type:'auto',
+label:'PDF + bedrag -&gt; HubSpot',sub:'Automatische terugkoppeling',
+sys:'Elfsquad -&gt; HubSpot',
+title:'Offerte terugkoppeling naar HubSpot',
+typeNote:'Automatisch - koppeling Elfsquad -&gt; HubSpot',
+desc:'Zodra de offerte klaar is stuurt Elfsquad automatisch het offerte-ID, het totaalbedrag en de PDF terug naar het deal-record in HubSpot. Sales hoeft niets handmatig over te nemen.',
+items:['Offerte-ID teruggestuurd naar HubSpot','Totaalbedrag &euro;8.400 in deal bijgewerkt','PDF automatisch als bijlage in HubSpot','Dealstatus bijgewerkt','Sales kan offerte nu direct versturen']},
+{id:'o6',lane:'hs',type:'manual',
+label:'Offerte versturen',sub:'Status: Offerte verzonden',
+sys:'HubSpot',
+title:'Offerte versturen naar de klant',
+typeNote:'Handmatige actie - sales',
+desc:'Sales verstuurt de offerte vanuit HubSpot via e-mail naar Easy Noise Control. De PDF zit automatisch als bijlage. De status wordt bijgewerkt naar "Offerte verzonden" - Elfsquad synct automatisch mee.',
+items:['E-mail verstuurd naar jan@enc.nl','PDF automatisch als bijlage','Status: "Offerte verzonden"','Elfsquad status synct automatisch mee','Klant ontvangt professionele offerte']},
+{id:'o7',lane:'hs',type:'decision',
+label:'Klant akkoord?',sub:'Status: Geaccepteerd / Gewonnen',
+sys:'HubSpot',
+title:'Beslismoment: klant akkoord?',
+typeNote:'Beslismoment - sales zet uitkomst',
+desc:'Sales ontvangt de reactie van de klant. Bij akkoord zet sales de status op "Geaccepteerd / Gewonnen". Dit is de trigger voor de automatische push naar Business Central. Bij afwijzing gaat de deal op "Verloren".',
+items:['Klant reageert per mail of telefoon','Akkoord: status -&gt; "Geaccepteerd / Gewonnen"','Verloren: status -&gt; "Verloren" (geen push naar BC)','Alle verplichte velden worden gecontroleerd','Bij Gewonnen: automatische push naar BC start']},
+{id:'o8',lane:'hs',type:'auto',
+label:'Order -&gt; Business Central',sub:'Automatische push bij Gewonnen',
+sys:'HubSpot -&gt; BC',
+title:'Order automatisch naar Business Central',
+typeNote:'Automatisch - koppeling HubSpot -&gt; BC',
+desc:'Bij de status "Gewonnen" stuurt HubSpot automatisch de orderdata naar Business Central. BC controleert of de klant al bestaat en maakt de order aan. Het ordernummer komt automatisch terug in HubSpot.',
+items:['Klantgegevens + orderdata naar BC gestuurd','BC herkent bestaande klant op klant-ID','Order aangemaakt in BC: #24-003812','Orderregels: 4 plafondeilanden, prijs, BTW','BC-ordernummer teruggestuurd naar HubSpot']},
+{id:'o9',lane:'bc',type:'manual',
+label:'Werkvoorbereider pakt over',sub:'Voorraad &middot; planning &middot; levering',
+sys:'Business Central',
+title:'Werkvoorbereider handelt de order af',
+typeNote:'Handmatige actie - werkvoorbereider',
+desc:'De werkvoorbereider ontvangt de order in BC. Voorraad wordt gecheckt, eventueel besteld. Levering of montage wordt gepland. Alle statuswijzigingen in BC syncen automatisch terug naar HubSpot en Elfsquad.',
+items:['Order ontvangen en klantdata gecontroleerd','Voorraad 4 plafondeilanden: beschikbaar','Leveringsdatum gepland','Status "In productie" gezet in BC','Status synct automatisch naar HubSpot + Elfsquad']},
+]
+},
+online:{
+label:'Online deal (website)',
+steps:[
+{id:'w1',lane:'es',type:'manual',
+label:'Klant configureert op website',sub:'Elfsquad configurator',
+sys:'Website / Elfsquad',
+title:'Klant configureert product via de website',
+typeNote:'Handmatige actie - klant zelf',
+desc:'Easy Noise Control bezoekt de website en configureert zelf de gewenste plafondeilanden via de Elfsquad-configurator. Na de configuratie vult de klant naam en e-mailadres in om een offerte aan te vragen.',
+items:['Klant opent configurator op website','4 plafondeilanden geconfigureerd','Naam en e-mailadres ingevuld','Offerte aangevraagd via de website','Configuratie opgeslagen in Elfsquad']},
+{id:'w2',lane:'hs',type:'auto',
+label:'Deal auto-aangemaakt in HubSpot',sub:'Lead direct zichtbaar voor sales',
+sys:'HubSpot',
+title:'Deal automatisch aangemaakt in HubSpot',
+typeNote:'Automatisch - koppeling website -&gt; HubSpot',
+desc:'Zodra de klant de aanvraag via de website verstuurt, wordt automatisch een nieuwe deal aangemaakt in HubSpot. Sales ziet de lead direct in hun dashboard - geen handmatig aanmaken nodig.',
+items:['Deal automatisch aangemaakt in HubSpot','Klantgegevens vanuit website overgenomen','Status: "Offerte aangevraagd" automatisch gezet','Offerte al klaargemaakt in Elfsquad','Lead direct zichtbaar voor sales']},
+{id:'w3',lane:'hs',type:'manual',
+label:'Sales controleert & verstuurt',sub:'Offerte versturen vanuit HubSpot',
+sys:'HubSpot',
+title:'Sales controleert en verstuurt de offerte',
+typeNote:'Handmatige actie - sales',
+desc:'Sales opent de deal in HubSpot, controleert de automatisch aangemaakte offerte en verstuurt die naar de klant. De PDF van Elfsquad zit al als bijlage. Eventuele aanpassingen kunnen in Elfsquad worden doorgevoerd.',
+items:['Offerte gecontroleerd door sales','Eventuele aanpassingen in Elfsquad doorgevoerd','PDF automatisch als bijlage beschikbaar','Offerte verstuurd vanuit HubSpot','Status: "Offerte verzonden"']},
+{id:'w4',lane:'hs',type:'decision',
+label:'Klant akkoord?',sub:'Gewonnen of Verloren',
+sys:'HubSpot',
+title:'Beslismoment: klant akkoord?',
+typeNote:'Beslismoment - sales zet uitkomst',
+desc:'Klant reageert op de offerte. Bij akkoord zet sales de status op "Gewonnen" - de order gaat automatisch naar BC. Exact dezelfde flow als een offline deal.',
+items:['Akkoord: status -&gt; "Gewonnen"','Verloren: status -&gt; "Verloren"','Bij Gewonnen: automatische push naar BC','Order aangemaakt in BC','Werkvoorbereider pakt over']},
+{id:'w5',lane:'bc',type:'manual',
+label:'Afhandeling in BC',sub:'Zelfde flow als offline',
+sys:'Business Central',
+title:'Afhandeling in Business Central',
+typeNote:'Handmatige actie - werkvoorbereider',
+desc:'Werkvoorbereider handelt de order af in BC: voorraad, planning, levering of montage. Alle statuswijzigingen syncen automatisch terug naar HubSpot en Elfsquad. Identiek aan de offline flow.',
+items:['Order ontvangen in BC','Voorraad en planning geregeld','Status bijgehouden in BC','Alle statussen syncen naar HubSpot','Klant ontvangt automatische communicatie']},
+]
+},
+montage:{
+label:'Met montage',
+steps:[
+{id:'m1',lane:'hs',type:'manual',
+label:'Deal aanmaken + offerte aanvragen',sub:'HubSpot start de flow',
+sys:'HubSpot',
+title:'Deal aanmaken en offerte aanvragen',
+typeNote:'Handmatige actie - binnendienst',
+desc:'Zelfde start als een offline deal: binnendienst maakt klant + deal aan in HubSpot, zet status op "Offerte aangevraagd". Klantdata vliegt automatisch naar Elfsquad.',
+items:['Klant + deal aangemaakt in HubSpot','Alle velden ingevuld','Status: "Offerte aangevraagd"','Klantdata automatisch naar Elfsquad','Elfsquad klaar voor offerte']},
+{id:'m2',lane:'es',type:'manual',
+label:'Offerte + montage = JA',sub:'Montage geselecteerd in Elfsquad',
+sys:'Elfsquad',
+title:'Offerte opmaken - montage geselecteerd',
+typeNote:'Handmatige actie - sales of binnendienst',
+desc:'In Elfsquad worden de producten geconfigureerd. Montage wordt bewust geselecteerd als extra optie. Dit "montage-vlag" reist mee door de hele keten en triggert later de automatische klantmails.',
+items:['4 plafondeilanden geconfigureerd','Montage = JA bewust geselecteerd','Montagekosten toegevoegd aan prijs','Montage-vlag wordt meegestuurd naar HubSpot','PDF inclusief montage-omschrijving gegenereerd']},
+{id:'m3',lane:'es',type:'auto',
+label:'PDF + montage-vlag -&gt; HubSpot',sub:'Terugkoppeling met montage-indicator',
+sys:'Elfsquad -&gt; HubSpot',
+title:'Terugkoppeling inclusief montage-vlag',
+typeNote:'Automatisch - koppeling Elfsquad -&gt; HubSpot',
+desc:'Elfsquad stuurt de PDF, het bedrag &eacute;n de montage-indicator terug naar HubSpot. HubSpot registreert dat er montage bij zit en zal later - bij het ontvangen van de montagedatum - automatisch de klantmails sturen.',
+items:['Offerte-ID en bedrag teruggestuurd','PDF als bijlage in HubSpot','Montage-veld in HubSpot: JA','HubSpot klaar om klantmails te triggeren','Sales kan offerte versturen']},
+{id:'m4',lane:'hs',type:'decision',
+label:'Klant akkoord -&gt; Gewonnen',sub:'Order + montage naar BC',
+sys:'HubSpot',
+title:'Klant akkoord - order naar BC',
+typeNote:'Beslismoment + automatische trigger',
+desc:'Sales zet de status op "Gewonnen". De order wordt automatisch naar BC gestuurd, inclusief de montage-indicator. BC weet daarmee dat er een montagedatum ingepland moet worden.',
+items:['Status: "Geaccepteerd / Gewonnen"','Order + montage-indicator naar BC gestuurd','BC maakt klant en order aan','Ordernummer teruggestuurd naar HubSpot','Werkvoorbereider ziet montage-indicatie in BC']},
+{id:'m5',lane:'bc',type:'manual',
+label:'Werkvoorbereider plant montage',sub:'Montagedatum invoeren in BC',
+sys:'Business Central',
+title:'Werkvoorbereider plant de montagedatum',
+typeNote:'Handmatige actie - werkvoorbereider',
+desc:'De werkvoorbereider ziet de order in BC met de montage-indicatie. Hij/zij plant de montage en voert de datum in BC in. Dit is de enige handmatige stap die de rest automatisch in gang zet.',
+items:['Order ontvangen met montage-indicatie','Voorraad gecheckt en montage ingepland','Montagedatum ingevoerd: bijv. 15 januari','Montageteam bevestigd','BC stuurt datum automatisch door naar HubSpot']},
+{id:'m6',lane:'bc',type:'auto',
+label:'Montagedatum -&gt; HubSpot',sub:'BC synct datum terug',
+sys:'BC -&gt; HubSpot',
+title:'Montagedatum automatisch naar HubSpot',
+typeNote:'Automatisch - koppeling BC -&gt; HubSpot',
+desc:'BC stuurt de montagedatum automatisch naar HubSpot via de bestaande koppeling. HubSpot ontvangt de datum en triggert direct de planning van twee automatische e-mails.',
+items:['Montagedatum 15 januari ontvangen van BC','HubSpot workflow getriggerd','Mail 1 ingepland: 8 jan (1 week van tevoren)','Mail 2 ingepland: 14 jan (1 dag van tevoren)','Niemand hoeft iets handmatig te doen']},
+{id:'m7',lane:'hs',type:'auto',
+label:'Automatische mails naar klant',sub:'1 week + 1 dag van tevoren',
+sys:'HubSpot',
+title:'Automatische klantcommunicatie verstuurd',
+typeNote:'Automatisch - HubSpot workflow',
+desc:'HubSpot verstuurt automatisch twee herinneringsmails naar de klant op het juiste moment. Geen handmatig werk nodig - alleen de montagedatum in BC invoeren was voldoende om dit te triggeren.',
+items:['Mail 1 (8 jan): montagedatum + voorbereidingsinstructies','Mail 2 (14 jan): herinnering een dag van tevoren','Inhoud: tijdstip, toegang regelen, wat klant moet doen','Na montage: status "Geleverd" triggert leveringsbevestiging','Volledige communicatie geautomatiseerd']},
+]
 }
-
-function renderSB(){
-  const sb=document.getElementById('sidebar');
-  let h='';
-  PH.forEach((ph,pi)=>{
-    const on=view.phaseId===pi;
-    h+="<div class=\"sb-sec\"><button class=\"sb-btn"+(on?' on':'')+"\" onclick=\"go({page:'phase',phaseId:"+(pi)+"})\">\n      <div class=\"sb-dot\" style=\"background:"+(ph.color)+"\"></div>\n      <div><div class=\"sb-name\">"+(ph.name)+"</div><div class=\"sb-wk\">"+(ph.weeks)+"</div></div>\n    </button>";
-    if(on){
-      h+="<div class=\"sb-tasks\">";
-      ph.tasks.forEach(t=>{h+="<button class=\"sb-task"+(view.taskId===t.id?' on':'')+"\" onclick=\"go({page:'task',phaseId:"+(pi)+",taskId:'"+(t.id)+"'})\">"+(t.name)+"</button>";});
-      h+="</div>";
-    }
-    h+="</div>";
-  });
-  h+="<div class=\"sb-div\"></div><div class=\"sb-prog\"><div class=\"sb-plbl\">Voortgang acties</div>";
-  PH.forEach((ph,pi)=>{
-    let tot=0,done=0;
-    ph.tasks.forEach(t=>t.actions.forEach((_,ai)=>{tot++;if(checks[(t.id)+"-"+(ai)])done++;}));
-    const p=tot?Math.round(done/tot*100):0;
-    h+="<div class=\"sb-pr\"><div style=\"font-size:14px;min-width:16px\">"+(ph.emoji)+"</div><div class=\"sb-pt\"><div class=\"sb-pf\" style=\"width:"+(p)+"%;background:"+(ph.color)+"\"></div></div><div class=\"sb-pp\">"+(p)+"%</div></div>";
-  });
-  h+="</div>";
-  sb.innerHTML=h;
+};
+// -- STATE --
+var curSc = 'offline';
+var curStep = null;
+// -- RENDER CHART --
+function renderChart(){
+var sc = SC[curSc];
+var n = sc.steps.length;
+// Group steps by lane
+var byLane = {hs:[],es:[],bc:[]};
+sc.steps.forEach(function(s){ byLane[s.lane].push(s); });
+// Build a grid: each step occupies a row, placed in its lane column
+// rows = steps in order; each row has at most one node
+var html = '<table class="slt" id="slt"><thead class="slt-head"><tr>'
++ '<th class="th-hs"><span class="th-icon" style="background:#1A56DB">HS</span>HubSpot</th>'
++ '<th class="th-es"><span class="th-icon" style="background:#0B7B5A">ES</span>Elfsquad</th>'
++ '<th class="th-bc"><span class="th-icon" style="background:#B45309">BC</span>Business Central</th>'
++ '</tr></thead><tbody>';
+sc.steps.forEach(function(step, i){
+// Main row
+html += '<tr id="row-'+i+'">';
+['hs','es','bc'].forEach(function(lane){
+html += '<td class="lane-'+lane+'">';
+if(step.lane === lane){
+html += nodeHtml(step);
+} else {
+html += '<div class="lane-empty"><div class="lane-dot-line"></div></div>';
 }
-
-function BCS(items){
-  return "<div class=\"bc\">"+(items.map((it,i)=>{
-    if(i===items.length-1) return '<span class="bcc">'+it.l+'</span>';
-    return '<span class="bcl" onclick="'+it.n+'">'+it.l+'</span><span class="bcs">›</span>';
-  }).join(''))+"</div>";
+html += '</td>';
+});
+html += '</tr>';
+// Connector row (between steps)
+if(i < n-1){
+var next = sc.steps[i+1];
+html += '<tr class="sep-row" id="conn-'+i+'"><td class="lane-hs conn-cell" id="cc-hs-'+i+'"></td><td class="lane-es conn-cell" id="cc-es-'+i+'"></td><td class="lane-bc conn-cell" id="cc-bc-'+i+'"></td></tr>';
 }
-
-function renderOV(){
-  let tot=0,done=0;
-  PH.forEach(ph=>ph.tasks.forEach(t=>t.actions.forEach((_,ai)=>{tot++;if(checks[(t.id)+"-"+(ai)])done++;})));
-  let h=BCS([{l:'Overzicht'}]);
-  h+="<div class=\"ov-h\"><h1>Implementatieplanning — Systeem Transitie</h1>\n    <p>Van versnipperde processen naar één gestroomlijnde flow. Alle acties zijn concreet en direct uitvoerbaar — geen verwijzingen naar interne documenten.</p></div>";
-  h+="<div class=\"stats\">\n    <div class=\"sc\"><div class=\"n\">4</div><div class=\"l\">Fasen</div></div>\n    <div class=\"sc\"><div class=\"n\">24</div><div class=\"l\">Weken totaal</div></div>\n    <div class=\"sc\"><div class=\"n\">"+(tot)+"</div><div class=\"l\">Concrete acties</div></div>\n    <div class=\"sc\"><div class=\"n\">"+(done)+"/"+(tot)+"</div><div class=\"l\">Afgerond</div></div>\n  </div>";
-  h+="<div class=\"alert\"><div class=\"ai\">⚠️</div><div class=\"at\"><strong>Start hier:</strong> De meest urgente actie is het selecteren van een technische partij voor de HubSpot-koppelingen. Zonder een bevestigde partij kan de bouw niet beginnen en schuift de deadline van 6 maanden op.</div></div>";
-
-  h+="<div class=\"gantt-card\"><h2>Tijdlijn — 40 weken</h2><div class=\"gi\">";
-  h+="<div class=\"gwh\"><div></div><div class=\"gws\">";
-  for(let w=1;w<=W;w++) h+="<div class=\"gwl\">W"+(w)+"</div>";
-  h+="</div></div>";
-  PH.forEach((ph,pi)=>{
-    h+="<div class=\"gr\"><div class=\"gl\" style=\"color:"+(ph.color)+";font-weight:500\">"+(ph.emoji)+" "+(ph.weeks)+"</div><div class=\"gt\"><div class=\"gb\" style=\"left:"+(ph.ws/W*100)+"%;width:"+(ph.wd/W*100)+"%;background:"+(ph.color)+"\" onclick=\"go({page:'phase',phaseId:"+(pi)+"})\">F"+(pi+1)+"</div></div></div>";
-    ph.tasks.forEach(t=>{
-      h+="<div class=\"gr\"><div class=\"gl\">"+(t.name)+"</div><div class=\"gt\"><div class=\"gb\" style=\"left:"+(t.ws/W*100)+"%;width:"+(t.wd/W*100)+"%;background:"+(ph.color)+";opacity:.7\" onclick=\"go({page:'task',phaseId:"+(pi)+",taskId:'"+(t.id)+"'})\">"+(t.wd>=2?t.name:'')+"</div></div></div>";
-    });
-  });
-  h+="</div></div>";
-
-  h+="<div class=\"pg\">";
-  PH.forEach((ph,pi)=>{
-    let tot=0,done=0;
-    ph.tasks.forEach(t=>t.actions.forEach((_,ai)=>{tot++;if(checks[(t.id)+"-"+(ai)])done++;}));
-    h+="<div class=\"pc\" onclick=\"go({page:'phase',phaseId:"+(pi)+"})\">\n      <div class=\"pch\"><div class=\"pci\" style=\"background:"+(ph.bg)+"\">"+(ph.emoji)+"</div>\n        <div><div class=\"pcn\" style=\"color:"+(ph.color)+"\">"+(ph.name)+"</div><div class=\"pcp\">"+(ph.weeks)+" · "+(ph.tasks.length)+" taken · "+(done)+"/"+(tot)+" acties</div></div></div>\n      <div class=\"pcb\"><ul class=\"pct\">"+(ph.tasks.slice(0,4).map(t=>'<li>'+t.name+'</li>').join(''))+(ph.tasks.length>4?'<li style="color:var(--g400)">+ '+(ph.tasks.length-4)+' meer...</li>':'')+"</ul></div>\n      <div class=\"pca\">Bekijk fase →</div></div>";
-  });
-  h+="</div>";
-  document.getElementById('main').innerHTML=h;
+});
+html += '</tbody></table>';
+document.getElementById('fc-root').innerHTML = html;
+// Draw connectors after DOM is ready
+setTimeout(function(){ drawConnectors(sc); }, 60);
 }
-
-function renderPH(pi){
-  const ph=PH[pi];
-  let h=BCS([{l:'Overzicht',n:"go({page:'overview'})"},{l:ph.name}]);
-  h+="<div class=\"phh\" style=\"background:"+(ph.bg)+"\"><div class=\"phi\">"+(ph.emoji)+"</div>\n    <div><h1 style=\"color:"+(ph.color)+"\">"+(ph.name)+"</h1><p style=\"color:"+(ph.color)+"\">"+(ph.intro)+"</p>\n    <div class=\"phpills\"><span class=\"pill\" style=\"color:"+(ph.color)+"\">"+(ph.weeks)+"</span><span class=\"pill\" style=\"color:"+(ph.color)+"\">"+(ph.tasks.length)+" taken</span></div></div></div>";
-  h+="<div class=\"dod\"><h2>✅ Fase "+(pi+1)+" is klaar als...</h2><div class=\"dodg\">\n    <div class=\"dodc\"><h3 style=\"color:#0B7B5A\">Technisch</h3><ul>"+(ph.dod.tech.map(i=>'<li>'+i+'</li>').join(''))+"</ul></div>\n    <div class=\"dodc\"><h3 style=\"color:#B45309\">Teamadoptie</h3><ul>"+(ph.dod.adoptie.map(i=>'<li>'+i+'</li>').join(''))+"</ul></div>\n  </div></div>";
-  h+="<div class=\"ts\"><h2>Taken in deze fase</h2>";
-  ph.tasks.forEach((t,ti)=>{
-    let tot=t.actions.length,done=t.actions.filter((_,ai)=>checks[(t.id)+"-"+(ai)]).length;
-    const pct=tot?Math.round(done/tot*100):0;
-    const wl=wtag(t.who);
-    h+="<div class=\"tc\"><div class=\"tch\" onclick=\"go({page:'task',phaseId:"+(pi)+",taskId:'"+(t.id)+"'})\">\n      <div class=\"tcl\"><div class=\"tnum\" style=\"background:"+(ph.bg)+";color:"+(ph.color)+"\">"+(ti+1)+"</div>\n        <div><div class=\"tname\">"+(t.name)+"</div>\n          <div class=\"tmeta\"><span class=\"twk\">"+(t.week)+"</span><span class=\"wtag "+(wl.c)+"\">"+(wl.l)+"</span><span style=\"font-size:11px;color:var(--g400)\">"+(done)+"/"+(tot)+"</span></div></div></div>\n      <div class=\"tcr\"><div class=\"tpw\"><div class=\"tpf\" style=\"width:"+(pct)+"%;background:"+(ph.color)+"\"></div></div>\n        <div style=\"font-size:11px;font-weight:500;color:"+(ph.color)+";min-width:28px;text-align:right\">"+(pct)+"%</div>\n        <div style=\"font-size:12px;color:var(--blue);font-weight:500;white-space:nowrap\">Bekijk →</div></div></div></div>";
-  });
-  h+="</div>";
-  document.getElementById('main').innerHTML=h;
+function nodeHtml(step){
+var typeCls = step.type === 'auto' ? 'fn-auto' : step.type === 'decision' ? 'fn-decision' : 'fn-manual';
+var nodeScCls = 'fc-node-'+step.lane;
+var typeIcon = step.type === 'auto' ? '<span class="ni-auto"></span>Automatisch' : step.type === 'decision' ? '<span class="ni-decision"></span>Beslissing' : '<span class="ni-manual"></span>Handmatig';
+var isDimmed = curStep && curStep !== step.id ? ' dimmed' : '';
+var isActive = curStep === step.id ? ' active' : '';
+return '<button class="fc-node '+typeCls+' '+nodeScCls+isActive+isDimmed+'" id="node-'+step.id+'" onclick="selectStep(\''+step.id+'\')">'
++ '<div class="fn-type-badge">'+typeIcon+'</div>'
++ '<div class="fn-label">'+step.label+'</div>'
++ '<div class="fn-sub">'+step.sub+'</div>'
++ '</button>';
 }
-
-function renderTask(pi,tid){
-  const ph=PH[pi];
-  const t=ph.tasks.find(x=>x.id===tid);
-  const idx=ph.tasks.indexOf(t);
-  const wl=wtag(t.who);
-  let h=BCS([{l:'Overzicht',n:"go({page:'overview'})"},{l:ph.name,n:"go({page:'phase',phaseId:"+(pi)+"})"},{l:t.name}]);
-  h+="<div class=\"tdh\">\n    <div style=\"display:flex;align-items:center;gap:10px;margin-bottom:8px\">\n      <div class=\"tnum\" style=\"background:"+(ph.bg)+";color:"+(ph.color)+";width:32px;height:32px;border-radius:8px;font-size:13px\">"+(idx+1)+"</div>\n      <h1>"+(t.name)+"</h1></div>\n    <div class=\"tdm\"><span class=\"wtag "+(wl.c)+"\">"+(wl.l)+"</span><span class=\"twk\">"+(t.week)+"</span><span style=\"font-size:12px;color:var(--g400)\">"+(t.actions.length)+" acties</span></div>\n    <p class=\"tdd\">"+(t.desc)+"</p>\n    <div class=\"tdw\"><p><strong>Waarom nu?</strong> "+(t.why)+"</p></div></div>";
-
-  const tot=t.actions.length,done=t.actions.filter((_,ai)=>checks[(t.id)+"-"+(ai)]).length;
-  const pct=tot?Math.round(done/tot*100):0;
-  h+="<div class=\"abox\"><h2>📋 Concrete acties — "+(done)+" van "+(tot)+" afgerond ("+(pct)+"%)</h2>";
-  t.actions.forEach((a,ai)=>{
-    const key=(t.id)+"-"+(ai);const isDone=!!checks[key];const awl=wtag(a.who);
-    h+="<div class=\"aitem\">\n      <div class=\"ach"+(isDone?' done':'')+"\" onclick=\"toggle('"+(key)+"')\"></div>\n      <div class=\"atxt"+(isDone?' done':'')+"\">"+(a.t)+"</div>\n      <span class=\"atag "+(awl.c)+"\">"+(awl.l)+"</span></div>";
-  });
-  h+="</div>";
-
-  h+="<div class=\"dod\"><h2>✅ Deze taak is klaar als...</h2><div class=\"dodg\">\n    <div class=\"dodc\"><h3 style=\"color:#0B7B5A\">Technisch</h3><ul>"+(t.dod.tech.length?t.dod.tech.map(i=>'<li>'+i+'</li>').join(''):'<li style="color:var(--g400)">Niet van toepassing</li>')+"</ul></div>\n    <div class=\"dodc\"><h3 style=\"color:#B45309\">Adoptie</h3><ul>"+(t.dod.adoptie.length?t.dod.adoptie.map(i=>'<li>'+i+'</li>').join(''):'<li style="color:var(--g400)">Niet van toepassing</li>')+"</ul></div>\n  </div></div>";
-
-  h+="<div class=\"nav2\">";
-  if(idx>0){const p=ph.tasks[idx-1];h+="<button class=\"nbtn\" onclick=\"go({page:'task',phaseId:"+(pi)+",taskId:'"+(p.id)+"'})\">← "+(p.name)+"</button>";}
-  else h+="<button class=\"nbtn\" onclick=\"go({page:'phase',phaseId:"+(pi)+"})\">← Terug naar fase</button>";
-  if(idx<ph.tasks.length-1){const n=ph.tasks[idx+1];h+="<button class=\"nbtn nx\" onclick=\"go({page:'task',phaseId:"+(pi)+",taskId:'"+(n.id)+"'})\">Volgende: "+(n.name)+" →</button>";}
-  h+="</div>";
-  document.getElementById('main').innerHTML=h;
+// -- DRAW SVG CONNECTORS --
+function drawConnectors(sc){
+var LANES = ['hs','es','bc'];
+for(var i=0; i < sc.steps.length-1; i++){
+var curr = sc.steps[i];
+var next = sc.steps[i+1];
+// Fill each connector cell
+LANES.forEach(function(lane){
+var cell = document.getElementById('cc-'+lane+'-'+i);
+if(!cell) return;
+if(curr.lane === lane && next.lane === lane){
+// Straight down connector in same lane
+cell.innerHTML = '<svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">'
++ '<defs><marker id="arr'+lane+i+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></marker></defs>'
++ '<line x1="50" y1="0" x2="50" y2="24" stroke="#CBD5E1" stroke-width="2" marker-end="url(#arr'+lane+i+')"/>'
++ '</svg>';
+} else if(curr.lane === lane){
+// Line goes out of this lane to another lane
+var toRight = laneOrder(next.lane) > laneOrder(curr.lane);
+cell.innerHTML = '<svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">'
++ '<line x1="50" y1="0" x2="50" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"/>'
++ '<line x1="50" y1="12" x2="'+(toRight?'110':'-10')+'" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"/>'
++ '</svg>';
+} else if(next.lane === lane){
+// Line enters from another lane
+var fromLeft = laneOrder(curr.lane) < laneOrder(next.lane);
+var arrid = 'arr2'+lane+i;
+cell.innerHTML = '<svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none" overflow="visible">'
++ '<defs><marker id="'+arrid+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></marker></defs>'
++ '<line x1="'+(fromLeft?'-10':'110')+'" y1="12" x2="50" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#'+arrid+')"/>'
++ '<line x1="50" y1="12" x2="50" y2="24" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"/>'
++ '</svg>';
+} else {
+// Pass-through lane
+cell.innerHTML = '<svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">'
++ '<line x1="0" y1="12" x2="100" y2="12" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="3,4"/>'
++ '</svg>';
 }
-
-function toggle(key){checks[key]=!checks[key];save();render()}
-function go(v){view={page:'overview',phaseId:null,taskId:null,...v};render();window.scrollTo(0,0)}
-function render(){
-  renderSB();
-  if(view.page==='overview') renderOV();
-  else if(view.page==='phase') renderPH(view.phaseId);
-  else if(view.page==='task') renderTask(view.phaseId,view.taskId);
+});
 }
-render();
+}
+function laneOrder(l){ return {hs:0,es:1,bc:2}[l]; }
+// -- SELECT STEP --
+function selectStep(id){
+curStep = id;
+// Update node classes
+var sc = SC[curSc];
+sc.steps.forEach(function(s){
+var el = document.getElementById('node-'+s.id);
+if(!el) return;
+el.classList.remove('active','dimmed');
+if(s.id === id) el.classList.add('active');
+else el.classList.add('dimmed');
+});
+renderDetail();
+renderPills();
+}
+// -- RENDER DETAIL --
+function renderDetail(){
+var sc = SC[curSc];
+var step = sc.steps.find(function(s){return s.id===curStep;});
+if(!step) return;
+var idx = sc.steps.indexOf(step);
+var total = sc.steps.length;
+var pct = Math.round((idx+1)/total*100);
+var sysColors = {hs:'#1A56DB',es:'#0B7B5A',bc:'#B45309'};
+var col = sysColors[step.lane] || '#6D28D9';
+var typeColors = {manual:'#334155',auto:'#6D28D9',decision:'#16A34A'};
+var typeBgs = {manual:'#F1F5F9',auto:'#EDE9FE',decision:'#DCFCE7'};
+var typeLabels = {manual:'Handmatig - menselijke actie vereist','auto':'Automatisch - systeem handelt af','decision':'Beslismoment - status wordt gezet'};
+var itemsHtml = step.items.map(function(it){
+return '<div class="dp-item"><span class="dp-item-icon">-&gt;</span>'+it+'</div>';
+}).join('');
+var html = '<div class="dp-top">'
++ '<div class="dp-scenario">'+sc.label+' &middot; Stap '+(idx+1)+' van '+total+'</div>'
++ '<div class="dp-title">'+step.title+'</div>'
++ '<div class="dp-sys-pill" style="background:'+col+'18;color:'+col+'">'+step.sys+'</div>'
++ '</div>'
++ '<div class="dp-progress">'
++ '<div class="dp-prog-label"><span>Voortgang</span><span>'+(idx+1)+' / '+total+'</span></div>'
++ '<div class="dp-prog-track"><div class="dp-prog-fill" style="width:'+pct+'%;background:'+col+'"></div></div>'
++ '</div>'
++ '<div class="dp-body">'
++ '<div class="dp-type-row" style="background:'+typeBgs[step.type]+';color:'+typeColors[step.type]+'">'+typeLabels[step.type]+'</div>'
++ '<div class="dp-sect"><div class="dp-sect-lbl">Wat er gebeurt</div><div class="dp-desc">'+step.desc+'</div></div>'
++ '<div class="dp-sect"><div class="dp-sect-lbl">Details</div><div class="dp-items">'+itemsHtml+'</div></div>'
++ '</div>'
++ '<div class="dp-nav">'
++ '<span class="dp-nav-count">'+(idx+1)+' / '+total+'</span>'
++ '<div class="dp-nav-btns">'
++ (idx>0?'<button class="dp-btn dp-btn-s" onclick="selectStep(\''+sc.steps[idx-1].id+'\')">&larr; Vorige</button>':'')
++ (idx<total-1?'<button class="dp-btn dp-btn-p" onclick="selectStep(\''+sc.steps[idx+1].id+'\')">Volgende -&gt;</button>':'<button class="dp-btn dp-btn-p" onclick="resetChart()">&#8634; Opnieuw</button>')
++ '</div></div>';
+var filled = document.getElementById('dp-filled');
+filled.innerHTML = html;
+filled.style.display = 'flex';
+filled.style.flexDirection = 'column';
+filled.style.flex = '1';
+filled.style.overflow = 'hidden';
+document.getElementById('dp-empty').style.display = 'none';
+}
+function renderPills(){
+var sc = SC[curSc];
+var html = sc.steps.map(function(s){
+return '<button class="dp-pill'+(curStep===s.id?' on':'')+'" onclick="selectStep(\''+s.id+'\')">'+s.label+'</button>';
+}).join('');
+document.getElementById('dp-pills').innerHTML = html;
+}
+function resetChart(){
+curStep = null;
+var sc = SC[curSc];
+sc.steps.forEach(function(s){
+var el = document.getElementById('node-'+s.id);
+if(el){el.classList.remove('active','dimmed');}
+});
+document.getElementById('dp-filled').style.display = 'none';
+document.getElementById('dp-empty').style.display = 'flex';
+renderPills();
+}
+function setScenario(key, btn){
+curSc = key;
+curStep = null;
+document.querySelectorAll('.sc-tab').forEach(function(t){t.classList.remove('on');});
+btn.classList.add('on');
+renderChart();
+document.getElementById('dp-filled').style.display = 'none';
+document.getElementById('dp-empty').style.display = 'flex';
+renderPills();
+}
+// -- INIT --
+renderChart();
+renderPills();
+window.addEventListener('resize', function(){
+setTimeout(function(){ drawConnectors(SC[curSc]); }, 100);
+});
 </script>
 </body>
 </html>
