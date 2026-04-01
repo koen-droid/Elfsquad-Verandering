@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Implementatieplanning — ENC Systeem Transitie</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #1A56DB;
+  --blue-light: #EBF1FF;
+  --blue-dark: #1240a8;
+  --green: #0B7B5A;
+  --green-light: #E3F5EE;
+  --amber: #B45309;
+  --amber-light: #FEF3C7;
+  --red: #9B1C1C;
+  --red-light: #FEE2E2;
+  --purple: #5B21B6;
+  --purple-light: #EDE9FE;
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--gray-800);
+  background: var(--gray-50);
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--gray-900);
+  color: white;
+  padding: 0 2rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.topbar-logo {
+  width: 32px; height: 32px;
+  background: var(--blue);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: white;
+}
+.topbar-title { font-size: 14px; font-weight: 500; color: white; }
+.topbar-sub { font-size: 12px; color: var(--gray-400); margin-left: 4px; }
+.topbar-right { font-size: 12px; color: var(--gray-400); font-family: 'DM Mono', monospace; }
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 56px); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: white;
+  border-right: 1px solid var(--gray-200);
+  padding: 1.5rem 0;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+.sidebar-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray-400);
+  padding: 0 1.25rem;
+  margin-bottom: .5rem;
+}
+.sidebar-phase {
+  padding: 0 .75rem;
+  margin-bottom: .25rem;
+}
+.sidebar-phase-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: .55rem .75rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background .15s;
+}
+.sidebar-phase-btn:hover { background: var(--gray-100); }
+.sidebar-phase-btn.active { background: var(--gray-100); }
+.phase-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sidebar-phase-name { font-size: 12px; font-weight: 500; color: var(--gray-700); line-height: 1.3; }
+.sidebar-phase-weeks { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
+.sidebar-task-list { padding-left: 2.1rem; margin-top: .1rem; }
+.sidebar-task-btn {
+  display: block;
+  width: 100%;
+  padding: .3rem .5rem;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 12px;
+  color: var(--gray-500);
+  transition: all .15s;
+}
+.sidebar-task-btn:hover { background: var(--gray-100); color: var(--gray-700); }
+.sidebar-task-btn.active { background: var(--blue-light); color: var(--blue); font-weight: 500; }
+
+.sidebar-divider { height: 1px; background: var(--gray-200); margin: 1rem .75rem; }
+.progress-section { padding: .75rem 1.25rem; }
+.progress-label { font-size: 11px; color: var(--gray-400); margin-bottom: .5rem; font-weight: 500; }
+.progress-item { display: flex; align-items: center; gap: 8px; margin-bottom: .4rem; }
+.progress-track { flex: 1; height: 4px; background: var(--gray-100); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; transition: width .3s; }
+.progress-pct { font-size: 10px; color: var(--gray-400); min-width: 28px; text-align: right; font-family: 'DM Mono', monospace; }
+.progress-name { font-size: 11px; color: var(--gray-500); min-width: 60px; }
+
+/* ── MAIN CONTENT ── */
+.main { padding: 2rem; overflow-y: auto; }
+
+/* ── BREADCRUMB ── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--gray-400);
+  margin-bottom: 1.5rem;
+}
+.breadcrumb span { cursor: pointer; }
+.breadcrumb span:hover { color: var(--blue); }
+.breadcrumb .sep { color: var(--gray-300); }
+.breadcrumb .current { color: var(--gray-700); font-weight: 500; }
+
+/* ── OVERVIEW PAGE ── */
+.overview-header { margin-bottom: 2rem; }
+.overview-header h1 { font-size: 26px; font-weight: 600; color: var(--gray-900); margin-bottom: 6px; }
+.overview-header p { font-size: 14px; color: var(--gray-500); max-width: 580px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 2rem; }
+.stat-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+.stat-card .num { font-size: 28px; font-weight: 600; color: var(--gray-900); line-height: 1; }
+.stat-card .lbl { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+/* ── GANTT ── */
+.gantt-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+}
+.gantt-card h2 { font-size: 14px; font-weight: 600; color: var(--gray-700); margin-bottom: 1.25rem; }
+.gantt-inner { min-width: 600px; }
+.gantt-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: center; margin-bottom: 6px; }
+.gantt-label { font-size: 11px; color: var(--gray-500); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gantt-track { position: relative; height: 22px; background: var(--gray-100); border-radius: 4px; }
+.gantt-bar {
+  position: absolute;
+  top: 1px; bottom: 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex; align-items: center;
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity .15s, filter .15s;
+}
+.gantt-bar:hover { opacity: .85; filter: brightness(1.05); }
+.gantt-week-header { display: grid; grid-template-columns: 150px 1fr; gap: 12px; margin-bottom: 6px; }
+.gantt-weeks { display: flex; }
+.gantt-week-lbl { flex: 1; font-size: 10px; color: var(--gray-400); text-align: center; font-family: 'DM Mono', monospace; }
+.gantt-phase-label {
+  grid-column: 1/-1;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--gray-400);
+  padding: 8px 0 4px;
+}
+
+/* checkpoint row */
+.checkpoint-row { display: flex; justify-content: space-around; padding-top: 8px; }
+.checkpoint { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.checkpoint-diamond {
+  width: 12px; height: 12px;
+  background: var(--purple);
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+.checkpoint-label { font-size: 9px; color: var(--purple); text-align: center; max-width: 60px; line-height: 1.2; }
+
+/* ── PHASE CARDS on overview ── */
+.phases-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.phase-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow .2s, transform .15s;
+}
+.phase-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.phase-card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 12px; }
+.phase-card-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.phase-card-meta { flex: 1; }
+.phase-card-name { font-size: 13px; font-weight: 600; color: var(--gray-800); }
+.phase-card-period { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+.phase-card-body { padding: 1rem 1.25rem; }
+.phase-card-tasks { font-size: 12px; color: var(--gray-500); }
+.phase-card-tasks li { padding: 2px 0; list-style: none; display: flex; align-items: flex-start; gap: 6px; }
+.phase-card-tasks li::before { content: "→"; color: var(--gray-300); flex-shrink: 0; margin-top: 1px; }
+.phase-card-arrow { padding: .75rem 1.25rem; display: flex; justify-content: flex-end; font-size: 12px; color: var(--blue); font-weight: 500; border-top: 1px solid var(--gray-100); }
+
+/* ── PHASE DETAIL PAGE ── */
+.phase-header {
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.phase-header-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,.5);
+}
+.phase-header h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.phase-header p { font-size: 13px; opacity: .8; }
+.phase-meta-pills { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.pill {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.4);
+}
+
+.dod-box {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.dod-box h2 { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+.dod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.dod-col h3 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .6rem; }
+.dod-col ul { list-style: none; }
+.dod-col ul li {
+  font-size: 12px;
+  color: var(--gray-600);
+  padding: 5px 0 5px 20px;
+  position: relative;
+  border-bottom: 1px solid var(--gray-100);
+  line-height: 1.4;
+}
+.dod-col ul li:last-child { border-bottom: none; }
+.dod-col ul li::before {
+  content: "✓";
+  position: absolute; left: 0;
+  font-size: 11px;
+}
+
+.tasks-section h2 { font-size: 14px; font-weight: 600; color: var(--gray-700); margin-bottom: 1rem; }
+.task-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: box-shadow .15s;
+}
+.task-card:hover { box-shadow: var(--shadow); }
+.task-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .85rem 1.25rem;
+  cursor: pointer;
+  user-select: none;
+}
+.task-card-left { display: flex; align-items: center; gap: 12px; }
+.task-num {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.task-card-name { font-size: 13px; font-weight: 500; color: var(--gray-800); }
+.task-card-week { font-size: 11px; color: var(--gray-400); font-family: 'DM Mono', monospace; }
+.task-chevron {
+  width: 20px; height: 20px;
+  color: var(--gray-400);
+  transition: transform .2s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.task-chevron.open { transform: rotate(180deg); }
+
+.task-card-body {
+  display: none;
+  border-top: 1px solid var(--gray-100);
+  padding: 1.25rem;
+}
+.task-card-body.open { display: block; }
+.task-card-body p { font-size: 13px; color: var(--gray-600); margin-bottom: 1rem; line-height: 1.6; }
+
+.actions-section { margin-bottom: 1rem; }
+.actions-section h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-400); margin-bottom: .5rem; }
+.action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: .6rem 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.action-item:last-child { border-bottom: none; }
+.action-check {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid var(--gray-300);
+  flex-shrink: 0;
+  margin-top: 2px;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  color: white;
+}
+.action-check.done {
+  background: var(--green);
+  border-color: var(--green);
+}
+.action-check.done::after { content: "✓"; }
+.action-text { font-size: 13px; color: var(--gray-700); line-height: 1.5; }
+.action-text.done { text-decoration: line-through; color: var(--gray-400); }
+.action-who {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.adopt-tag { background: #FEF3C7; color: #92400E; }
+.tech-tag { background: #EBF5FF; color: #1A56DB; }
+.mgmt-tag { background: #F5F3FF; color: #5B21B6; }
+
+.task-dod-mini { margin-top: 1rem; }
+.task-dod-mini h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-400); margin-bottom: .5rem; }
+.task-dod-mini ul { list-style: none; }
+.task-dod-mini ul li { font-size: 12px; color: var(--gray-600); padding: 3px 0 3px 16px; position: relative; }
+.task-dod-mini ul li::before { content: "→"; position: absolute; left: 0; color: var(--gray-300); }
+
+/* ── TASK DETAIL PAGE ── */
+.task-detail-header {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.task-detail-header h1 { font-size: 20px; font-weight: 600; color: var(--gray-900); margin-bottom: 6px; }
+.task-detail-header p { font-size: 13px; color: var(--gray-500); }
+
+.actions-full {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.actions-full h2 { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 1rem; }
+
+/* ── BACK BUTTON ── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--gray-500);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1rem;
+  transition: color .15s;
+}
+.back-btn:hover { color: var(--blue); }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--gray-200); }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .phases-grid { grid-template-columns: 1fr; }
+  .dod-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">E</div>
+    <span class="topbar-title">ENC — Systeem Transitie</span>
+    <span class="topbar-sub">Implementatieplanning</span>
+  </div>
+  <div class="topbar-right">HubSpot · Elfsquad · Business Central</div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+const TOTAL_WEEKS = 20;
+
+const phases = [
+  {
+    id: 0,
+    name: "Fase 1 — Voorbereiding & analyse",
+    emoji: "🔍",
+    color: "#1A56DB",
+    bg: "#EBF1FF",
+    weeks: "Week 1 – 4",
+    wStart: 0, wDur: 4,
+    description: "Voordat er technisch iets gebouwd wordt, moet het fundament kloppen. In deze fase zorg je dat de veldmapping is uitgewerkt, de technische partijen zijn gebrieft en het team begrijpt waarom deze verandering nodig is.",
+    dod: {
+      tech: [
+        "Veldmapping volledig gedocumenteerd en intern goedgekeurd",
+        "HubSpot dealstages en veldstructuur schriftelijk vastgelegd",
+        "Technische partijen (Social Brothers / Bliss) geboekt en gebrieft",
+        "Integratieplan besproken en akkoord bevonden",
+        "Testomgeving beschikbaar gesteld",
+      ],
+      adoptie: [
+        "Alle medewerkers geïnformeerd over de komende verandering",
+        "Rolverdeling (binnendienst / buitendienst / werkvoorbereider) intern besproken",
+        "Projectverantwoordelijke aangewezen",
+        "Eerste terugkoppelmoment ingepland",
+        "Zorgen en vragen van medewerkers opgehaald en gedocumenteerd",
+      ]
+    },
+    tasks: [
+      {
+        id: "1-1",
+        name: "Veldmapping finaliseren",
+        week: "Week 1 – 2",
+        wStart: 0, wDur: 2,
+        who: "tech",
+        description: "De veldmapping beschrijft welke data vanuit welk systeem komt en naartoe gaat (HubSpot → Elfsquad → BC). Dit document is de blauwdruk voor alle technische koppelingen. Zonder goedgekeurde veldmapping kan de bouw niet starten.",
+        actions: [
+          { text: "Open het document 'Veldmapping_Procesontwerp_HubSpot_Elfsquad_BC' en doorloop alle velden.", who: "tech" },
+          { text: "Controleer of alle Company-velden (naam, adres, BTW, KvK, taal, valuta) compleet zijn ingevuld.", who: "tech" },
+          { text: "Controleer of alle Deal-velden (dealname, closedate, elsf_quote_id, elsf_pdf_url, bc_order_number etc.) aanwezig zijn.", who: "tech" },
+          { text: "Controleer of de Elfsquad → BC velden (klant-ID, factuuradres, orderregels, productcodes) kloppen.", who: "tech" },
+          { text: "Laat de veldmapping intern goedkeuren door de verantwoordelijke manager of directeur.", who: "mgmt" },
+          { text: "Maak een definitieve versie en sla deze op als gedeeld document (bijv. SharePoint of Google Drive).", who: "tech" },
+          { text: "Stuur de definitieve veldmapping door naar Social Brothers (HubSpot/integraties) en Bliss (BC).", who: "mgmt" },
+        ],
+        dod: {
+          tech: ["Definitieve veldmapping goedgekeurd en gedeeld met technische partijen"],
+          adoptie: ["Binnendienst heeft velden bekeken en correcties doorgegeven"]
+        }
+      },
+      {
+        id: "1-2",
+        name: "Technische partijen selecteren & briefen",
+        week: "Week 1 – 3",
+        wStart: 1, wDur: 2,
+        who: "mgmt",
+        description: "Social Brothers voert de HubSpot-inrichting en integraties uit. Bliss is verantwoordelijk voor Business Central. Beide partijen moeten tijdig worden geboekt en een volledige briefing krijgen zodat ze een realistisch tijdplan kunnen maken.",
+        actions: [
+          { text: "Neem contact op met Social Brothers en plan een briefinggesprek in.", who: "mgmt" },
+          { text: "Neem contact op met Bliss (BC-partner) en plan een briefinggesprek in.", who: "mgmt" },
+          { text: "Stuur de veldmapping, het procesontwerp en het architectuurdiagram mee als voorbereiding.", who: "mgmt" },
+          { text: "Bespreek in het briefinggesprek: scope, tijdlijn, afhankelijkheden en testprocedure.", who: "mgmt" },
+          { text: "Vraag een schriftelijke offerte of planningsvoorstel op bij beide partijen.", who: "mgmt" },
+          { text: "Keur de planningen goed en bevestig de startdatum voor Fase 2.", who: "mgmt" },
+          { text: "Maak een contactlijst met namen, rollen en directe contactgegevens van beide partijen.", who: "mgmt" },
+        ],
+        dod: {
+          tech: ["Beide partijen hebben een akkoord planningsvoorstel ingediend", "Startdatum Fase 2 is schriftelijk bevestigd"],
+          adoptie: ["Intern team weet wie waarvoor verantwoordelijk is bij technische vragen"]
+        }
+      },
+      {
+        id: "1-3",
+        name: "HubSpot structuur vastleggen op papier",
+        week: "Week 2 – 4",
+        wStart: 1, wDur: 3,
+        who: "tech",
+        description: "Voordat Social Brothers aan de slag gaat, moeten alle gewenste instellingen in HubSpot schriftelijk zijn vastgelegd: dealstages, pipelines, velden, workflows en permissies. Dit voorkomt mis-communicatie en meerwerk achteraf.",
+        actions: [
+          { text: "Schrijf op welke dealstages in de pipeline komen, inclusief de nieuwe stage 'Offerte geaccepteerd / Gewonnen'.", who: "tech" },
+          { text: "Beschrijf de permissieregels: wie mag de stage 'Gewonnen' zetten (alleen Binnendienst en Sales Lead).", who: "mgmt" },
+          { text: "Noteer welke dealvelden verplicht moeten zijn vóórdat een deal naar 'Gewonnen' kan.", who: "tech" },
+          { text: "Beschrijf de workflow 'Bij Gewonnen → push naar BC': wat triggert het, wat verstuurt het, wat logt het.", who: "tech" },
+          { text: "Beschrijf de workflow 'Velden locken bij Gewonnen': welke velden worden vergrendeld.", who: "tech" },
+          { text: "Vraag Social Brothers om dit document te reviewen en opmerkingen te plaatsen.", who: "tech" },
+          { text: "Verwerk de feedback en maak een definitieve versie klaar voor de bouwfase.", who: "tech" },
+        ],
+        dod: {
+          tech: ["Document met alle HubSpot-instellingen klaar en gereviewed door Social Brothers"],
+          adoptie: []
+        }
+      },
+      {
+        id: "1-4",
+        name: "Interne communicatie & kick-off",
+        week: "Week 1 – 4",
+        wStart: 0, wDur: 4,
+        who: "adoptie",
+        description: "Verandering slaagt of mislukt bij de mensen die ermee moeten werken. In deze fase informeer je het team proactief, haal je zorgen op en zorg je dat niemand verrast wordt. Dit is geen eenmalige actie maar een doorlopend proces.",
+        actions: [
+          { text: "Plan een kick-off sessie met het volledige team (binnendienst + buitendienst + werkvoorbereider).", who: "mgmt" },
+          { text: "Presenteer in de kick-off: het probleem nu, het doel straks, de planning en de rolverdeling.", who: "mgmt" },
+          { text: "Geef medewerkers de ruimte om vragen te stellen en zorgen te uiten — noteer alles.", who: "mgmt" },
+          { text: "Wijs een intern aanspreekpunt aan voor vragen gedurende het hele project.", who: "mgmt" },
+          { text: "Stuur na de kick-off een korte samenvatting per mail/app aan alle betrokkenen.", who: "mgmt" },
+          { text: "Plan maandelijkse of tweewekelijkse update-momenten in de agenda voor de rest van het project.", who: "mgmt" },
+          { text: "Houd een korte poll of enquête na de kick-off: hoe zeker voelen medewerkers zich? (schaal 1–5)", who: "mgmt" },
+        ],
+        dod: {
+          tech: [],
+          adoptie: ["Kick-off gehouden, vragen/zorgen gedocumenteerd", "Aanspreekpunt aangewezen en gecommuniceerd", "Poll-resultaten verwerkt, actieplan bij lage scores"]
+        }
+      },
+    ]
+  },
+  {
+    id: 1,
+    name: "Fase 2 — Technische bouw & integraties",
+    emoji: "⚙️",
+    color: "#0B7B5A",
+    bg: "#E3F5EE",
+    weeks: "Week 5 – 10",
+    wStart: 4, wDur: 6,
+    description: "In deze fase bouwen Social Brothers en Bliss alle technische koppelingen. De volgorde is belangrijk: eerst HubSpot inrichten, dan de koppeling naar Elfsquad, dan de terugkoppeling, en als laatste de push naar BC.",
+    dod: {
+      tech: [
+        "HubSpot volledig ingericht (dealstages, velden, workflows, permissies)",
+        "Koppeling HubSpot → Elfsquad werkt (klantdata, deal-ID, taal, valuta)",
+        "Elfsquad → HubSpot terugkoppeling werkt (offerte-ID, PDF, status, bedrag)",
+        "Push HubSpot → BC werkt bij dealstage 'Gewonnen'",
+        "BC stuurt ordernummer terug naar HubSpot (bc_order_number)",
+        "Idempotentie getest: dubbele berichten geven geen dubbele records",
+        "Alle integraties succesvol getest in de testomgeving",
+      ],
+      adoptie: [
+        "Binnendienst heeft een demo gezien van de nieuwe HubSpot-schermen",
+        "Team heeft de volledige flow één keer gezien (demo-sessie week 9)",
+        "Feedback van de demo is verwerkt of gedocumenteerd",
+      ]
+    },
+    tasks: [
+      {
+        id: "2-1",
+        name: "HubSpot volledig inrichten",
+        week: "Week 5 – 7",
+        wStart: 4, wDur: 3,
+        who: "tech",
+        description: "Social Brothers richt HubSpot in op basis van het document uit Fase 1. Dit is de basis waarop alle andere integraties draaien, dus dit moet foutloos zijn voordat de koppelingen worden gebouwd.",
+        actions: [
+          { text: "Maak de nieuwe dealstage 'Offerte geaccepteerd / Gewonnen' aan in de pipeline.", who: "tech" },
+          { text: "Stel permissies in: alleen Binnendienst en Sales Lead mogen naar 'Gewonnen' verplaatsen.", who: "tech" },
+          { text: "Voeg alle custom Company-velden toe: billing_street, billing_number, billing_postalcode, billing_city, billing_country, vat_number, kvk_number, invoice_email, language, currency, customer_external_id.", who: "tech" },
+          { text: "Voeg alle custom Deal-velden toe: delivery_terms, payment_terms, external_reference, language, currency, elsf_quote_id, elsf_status, elsf_version, amount, elsf_pdf_url, elsf_pdf_file_id, order_ready, bc_order_number.", who: "tech" },
+          { text: "Stel validaties in: velden elsf_quote_id, elsf_status, elsf_pdf_url moeten gevuld zijn vóór 'Gewonnen'.", who: "tech" },
+          { text: "Maak workflow aan: bij 'Gewonnen' → lock de velden adres, valuta, BTW, betalingscondities, totaalbedrag.", who: "tech" },
+          { text: "Maak workflow aan: bij 'Gewonnen' → log tijdlijnnotitie met correlatie-ID.", who: "tech" },
+          { text: "Test de inrichting intern: maak een testdeal aan en doorloop alle stappen.", who: "tech" },
+          { text: "Geef een korte demo van de nieuwe schermen aan de binnendienst.", who: "tech" },
+        ],
+        dod: {
+          tech: ["Alle velden en dealstages aanwezig en correct ingesteld", "Validaties werken (test met testdeal)", "Demo gegeven aan binnendienst"],
+          adoptie: ["Binnendienst heeft de nieuwe schermen gezien en feedback gegeven"]
+        }
+      },
+      {
+        id: "2-2",
+        name: "Koppeling HubSpot → Elfsquad bouwen",
+        week: "Week 6 – 9",
+        wStart: 5, wDur: 4,
+        who: "tech",
+        description: "Wanneer een deal in HubSpot de status 'Offerte aangevraagd' krijgt (of via een handmatige trigger), moeten alle relevante klant- en dealgegevens automatisch naar Elfsquad worden gestuurd. Elfsquad kan dan de offerte configureren.",
+        actions: [
+          { text: "Stel de trigger in: bij dealstage 'Offerte aangevraagd' of toggle 'Verstuur naar Elfsquad' → start workflow.", who: "tech" },
+          { text: "Voeg validatie toe: controleer voor het versturen of alle verplichte klantvelden gevuld zijn.", who: "tech" },
+          { text: "Bouw de API-koppeling: stuur klantgegevens door (customer_external_id, naam, adres, BTW, valuta, taal, betaalcondities).", who: "tech" },
+          { text: "Stuur contactpersoongegevens mee (voor- en achternaam, e-mail, telefoon, contact-ID).", who: "tech" },
+          { text: "Stuur dealcontext mee (deal-ID, dealnaam, pipeline, dealstage, valuta).", who: "tech" },
+          { text: "Implementeer idempotentie: gebruik customer_external_id en hubspot_deal_id als unieke sleutels.", who: "tech" },
+          { text: "Test de koppeling met een testklant en testdeal: controleer of alle velden correct aankomen in Elfsquad.", who: "tech" },
+          { text: "Controleer op foutafhandeling: wat gebeurt er als een veld ontbreekt of de API down is?", who: "tech" },
+        ],
+        dod: {
+          tech: ["Testdeal succesvol doorgestuurd naar Elfsquad", "Alle velden correct aangekomen (incl. taal en valuta)", "Idempotentie werkt: dubbele trigger = geen dubbel record"],
+          adoptie: []
+        }
+      },
+      {
+        id: "2-3",
+        name: "Elfsquad → HubSpot terugkoppeling bouwen",
+        week: "Week 7 – 9",
+        wStart: 6, wDur: 3,
+        who: "tech",
+        description: "Nadat Elfsquad de offerte heeft opgesteld, moet de offertestatus, het bedrag, het offerte-ID en de PDF automatisch terugkomen in HubSpot. Sales kan zo de dealstatus opvolgen zonder in Elfsquad te hoeven kijken.",
+        actions: [
+          { text: "Stel de Elfsquad webhook in: bij statuswijziging (Draft/Sent/Accepted/Rejected) → stuur bericht naar HubSpot.", who: "tech" },
+          { text: "Verwerk de webhook in HubSpot: update de velden elsf_quote_id, elsf_status, elsf_version, amount.", who: "tech" },
+          { text: "Bouw de PDF-upload stap: middleware ontvangt de PDF van Elfsquad, uploadt naar HubSpot Files API.", who: "tech" },
+          { text: "Vul na upload de velden elsf_pdf_file_id en elsf_pdf_url in het deal-record.", who: "tech" },
+          { text: "Koppel de PDF als bijlage aan de deal in HubSpot (zichtbaar in tijdlijn).", who: "tech" },
+          { text: "Test de flow: maak een testofferte in Elfsquad, genereer PDF, controleer of alles correct terugkomt in HubSpot.", who: "tech" },
+          { text: "Test versioning: maak een tweede versie van de offerte en controleer of elsf_version correct wordt bijgewerkt.", who: "tech" },
+        ],
+        dod: {
+          tech: ["Offerte-ID, status, versie en bedrag komen correct terug in HubSpot", "PDF staat als bijlage in de deal", "Versioning werkt correct"],
+          adoptie: []
+        }
+      },
+      {
+        id: "2-4",
+        name: "Push HubSpot → Business Central bouwen",
+        week: "Week 8 – 9",
+        wStart: 7, wDur: 2,
+        who: "tech",
+        description: "Alleen bij een gewonnen deal mag er een order in BC worden aangemaakt. BC is puur voor administratie — er komen geen offertes meer in, alleen echte orders. Bliss bouwt de ontvangst in BC; Social Brothers de push vanuit HubSpot.",
+        actions: [
+          { text: "Bouw trigger in HubSpot: bij dealstage 'Gewonnen' → start BC-push workflow.", who: "tech" },
+          { text: "Valideer vóór de push: elsf_quote_id aanwezig, elsf_status = 'Geaccepteerd', PDF aanwezig, klantvelden compleet.", who: "tech" },
+          { text: "Stuur naar BC: klantgegevens (klant-ID als sleutel om dubbelen te voorkomen), factuuradres, BTW, valuta, betaalcondities.", who: "tech" },
+          { text: "Stuur ordergegevens mee: offerte-ID als referentie, orderregels (productcode, omschrijving, aantal, prijs).", who: "tech" },
+          { text: "Bliss: ontvang de data in BC, maak klantnummer aan (of hergebruik bestaand op basis van klant-ID), maak order aan.", who: "tech" },
+          { text: "BC stuurt het BC-ordernummer terug naar HubSpot (bc_order_number veld in de deal).", who: "tech" },
+          { text: "Test de volledige flow: testdeal → Gewonnen → order in BC → ordernummer terug in HubSpot.", who: "tech" },
+          { text: "Controleer dat er geen dubbele klanten in BC worden aangemaakt bij herhaalde pushes.", who: "tech" },
+        ],
+        dod: {
+          tech: ["Order wordt correct aangemaakt in BC bij 'Gewonnen'", "BC ordernummer staat in HubSpot na push", "Geen dubbele klanten of orders bij herhaalde triggers"],
+          adoptie: []
+        }
+      },
+      {
+        id: "2-5",
+        name: "Demo & tussentijdse terugkoppeling aan team",
+        week: "Week 9 – 10",
+        wStart: 8, wDur: 2,
+        who: "adoptie",
+        description: "Halverwege de bouwfase laat je het team de volledige nieuwe flow zien — ook al is het nog niet 'af'. Dit verlaagt de drempel voor de training later en geeft je de kans om misverstanden vroeg te corrigeren.",
+        actions: [
+          { text: "Plan een demo-sessie van 1 uur met binnendienst, buitendienst en werkvoorbereider.", who: "mgmt" },
+          { text: "Demonstreer de volledige flow live: deal aanmaken in HubSpot → offerte in Elfsquad → terugkoppeling → Gewonnen → BC.", who: "tech" },
+          { text: "Laat medewerkers zelf een stap uitvoeren (bijv. een deal aanmaken) onder begeleiding.", who: "tech" },
+          { text: "Stel open vragen: wat valt op? Wat is onduidelijk? Wat missen jullie?", who: "mgmt" },
+          { text: "Noteer alle feedback en maak een actie-/beslislijst.", who: "mgmt" },
+          { text: "Verwerk technische feedback bij Social Brothers / Bliss als er aanpassingen nodig zijn.", who: "tech" },
+          { text: "Stuur een korte update aan het team: 'Dit hebben we meegenomen, dit niet en waarom'.", who: "mgmt" },
+        ],
+        dod: {
+          tech: ["Technische feedback verwerkt of gedocumenteerd als backlog"],
+          adoptie: ["Demo gehouden, alle medewerkers aanwezig geweest", "Feedback gedocumenteerd en gecommuniceerd aan het team"]
+        }
+      },
+    ]
+  },
+  {
+    id: 2,
+    name: "Fase 3 — Training & adoptie",
+    emoji: "🎓",
+    color: "#B45309",
+    bg: "#FEF3C7",
+    weeks: "Week 11 – 15",
+    wStart: 10, wDur: 5,
+    description: "Dit is de meest kritische fase voor het succes van de transitie. Techniek werkt alleen als mensen er goed mee omgaan. Elke rol krijgt een aparte, praktijkgerichte training en de kans om te oefenen in een veilige testomgeving.",
+    dod: {
+      tech: [
+        "Werkinstructies per rol beschikbaar (binnendienst, buitendienst, werkvoorbereider)",
+        "Cheat sheets en snelgidsen voor HubSpot en Elfsquad klaar",
+        "Testomgeving beschikbaar voor oefenen",
+      ],
+      adoptie: [
+        "Elke medewerker heeft de training voor zijn/haar rol gevolgd",
+        "Elke medewerker heeft minimaal 2 testsituaties zelfstandig doorlopen",
+        "Alle vragen zijn beantwoord en gedocumenteerd",
+        "Readiness check afgenomen: score gemiddeld ≥ 3.5 / 5",
+        "Buddy-systeem of aanspreekpunt klaar voor de livegang",
+      ]
+    },
+    tasks: [
+      {
+        id: "3-1",
+        name: "Werkinstructies en cheat sheets maken",
+        week: "Week 11 – 12",
+        wStart: 10, wDur: 2,
+        who: "mgmt",
+        description: "Medewerkers moeten kunnen terugvallen op een simpele stap-voor-stap handleiding. Geen uitgebreid handboek — korte, visuele cheat sheets die je aan je bureau kunt hangen of op je telefoon kunt bewaren.",
+        actions: [
+          { text: "Schrijf een stap-voor-stap werkinstructie voor de binnendienst (max. 1 A4).", who: "mgmt" },
+          { text: "Schrijf een stap-voor-stap werkinstructie voor de buitendienst (max. 1 A4).", who: "mgmt" },
+          { text: "Schrijf een stap-voor-stap werkinstructie voor de werkvoorbereider / projectcoördinator (max. 1 A4).", who: "mgmt" },
+          { text: "Maak een visuele cheat sheet HubSpot: welke velden zijn verplicht en wanneer?", who: "mgmt" },
+          { text: "Maak een visuele cheat sheet Elfsquad: hoe maak ik een offerte aan en stuur ik deze door?", who: "mgmt" },
+          { text: "Laat de instructies reviewen door één medewerker per rol — zijn ze begrijpelijk?", who: "mgmt" },
+          { text: "Druk de cheat sheets af en/of deel ze digitaal via mail/intranet.", who: "mgmt" },
+        ],
+        dod: {
+          tech: ["Werkinstructies en cheat sheets klaar en gereviewed"],
+          adoptie: ["Minimaal één medewerker per rol heeft de instructie gereviewed en akkoord gegeven"]
+        }
+      },
+      {
+        id: "3-2",
+        name: "Training binnendienst",
+        week: "Week 12 – 13",
+        wStart: 11, wDur: 2,
+        who: "adoptie",
+        description: "De binnendienst heeft de breedste rol in het nieuwe proces: klant aanmaken, deal opvolgen in HubSpot, buitendienst ondersteunen met Elfsquad en het dossier overdragen aan de werkvoorbereider.",
+        actions: [
+          { text: "Plan een trainingssessie van 2 uur voor alle binnendienst-medewerkers samen.", who: "mgmt" },
+          { text: "Bespreek de nieuwe rolverdeling: wat doet de binnendienst wél en niet meer (geen after-sales, geen voorraad).", who: "mgmt" },
+          { text: "Oefening 1: Maak een nieuwe klant + deal aan in HubSpot (met testgegevens).", who: "mgmt" },
+          { text: "Oefening 2: Zet een deal op 'Offerte aangevraagd' en bekijk wat er automatisch naar Elfsquad gaat.", who: "mgmt" },
+          { text: "Oefening 3: Ontvang de offertebevestiging terug in HubSpot (PDF, status, bedrag) en volg de deal op.", who: "mgmt" },
+          { text: "Oefening 4: Zet een deal op 'Gewonnen' en controleer of de push naar BC correct werkt.", who: "mgmt" },
+          { text: "Oefening 5: Draag het dossier over aan de werkvoorbereider (wat stuur je door, hoe?).", who: "mgmt" },
+          { text: "Beantwoord alle vragen en noteer openstaande punten.", who: "mgmt" },
+        ],
+        dod: {
+          tech: [],
+          adoptie: ["Alle binnendienst-medewerkers getraind", "Minimaal 4 oefeningen zelfstandig doorlopen", "Vragen beantwoord en gedocumenteerd"]
+        }
+      },
+      {
+        id: "3-3",
+        name: "Training buitendienst",
+        week: "Week 12 – 13",
+        wStart: 11, wDur: 2,
+        who: "adoptie",
+        description: "De buitendienst gebruikt primair Elfsquad voor het aanmaken van offertes en HubSpot voor het opvolgen van deals. Ze doen geen after-sales of operationele taken meer.",
+        actions: [
+          { text: "Plan een trainingssessie van 2 uur voor alle buitendienst-medewerkers (bij voorkeur apart van binnendienst).", who: "mgmt" },
+          { text: "Bespreek de nieuwe rolverdeling: geen after-sales, geen montage/voorraad meer — focus op verkoop.", who: "mgmt" },
+          { text: "Oefening 1: Open een bestaande deal in HubSpot en voer een klantsituatie in.", who: "mgmt" },
+          { text: "Oefening 2: Start een offerte aan in Elfsquad vanuit HubSpot (of met hulp binnendienst).", who: "mgmt" },
+          { text: "Oefening 3: Configureer een product in Elfsquad en bekijk de prijsberekening.", who: "mgmt" },
+          { text: "Oefening 4: Verstuur de offerte vanuit Elfsquad en volg de status op in HubSpot.", who: "mgmt" },
+          { text: "Oefening 5: Markeer een deal als Gewonnen en draag het dossier over.", who: "mgmt" },
+          { text: "Bespreek hoe om te gaan met situaties waarbij de binnendienst helpt (wie doet wat?).", who: "mgmt" },
+        ],
+        dod: {
+          tech: [],
+          adoptie: ["Alle buitendienst-medewerkers getraind", "Elfsquad offerte aanmaken en versturen geoefend", "Dealopvolging in HubSpot geoefend"]
+        }
+      },
+      {
+        id: "3-4",
+        name: "Training werkvoorbereider / projectcoördinator",
+        week: "Week 13 – 14",
+        wStart: 12, wDur: 2,
+        who: "adoptie",
+        description: "De werkvoorbereider neemt het dossier over zodra een deal is gewonnen. Hij/zij controleert de orderdata, regelt voorraad en montage, en heeft beperkte toegang tot BC voor facturatie.",
+        actions: [
+          { text: "Plan een trainingssessie van 1,5 uur voor de werkvoorbereider(s).", who: "mgmt" },
+          { text: "Bespreek het nieuwe overdrachtsmoment: wanneer en hoe ontvang je een gewonnen deal?", who: "mgmt" },
+          { text: "Oefening 1: Ontvang een testorder vanuit HubSpot en controleer de klant- en orderdata.", who: "mgmt" },
+          { text: "Oefening 2: Open BC en bekijk hoe het ordernummer en de klantgegevens zijn aangekomen.", who: "mgmt" },
+          { text: "Oefening 3: Controleer de voorraad in BC en noteer wat besteld moet worden.", who: "mgmt" },
+          { text: "Oefening 4: Plan een montageafspraak op basis van de orderinformatie.", who: "mgmt" },
+          { text: "Bespreek wat de werkvoorbereider doet als er fouten in de orderdata staan (terugkoppelen naar binnendienst).", who: "mgmt" },
+        ],
+        dod: {
+          tech: [],
+          adoptie: ["Werkvoorbereider getraind op ontvangst gewonnen deal", "BC-toegang en facturatie-check geoefend", "Overdrachtsproces duidelijk voor alle betrokkenen"]
+        }
+      },
+      {
+        id: "3-5",
+        name: "Readiness check — Go/No-go beslissing",
+        week: "Week 15",
+        wStart: 14, wDur: 1,
+        who: "mgmt",
+        description: "Voordat je naar de testfase gaat, check je of het team er écht klaar voor is. Een korte poll of gesprek per medewerker geeft je een eerlijk beeld. Bij lage scores pas je de planning aan.",
+        actions: [
+          { text: "Stuur een korte poll (5 vragen, schaal 1–5) aan alle betrokken medewerkers.", who: "mgmt" },
+          { text: "Vraag 1: Hoe zeker voel jij je in HubSpot? (1 = helemaal niet, 5 = volledig)", who: "mgmt" },
+          { text: "Vraag 2: Hoe zeker voel jij je in Elfsquad? (indien van toepassing)", who: "mgmt" },
+          { text: "Vraag 3: Is je nieuwe rol duidelijk voor jou?", who: "mgmt" },
+          { text: "Vraag 4: Zijn er nog situaties die je niet weet hoe je die moet aanpakken?", who: "mgmt" },
+          { text: "Vraag 5: Ben jij klaar om live te gaan? (1 = nee, 5 = ja)", who: "mgmt" },
+          { text: "Bereken de gemiddelde score. Bij gemiddelde ≥ 3.5 → Go. Bij lager → extra trainingssessies plannen.", who: "mgmt" },
+          { text: "Bespreek de uitkomst met het team en communiceer de Go/No-go beslissing.", who: "mgmt" },
+        ],
+        dod: {
+          tech: [],
+          adoptie: ["Poll afgenomen bij alle medewerkers", "Gemiddelde score ≥ 3.5 / 5 op 'klaar voor livegang'", "Go/No-go beslissing genomen en gecommuniceerd"]
+        }
+      },
+    ]
+  },
+  {
+    id: 3,
+    name: "Fase 4 — Testfase & livegang",
+    emoji: "🚀",
+    color: "#9B1C1C",
+    bg: "#FEE2E2",
+    weeks: "Week 16 – 20",
+    wStart: 15, wDur: 5,
+    description: "Pas als het team is getraind en de techniek is goedgekeurd, ga je testen met echte data. De livegang is een weloverwogen beslissing, niet een sprong in het diepe.",
+    dod: {
+      tech: [
+        "Interne test: volledige flow zonder blokkerende fouten doorlopen",
+        "Pilot: minimaal 3 echte deals verwerkt van HS → Elfsquad → HS → BC",
+        "Geen blokkerende bugs na pilotfase",
+        "Monitoring ingericht (foutmeldingen, synchronisatiefouten)",
+        "Terugvalscenario (rollback plan) gedocumenteerd",
+      ],
+      adoptie: [
+        "Team verwerkt alle deals zelfstandig via nieuwe werkwijze",
+        "Aanspreekpunt beschikbaar bij vragen na livegang",
+        "Evaluatiesessie na 2 weken livegang ingepland",
+        "Openstaande punten uit pilot zijn opgelost of ingepland",
+      ]
+    },
+    tasks: [
+      {
+        id: "4-1",
+        name: "Interne testfase",
+        week: "Week 16 – 18",
+        wStart: 15, wDur: 3,
+        who: "tech",
+        description: "In de interne testfase doorlopen technici én medewerkers de volledige flow met testdata. Je zoekt actief naar fouten voordat echte klanten er last van hebben.",
+        actions: [
+          { text: "Maak 3 testscenario's aan: (1) standaard offerte gewonnen, (2) offerte gewijzigd (nieuwe versie), (3) offerte verloren.", who: "tech" },
+          { text: "Doorloop scenario 1 volledig: HS → Elfsquad → PDF terug → HS → Gewonnen → BC → ordernummer terug.", who: "tech" },
+          { text: "Doorloop scenario 2: maak een tweede versie van de offerte in Elfsquad, controleer elsf_version in HubSpot.", who: "tech" },
+          { text: "Doorloop scenario 3: zet een deal op 'Verloren' en controleer dat er niets naar BC wordt gestuurd.", who: "tech" },
+          { text: "Test idempotentie: trigger dezelfde push twee keer en controleer dat er geen dubbele records ontstaan.", who: "tech" },
+          { text: "Laat één binnendienst-medewerker en één buitendienst-medewerker meedoen en noteer hun bevindingen.", who: "mgmt" },
+          { text: "Documenteer alle gevonden fouten in een buglijst met ernst-classificatie (blokkerend / niet-blokkerend).", who: "tech" },
+          { text: "Laat Social Brothers en Bliss alle blokkerende fouten oplossen voordat de pilot start.", who: "tech" },
+        ],
+        dod: {
+          tech: ["Alle 3 testscenario's zonder blokkerende fouten doorlopen", "Buglijst opgesteld en blokkerende fouten opgelost"],
+          adoptie: ["Medewerkers hebben testscenario's meegedraaid en bevindingen gedeeld"]
+        }
+      },
+      {
+        id: "4-2",
+        name: "Pilotfase met echte deals",
+        week: "Week 18 – 19",
+        wStart: 17, wDur: 2,
+        who: "adoptie",
+        description: "Selecteer 2–3 echte (kleine) deals om de nieuwe flow mee te testen in productie. Dit zijn de eerste echte orders die via het nieuwe systeem lopen. Begeleid de medewerkers actief.",
+        actions: [
+          { text: "Selecteer 2–3 echte klantdeals die geschikt zijn voor de pilot (bij voorkeur kleine, eenvoudige orders).", who: "mgmt" },
+          { text: "Informeer de betrokken medewerkers over welke deals in de pilot zitten.", who: "mgmt" },
+          { text: "Begeleid de binnendienst bij het aanmaken van de klant + deal in HubSpot.", who: "mgmt" },
+          { text: "Begeleid de buitendienst bij het aanmaken van de offerte in Elfsquad.", who: "mgmt" },
+          { text: "Controleer na elke stap of data correct is doorgekomen (HubSpot → Elfsquad, Elfsquad → HubSpot, HubSpot → BC).", who: "tech" },
+          { text: "Documenteer alle bevindingen: wat ging goed, wat ging fout, wat was verwarrend voor medewerkers.", who: "mgmt" },
+          { text: "Laat medewerkers reflecteren: was dit duidelijk? Wat hadden ze nodig wat ze niet hadden?", who: "mgmt" },
+          { text: "Verwerk bevindingen in een definitief actielijst voor na de livegang.", who: "mgmt" },
+        ],
+        dod: {
+          tech: ["Minimaal 3 echte deals verwerkt zonder blokkerende fouten"],
+          adoptie: ["Medewerkers hebben de pilot zelfstandig uitgevoerd (met begeleiding)", "Bevindingen gedocumenteerd en besproken"]
+        }
+      },
+      {
+        id: "4-3",
+        name: "Livegang & monitoring",
+        week: "Week 20",
+        wStart: 19, wDur: 1,
+        who: "mgmt",
+        description: "De volledige overstap naar het nieuwe systeem. Alle nieuwe deals gaan via de nieuwe flow. Tegelijkertijd worden de oude offertes in BC afgesloten en wordt monitoring ingericht om fouten snel te signaleren.",
+        actions: [
+          { text: "Communiceer de livegang aan het hele team: vanaf vandaag werken we via de nieuwe flow.", who: "mgmt" },
+          { text: "Zorg dat alle medewerkers de cheat sheets bij de hand hebben op de eerste dag.", who: "mgmt" },
+          { text: "Archiveer of sluit alle openstaande offertes in BC die via de oude methode zijn aangemaakt.", who: "tech" },
+          { text: "Richt monitoring in: stel foutmeldingen in voor mislukte API-calls of synchronisatiefouten (bij Social Brothers).", who: "tech" },
+          { text: "Wijs een aanspreekpunt aan voor de eerste 2 weken: wie pikt spoedvragen op?", who: "mgmt" },
+          { text: "Plan een evaluatiesessie van 1 uur na 2 weken livegang met het hele team.", who: "mgmt" },
+          { text: "Documenteer het terugvalscenario: wat doen we als de koppeling uitvalt? (tijdelijk handmatig, wie belt Social Brothers?)", who: "mgmt" },
+          { text: "Stuur na 2 weken een korte evaluatiemail aan het team: wat ging goed, wat kan beter?", who: "mgmt" },
+        ],
+        dod: {
+          tech: ["Monitoring actief en verantwoordelijke aangewezen", "Terugvalscenario gedocumenteerd en gecommuniceerd"],
+          adoptie: ["Alle medewerkers werken via nieuwe flow", "Evaluatiesessie na 2 weken ingepland en gehouden"]
+        }
+      },
+    ]
+  }
+];
+
+// ── STATE ──
+let view = { page: 'overview', phaseId: null, taskId: null };
+let checks = JSON.parse(localStorage.getItem('enc_checks') || '{}');
+
+function saveChecks() { localStorage.setItem('enc_checks', JSON.stringify(checks)); }
+
+// ── COLOR HELPERS ──
+function phaseColor(id) { return phases[id].color; }
+function whoLabel(who) {
+  if (who === 'tech') return { label: 'Techniek', cls: 'tech-tag' };
+  if (who === 'adoptie') return { label: 'Adoptie / HR', cls: 'adopt-tag' };
+  return { label: 'Management', cls: 'mgmt-tag' };
+}
+
+// ── RENDER SIDEBAR ──
+function renderSidebar() {
+  const sb = document.getElementById('sidebar');
+  let html = '';
+
+  phases.forEach((phase, pi) => {
+    const isActive = view.phaseId === pi;
+    html += `<div class="sidebar-phase">
+      <button class="sidebar-phase-btn ${isActive ? 'active' : ''}" onclick="navigate({page:'phase',phaseId:${pi}})">
+        <div class="phase-dot" style="background:${phase.color}"></div>
+        <div>
+          <div class="sidebar-phase-name">${phase.name}</div>
+          <div class="sidebar-phase-weeks">${phase.weeks}</div>
+        </div>
+      </button>`;
+    if (isActive) {
+      html += `<div class="sidebar-task-list">`;
+      phase.tasks.forEach((task, ti) => {
+        const isTaskActive = view.taskId === task.id;
+        html += `<button class="sidebar-task-btn ${isTaskActive ? 'active' : ''}" onclick="navigate({page:'task',phaseId:${pi},taskId:'${task.id}'})">${task.name}</button>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  });
+
+  html += `<div class="sidebar-divider"></div>`;
+  html += `<div class="progress-section"><div class="progress-label">Voortgang acties</div>`;
+  phases.forEach((phase, pi) => {
+    let total = 0, done = 0;
+    phase.tasks.forEach(task => {
+      task.actions.forEach((a, ai) => {
+        total++;
+        if (checks[`${task.id}-${ai}`]) done++;
+      });
+    });
+    const pct = total ? Math.round(done / total * 100) : 0;
+    html += `<div class="progress-item">
+      <div class="progress-name" style="font-size:10px;color:var(--gray-500)">${phase.emoji}</div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${phase.color}"></div></div>
+      <div class="progress-pct">${pct}%</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  sb.innerHTML = html;
+}
+
+// ── RENDER BREADCRUMB ──
+function breadcrumb(items) {
+  return `<div class="breadcrumb">${items.map((item, i) => {
+    if (i === items.length - 1) return `<span class="current">${item.label}</span>`;
+    return `<span onclick="${item.nav}">${item.label}</span><span class="sep">›</span>`;
+  }).join('')}</div>`;
+}
+
+// ── RENDER OVERVIEW ──
+function renderOverview() {
+  let totalActions = 0, doneActions = 0;
+  phases.forEach(p => p.tasks.forEach(t => t.actions.forEach((a, ai) => {
+    totalActions++;
+    if (checks[`${t.id}-${ai}`]) doneActions++;
+  })));
+
+  let html = breadcrumb([{ label: 'Overzicht', nav: '' }]);
+  html += `<div class="overview-header">
+    <h1>Implementatieplanning</h1>
+    <p>Systeem-transitie van versnipperde processen naar één gestroomlijnde flow via HubSpot, Elfsquad en Business Central.</p>
+  </div>`;
+
+  html += `<div class="stats-row">
+    <div class="stat-card"><div class="num">4</div><div class="lbl">Fasen</div></div>
+    <div class="stat-card"><div class="num">20</div><div class="lbl">Weken totaal</div></div>
+    <div class="stat-card"><div class="num">${totalActions}</div><div class="lbl">Concrete acties</div></div>
+    <div class="stat-card"><div class="num">${doneActions}/${totalActions}</div><div class="lbl">Afgerond</div></div>
+  </div>`;
+
+  // Gantt
+  html += `<div class="gantt-card"><h2>Tijdlijn — 20 weken</h2><div class="gantt-inner">`;
+  html += `<div class="gantt-week-header"><div></div><div class="gantt-weeks">`;
+  for (let w = 1; w <= TOTAL_WEEKS; w++) html += `<div class="gantt-week-lbl">W${w}</div>`;
+  html += `</div></div>`;
+
+  phases.forEach((phase, pi) => {
+    html += `<div class="gantt-row"><div class="gantt-label" style="color:${phase.color};font-weight:500">${phase.emoji} ${phase.weeks}</div>
+      <div class="gantt-track">
+        <div class="gantt-bar" style="left:${phase.wStart/TOTAL_WEEKS*100}%;width:${phase.wDur/TOTAL_WEEKS*100}%;background:${phase.color}" onclick="navigate({page:'phase',phaseId:${pi}})">
+          Fase ${pi + 1}
+        </div>
+      </div></div>`;
+    phase.tasks.forEach(task => {
+      html += `<div class="gantt-row"><div class="gantt-label">${task.name}</div>
+        <div class="gantt-track">
+          <div class="gantt-bar" style="left:${task.wStart/TOTAL_WEEKS*100}%;width:${task.wDur/TOTAL_WEEKS*100}%;background:${phase.color};opacity:.7" onclick="navigate({page:'task',phaseId:${pi},taskId:'${task.id}'})">
+            ${task.wDur >= 2 ? task.name : ''}
+          </div>
+        </div></div>`;
+    });
+  });
+
+  html += `</div></div>`;
+
+  // Phase cards
+  html += `<div class="phases-grid">`;
+  phases.forEach((phase, pi) => {
+    html += `<div class="phase-card" onclick="navigate({page:'phase',phaseId:${pi}})">
+      <div class="phase-card-header">
+        <div class="phase-card-icon" style="background:${phase.bg}">${phase.emoji}</div>
+        <div class="phase-card-meta">
+          <div class="phase-card-name" style="color:${phase.color}">${phase.name}</div>
+          <div class="phase-card-period">${phase.weeks} · ${phase.tasks.length} taken</div>
+        </div>
+      </div>
+      <div class="phase-card-body">
+        <ul class="phase-card-tasks">
+          ${phase.tasks.slice(0, 4).map(t => `<li>${t.name}</li>`).join('')}
+          ${phase.tasks.length > 4 ? `<li style="color:var(--gray-400)">+ ${phase.tasks.length - 4} meer...</li>` : ''}
+        </ul>
+      </div>
+      <div class="phase-card-arrow">Bekijk fase →</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  document.getElementById('main').innerHTML = html;
+}
+
+// ── RENDER PHASE ──
+function renderPhase(phaseId) {
+  const phase = phases[phaseId];
+
+  let html = breadcrumb([
+    { label: 'Overzicht', nav: "navigate({page:'overview'})" },
+    { label: phase.name }
+  ]);
+
+  html += `<div class="phase-header" style="background:${phase.bg}">
+    <div class="phase-header-icon">${phase.emoji}</div>
+    <div>
+      <h1 style="color:${phase.color}">${phase.name}</h1>
+      <p style="color:${phase.color}">${phase.description}</p>
+      <div class="phase-meta-pills">
+        <span class="pill" style="color:${phase.color}">${phase.weeks}</span>
+        <span class="pill" style="color:${phase.color}">${phase.tasks.length} taken</span>
+      </div>
+    </div>
+  </div>`;
+
+  // DoD
+  html += `<div class="dod-box">
+    <h2>✅ Definition of Done — Fase ${phaseId + 1} is klaar als...</h2>
+    <div class="dod-grid">
+      <div class="dod-col">
+        <h3 style="color:${phases[1].color}">Technisch</h3>
+        <ul>${phase.dod.tech.map(i => `<li style="--check:${phases[1].color}">${i}</li>`).join('')}</ul>
+      </div>
+      <div class="dod-col">
+        <h3 style="color:${phases[2].color}">Teamadoptie</h3>
+        <ul>${phase.dod.adoptie.map(i => `<li style="--check:${phases[2].color}">${i}</li>`).join('')}</ul>
+      </div>
+    </div>
+  </div>`;
+
+  // Tasks
+  html += `<div class="tasks-section"><h2>Taken in deze fase</h2>`;
+  phase.tasks.forEach((task, ti) => {
+    const totalA = task.actions.length;
+    const doneA = task.actions.filter((a, ai) => checks[`${task.id}-${ai}`]).length;
+    const pct = totalA ? Math.round(doneA / totalA * 100) : 0;
+    const wl = whoLabel(task.who);
+
+    html += `<div class="task-card">
+      <div class="task-card-header" onclick="navigate({page:'task',phaseId:${phaseId},taskId:'${task.id}'})">
+        <div class="task-card-left">
+          <div class="task-num" style="background:${phase.bg};color:${phase.color}">${ti + 1}</div>
+          <div>
+            <div class="task-card-name">${task.name}</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:3px">
+              <div class="task-card-week">${task.week}</div>
+              <span class="action-who ${wl.cls}">${wl.label}</span>
+              <span style="font-size:11px;color:var(--gray-400)">${doneA}/${totalA} acties</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:60px;height:4px;background:var(--gray-100);border-radius:2px;overflow:hidden">
+            <div style="height:100%;background:${phase.color};width:${pct}%;border-radius:2px"></div>
+          </div>
+          <div style="font-size:11px;color:${phase.color};font-weight:500">${pct}%</div>
+          <div style="font-size:12px;color:var(--blue);font-weight:500">Bekijk →</div>
+        </div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  document.getElementById('main').innerHTML = html;
+}
+
+// ── RENDER TASK ──
+function renderTask(phaseId, taskId) {
+  const phase = phases[phaseId];
+  const task = phase.tasks.find(t => t.id === taskId);
+  const wl = whoLabel(task.who);
+
+  let html = breadcrumb([
+    { label: 'Overzicht', nav: "navigate({page:'overview'})" },
+    { label: phase.name, nav: `navigate({page:'phase',phaseId:${phaseId}})` },
+    { label: task.name }
+  ]);
+
+  html += `<div class="task-detail-header">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div class="task-num" style="background:${phase.bg};color:${phase.color};width:32px;height:32px;border-radius:8px;font-size:13px">${phase.tasks.indexOf(task) + 1}</div>
+      <h1>${task.name}</h1>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+      <span class="action-who ${wl.cls}">${wl.label}</span>
+      <span style="font-size:12px;color:var(--gray-400);font-family:'DM Mono',monospace">${task.week}</span>
+      <span style="font-size:12px;color:var(--gray-400)">· ${task.actions.length} acties</span>
+    </div>
+    <p style="font-size:14px;color:var(--gray-600);line-height:1.7">${task.description}</p>
+  </div>`;
+
+  // Actions
+  html += `<div class="actions-full">
+    <h2>📋 Concrete acties — wat er precies moet gebeuren</h2>`;
+
+  task.actions.forEach((action, ai) => {
+    const key = `${task.id}-${ai}`;
+    const done = !!checks[key];
+    const awl = whoLabel(action.who);
+    html += `<div class="action-item">
+      <div class="action-check ${done ? 'done' : ''}" onclick="toggleCheck('${key}')"></div>
+      <div style="flex:1">
+        <div class="action-text ${done ? 'done' : ''}">${action.text}</div>
+      </div>
+      <span class="action-who ${awl.cls}">${awl.label}</span>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // DoD
+  html += `<div class="dod-box">
+    <h2>✅ Klaar als...</h2>
+    <div class="dod-grid">
+      <div class="dod-col">
+        <h3 style="color:${phases[1].color}">Technisch</h3>
+        <ul>${task.dod.tech.length ? task.dod.tech.map(i => `<li>${i}</li>`).join('') : '<li style="color:var(--gray-400)">—</li>'}</ul>
+      </div>
+      <div class="dod-col">
+        <h3 style="color:${phases[2].color}">Teamadoptie</h3>
+        <ul>${task.dod.adoptie.length ? task.dod.adoptie.map(i => `<li>${i}</li>`).join('') : '<li style="color:var(--gray-400)">—</li>'}</ul>
+      </div>
+    </div>
+  </div>`;
+
+  // Nav between tasks
+  const allTasks = phase.tasks;
+  const idx = allTasks.indexOf(task);
+  html += `<div style="display:flex;justify-content:space-between;margin-top:1rem">`;
+  if (idx > 0) {
+    const prev = allTasks[idx - 1];
+    html += `<button class="back-btn" onclick="navigate({page:'task',phaseId:${phaseId},taskId:'${prev.id}'})">← ${prev.name}</button>`;
+  } else html += `<div></div>`;
+  if (idx < allTasks.length - 1) {
+    const next = allTasks[idx + 1];
+    html += `<button class="back-btn" style="color:var(--blue)" onclick="navigate({page:'task',phaseId:${phaseId},taskId:'${next.id}'})">Volgende: ${next.name} →</button>`;
+  }
+  html += `</div>`;
+
+  document.getElementById('main').innerHTML = html;
+}
+
+// ── TOGGLE CHECK ──
+function toggleCheck(key) {
+  checks[key] = !checks[key];
+  saveChecks();
+  render();
+}
+
+// ── NAVIGATE ──
+function navigate(newView) {
+  view = { page: 'overview', phaseId: null, taskId: null, ...newView };
+  render();
+  window.scrollTo(0, 0);
+}
+
+// ── RENDER ──
+function render() {
+  renderSidebar();
+  if (view.page === 'overview') renderOverview();
+  else if (view.page === 'phase') renderPhase(view.phaseId);
+  else if (view.page === 'task') renderTask(view.phaseId, view.taskId);
+}
+
+render();
+</script>
+</body>
+</html>
