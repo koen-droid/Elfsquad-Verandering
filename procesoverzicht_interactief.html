@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procesoverzicht — Systeem Transitie ENC</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --hs:#1A56DB;--hs-l:#EBF1FF;--hs-d:#1240a8;
+  --es:#0B7B5A;--es-l:#E3F5EE;--es-d:#065F46;
+  --bc:#B45309;--bc-l:#FEF3C7;--bc-d:#92400E;
+  --pu:#6D28D9;--pu-l:#EDE9FE;
+  --or:#C2410C;--or-l:#FFF7ED;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
+  --g400:#9CA3AF;--g500:#6B7280;--g600:#4B5563;--g700:#374151;
+  --g800:#1F2937;--g900:#111827;
+  --shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--g50);color:var(--g900);min-height:100vh}
+
+/* NAV */
+nav{background:var(--g900);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.05)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-dot{width:32px;height:32px;background:var(--hs);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white}
+.nav-title{font-size:14px;font-weight:600;color:white}
+.nav-links{display:flex;gap:4px}
+.nav-link{font-size:12px;color:var(--g400);padding:6px 12px;border-radius:6px;cursor:pointer;transition:all .15s;background:transparent;border:none;font-family:inherit}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,.08);color:white}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);padding:64px 24px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(99,102,241,.15) 0%,transparent 60%)}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:500;color:rgba(255,255,255,.7);margin-bottom:20px}
+.hero-badge::before{content:'';width:6px;height:6px;background:#22c55e;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:36px;font-weight:800;color:white;margin-bottom:12px;letter-spacing:-.5px;line-height:1.1}
+.hero h1 span{color:#818cf8}
+.hero p{font-size:15px;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto 32px;line-height:1.7}
+.hero-systems{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.hero-sys{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600}
+.hero-sys.hs{background:var(--hs-l);color:var(--hs)}
+.hero-sys.es{background:var(--es-l);color:var(--es)}
+.hero-sys.bc{background:var(--bc-l);color:var(--bc)}
+.hero-arrow{color:rgba(255,255,255,.3);font-size:18px}
+
+/* LAYOUT */
+.container{max-width:1100px;margin:0 auto;padding:40px 24px}
+.section{margin-bottom:48px}
+.section-header{margin-bottom:24px}
+.section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--g400);margin-bottom:6px}
+.section-title{font-size:22px;font-weight:700;color:var(--g900)}
+.section-sub{font-size:14px;color:var(--g500);margin-top:6px;line-height:1.6}
+
+/* SYSTEM CARDS */
+.systems-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sys-card{background:white;border-radius:16px;padding:24px;border:1px solid var(--g200);box-shadow:var(--shadow);transition:all .2s;cursor:default}
+.sys-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.sys-card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;font-weight:700}
+.sys-card h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.sys-card p{font-size:13px;color:var(--g500);line-height:1.6;margin-bottom:16px}
+.sys-card-role{display:inline-block;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600}
+.sys-arrow{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
+.sys-arrow-line{display:flex;flex-direction:column;align-items:center;gap:3px}
+.arrow-chip{font-size:10px;padding:3px 8px;border-radius:20px;background:var(--g100);color:var(--g500);white-space:nowrap}
+
+/* STATUS CHAIN */
+.status-flow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px 0}
+.status-node{flex:1;min-width:90px}
+.status-card{border-radius:10px;padding:12px 8px;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:center;gap:4px;border:1.5px solid;cursor:pointer;transition:all .2s;position:relative}
+.status-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.status-card.active{box-shadow:0 0 0 3px rgba(99,102,241,.4)}
+.status-num{width:18px;height:18px;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;color:white;margin:0 auto 4px}
+.status-name{font-size:9px;font-weight:600;line-height:1.3}
+.status-owner{font-size:8px;opacity:.65;margin-top:2px}
+.status-connector{display:flex;align-items:center;padding:0 4px;color:var(--g300);font-size:16px;flex-shrink:0}
+.s-hs{background:var(--hs-l);border-color:rgba(26,86,219,.3)}.s-hs .status-name{color:var(--hs-d)}.s-hs .status-num{background:var(--hs)}
+.s-bc{background:var(--bc-l);border-color:rgba(180,83,9,.3)}.s-bc .status-name{color:var(--bc-d)}.s-bc .status-num{background:var(--bc)}
+
+/* INTERACTIVE DEMO */
+.demo-wrapper{background:white;border-radius:20px;border:1px solid var(--g200);box-shadow:var(--shadow-lg);overflow:hidden}
+.demo-header{background:var(--g900);padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+.demo-header h3{font-size:14px;font-weight:600;color:white}
+.demo-tabs{display:flex;gap:4px}
+.demo-tab{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;border:none;font-family:inherit;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)}
+.demo-tab.active{background:white;color:var(--g900)}
+.demo-body{display:grid;grid-template-columns:280px 1fr;min-height:460px}
+.demo-steps{border-right:1px solid var(--g200);padding:16px}
+.demo-steps h4{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:12px}
+.step-item{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:4px;border:1px solid transparent}
+.step-item:hover{background:var(--g50)}
+.step-item.active{background:var(--hs-l);border-color:rgba(26,86,219,.2)}
+.step-item.done{opacity:.5}
+.step-circle{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0}
+.step-circle.done-circle{background:var(--g300)!important}
+.step-text .step-sys{font-size:9px;font-weight:600;margin-bottom:1px}
+.step-text .step-desc{font-size:11px;color:var(--g600);line-height:1.3}
+.demo-visual{padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+.demo-scene{flex:1;display:flex;flex-direction:column;justify-content:center}
+.demo-step-title{font-size:18px;font-weight:700;color:var(--g900);margin-bottom:8px}
+.demo-step-sub{font-size:13px;color:var(--g500);line-height:1.6;margin-bottom:20px}
+.demo-flow-visual{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.demo-sys-box{padding:10px 16px;border-radius:10px;font-size:12px;font-weight:600;border:2px solid transparent;transition:all .3s}
+.demo-sys-box.active-sys{transform:scale(1.05);box-shadow:var(--shadow-md)}
+.demo-arrow-anim{font-size:20px;color:var(--g300);transition:color .3s}
+.demo-arrow-anim.active-arrow{color:var(--hs);animation:arrowPulse .8s ease-in-out infinite alternate}
+@keyframes arrowPulse{from{transform:translateX(0)}to{transform:translateX(4px)}}
+.demo-detail-box{background:var(--g50);border-radius:12px;padding:16px;border:1px solid var(--g200)}
+.demo-detail-box h4{font-size:11px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.demo-detail-items{display:flex;flex-direction:column;gap:6px}
+.demo-detail-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g700)}
+.demo-detail-item::before{content:'✓';color:#22c55e;font-weight:700;flex-shrink:0}
+.demo-controls{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--g100)}
+.demo-progress{display:flex;gap:4px;align-items:center}
+.demo-dot{width:6px;height:6px;border-radius:50%;background:var(--g200);transition:background .2s}
+.demo-dot.active{background:var(--hs)}
+.demo-dot.done-dot{background:var(--g400)}
+.btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:none;font-family:inherit}
+.btn-primary{background:var(--hs);color:white}.btn-primary:hover{background:var(--hs-d)}
+.btn-secondary{background:var(--g100);color:var(--g700)}.btn-secondary:hover{background:var(--g200)}
+.btn-group{display:flex;gap:8px}
+
+/* MONTAGE */
+.montage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.montage-card{background:white;border-radius:16px;border:1px solid var(--g200);padding:20px;box-shadow:var(--shadow)}
+.montage-card h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.montage-card p{font-size:13px;color:var(--g500);line-height:1.6;margin-bottom:16px}
+.montage-steps{display:flex;flex-direction:column;gap:8px}
+.m-step{display:flex;align-items:flex-start;gap:10px}
+.m-step-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.m-step-content h5{font-size:12px;font-weight:600;margin-bottom:2px}
+.m-step-content p{font-size:11px;color:var(--g500);line-height:1.4}
+.timeline-line{width:2px;background:var(--g200);height:20px;margin:2px 0 2px 15px}
+
+/* SYNC TABLE */
+.sync-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sync-card{background:white;border-radius:14px;border:1px solid var(--g200);padding:18px;box-shadow:var(--shadow)}
+.sync-card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sync-card-dot{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;flex-shrink:0}
+.sync-card h3{font-size:13px;font-weight:700}
+.sync-card p{font-size:11px;color:var(--g500);margin-top:2px}
+.sync-items{display:flex;flex-direction:column;gap:5px}
+.sync-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--g700);padding:5px 8px;background:var(--g50);border-radius:6px}
+.sync-item-arrow{font-size:10px;color:var(--g400)}
+
+/* SPELREGELS */
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rule-card{background:white;border-radius:14px;border:1px solid var(--g200);padding:18px;box-shadow:var(--shadow);display:flex;align-items:flex-start;gap:14px}
+.rule-num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:white;flex-shrink:0}
+.rule-content h4{font-size:13px;font-weight:700;margin-bottom:4px}
+.rule-content p{font-size:12px;color:var(--g500);line-height:1.5}
+
+/* FOOTER */
+footer{background:var(--g900);color:var(--g400);text-align:center;padding:24px;font-size:12px;margin-top:20px}
+
+/* ANIMATIONS */
+.fade-in{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-dot">E</div>
+      <span class="nav-title">ENC — Systeem Transitie</span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="scrollTo('systemen')">Systemen</button>
+      <button class="nav-link" onclick="scrollTo('flow')">Statusflow</button>
+      <button class="nav-link" onclick="scrollTo('demo')">Demo</button>
+      <button class="nav-link" onclick="scrollTo('montage')">Montage</button>
+      <button class="nav-link" onclick="scrollTo('spelregels')">Spelregels</button>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Intern document · Systeem Transitie 2025</div>
+  <h1>Van 3 losse systemen naar<br><span>één gestroomlijnde flow</span></h1>
+  <p>HubSpot, Elfsquad en Business Central werken automatisch samen. Sales werkt in HubSpot — de rest volgt vanzelf.</p>
+  <div class="hero-systems">
+    <div class="hero-sys hs">HubSpot</div>
+    <div class="hero-arrow">⇄</div>
+    <div class="hero-sys es">Elfsquad</div>
+    <div class="hero-arrow">→</div>
+    <div class="hero-sys bc">Business Central</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SYSTEMEN -->
+  <div class="section" id="systemen">
+    <div class="section-header">
+      <div class="section-label">01 — De drie systemen</div>
+      <div class="section-title">Wie doet wat?</div>
+      <div class="section-sub">Elk systeem heeft een eigen verantwoordelijkheid. Samen vormen ze één vloeiende keten.</div>
+    </div>
+    <div class="systems-grid">
+      <div class="sys-card">
+        <div class="sys-card-icon" style="background:var(--hs-l);color:var(--hs)">HS</div>
+        <h3 style="color:var(--hs)">HubSpot</h3>
+        <p>De werkplek van sales. Hier worden klanten en deals aangemaakt, statussen bijgehouden en offertes verstuurd naar de klant. Alles begint hier.</p>
+        <span class="sys-card-role" style="background:var(--hs-l);color:var(--hs)">CRM — Klant & Deal</span>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-icon" style="background:var(--es-l);color:var(--es)">ES</div>
+        <h3 style="color:var(--es)">Elfsquad</h3>
+        <p>De offertetool. Alle producten worden hier geconfigureerd, geprijsd en omgezet in een professionele PDF. Altijd de enige plek voor offertes.</p>
+        <span class="sys-card-role" style="background:var(--es-l);color:var(--es)">CPQ — Offerte & Configuratie</span>
+      </div>
+      <div class="sys-card">
+        <div class="sys-card-icon" style="background:var(--bc-l);color:var(--bc)">BC</div>
+        <h3 style="color:var(--bc)">Business Central</h3>
+        <p>Het ERP-systeem voor financiën en orders. Ontvangt alleen echte orders na een gewonnen deal. De werkvoorbereider en financiële afdeling werken hier.</p>
+        <span class="sys-card-role" style="background:var(--bc-l);color:var(--bc)">ERP — Orders & Financiën</span>
+      </div>
+    </div>
+    <div style="background:var(--g100);border-radius:12px;padding:14px 18px;margin-top:14px;font-size:13px;color:var(--g600);line-height:1.6">
+      <strong style="color:var(--g800)">Synchronisatie:</strong> Elke statuswijziging in één systeem wordt automatisch doorgezet naar de andere twee systemen. Medewerkers zien altijd dezelfde status, ongeacht in welk systeem ze werken.
+    </div>
+  </div>
+
+  <!-- STATUSFLOW -->
+  <div class="section" id="flow">
+    <div class="section-header">
+      <div class="section-label">02 — Statusketen</div>
+      <div class="section-title">Van aanvraag tot factuur</div>
+      <div class="section-sub">Sales zet de blauwe statussen in HubSpot. BC zet de oranje statussen. Alles synct automatisch.</div>
+    </div>
+    <div class="status-flow">
+      <div class="status-node">
+        <div class="status-card s-hs" onclick="highlightStatus(this)">
+          <div class="status-num">1</div>
+          <div class="status-name">Offerte aangevraagd</div>
+          <div class="status-owner">Sales · HubSpot</div>
+        </div>
+      </div>
+      <div class="status-connector">›</div>
+      <div class="status-node">
+        <div class="status-card s-hs" onclick="highlightStatus(this)">
+          <div class="status-num">2</div>
+          <div class="status-name">Offerte verzonden</div>
+          <div class="status-owner">Sales · HubSpot</div>
+        </div>
+      </div>
+      <div class="status-connector">›</div>
+      <div class="status-node">
+        <div class="status-card s-hs" onclick="highlightStatus(this)">
+          <div class="status-num">3</div>
+          <div class="status-name">Geaccepteerd</div>
+          <div class="status-owner">Sales · HubSpot</div>
+        </div>
+      </div>
+      <div class="status-connector">›</div>
+      <div class="status-node">
+        <div class="status-card s-bc" onclick="highlightStatus(this)">
+          <div class="status-num">4</div>
+          <div class="status-name">Order aangemaakt</div>
+          <div class="status-owner">Automatisch · BC</div>
+        </div>
+      </div>
+      <div class="status-connector">›</div>
+      <div class="status-node">
+        <div class="status-card s-bc" onclick="highlightStatus(this)">
+          <div class="status-num">5</div>
+          <div class="status-name">In productie</div>
+          <div class="status-owner">Financiën · BC</div>
+        </div>
+      </div>
+      <div class="status-connector">›</div>
+      <div class="status-node">
+        <div class="status-card s-bc" onclick="highlightStatus(this)">
+          <div class="status-num">6</div>
+          <div class="status-name">Montage gepland</div>
+          <div class="status-owner">Werkvoorbereider · BC</div>
+        </div>
+      </div>
+      <div class="status-connector">›</div>
+      <div class="status-node">
+        <div class="status-card s-bc" onclick="highlightStatus(this)">
+          <div class="status-num">7</div>
+          <div class="status-name">Geleverd</div>
+          <div class="status-owner">Financiën · BC</div>
+        </div>
+      </div>
+      <div class="status-connector">›</div>
+      <div class="status-node">
+        <div class="status-card s-bc" onclick="highlightStatus(this)">
+          <div class="status-num">8</div>
+          <div class="status-name">Gefactureerd</div>
+          <div class="status-owner">Financiën · BC</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIEVE DEMO -->
+  <div class="section" id="demo">
+    <div class="section-header">
+      <div class="section-label">03 — Interactieve demo</div>
+      <div class="section-title">Volg een deal stap voor stap</div>
+      <div class="section-sub">Klik door het proces van Easy Noise Control die 4 plafondeilanden bestelt.</div>
+    </div>
+    <div class="demo-wrapper">
+      <div class="demo-header">
+        <h3>Easy Noise Control — 4 plafondeilanden + montage</h3>
+        <div class="demo-tabs">
+          <button class="demo-tab active" onclick="switchScenario('offline',this)">Offline deal</button>
+          <button class="demo-tab" onclick="switchScenario('online',this)">Online deal</button>
+        </div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-steps">
+          <h4>Stappen</h4>
+          <div id="steps-list"></div>
+        </div>
+        <div class="demo-visual">
+          <div class="demo-scene" id="demo-scene"></div>
+          <div class="demo-controls">
+            <div class="demo-progress" id="demo-progress"></div>
+            <div class="btn-group">
+              <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()">← Vorige</button>
+              <button class="btn btn-primary" id="btn-next" onclick="nextStep()">Volgende →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONTAGE -->
+  <div class="section" id="montage">
+    <div class="section-header">
+      <div class="section-label">04 — Montage-workflow</div>
+      <div class="section-title">Automatische klantcommunicatie</div>
+      <div class="section-sub">Als montage is geselecteerd in Elfsquad, mailt HubSpot de klant automatisch op de juiste momenten.</div>
+    </div>
+    <div class="montage-grid">
+      <div class="montage-card">
+        <h3 style="color:var(--or)">Montage = Ja</h3>
+        <p>Wanneer montage is geselecteerd in Elfsquad en de werkvoorbereider de montagedatum heeft ingevoerd in BC, worden de klantmails automatisch verstuurd vanuit HubSpot.</p>
+        <div class="montage-steps">
+          <div class="m-step">
+            <div class="m-step-icon" style="background:var(--es-l)">🔧</div>
+            <div class="m-step-content">
+              <h5 style="color:var(--es)">Elfsquad</h5>
+              <p>Montage geselecteerd bij het opmaken van de offerte</p>
+            </div>
+          </div>
+          <div class="timeline-line"></div>
+          <div class="m-step">
+            <div class="m-step-icon" style="background:var(--bc-l)">📅</div>
+            <div class="m-step-content">
+              <h5 style="color:var(--bc)">Business Central</h5>
+              <p>Werkvoorbereider zet de montagedatum in BC</p>
+            </div>
+          </div>
+          <div class="timeline-line"></div>
+          <div class="m-step">
+            <div class="m-step-icon" style="background:var(--hs-l)">📧</div>
+            <div class="m-step-content">
+              <h5 style="color:var(--hs)">HubSpot — 1 week van tevoren</h5>
+              <p>Automatische mail: datum montage + wat klant moet voorbereiden</p>
+            </div>
+          </div>
+          <div class="timeline-line"></div>
+          <div class="m-step">
+            <div class="m-step-icon" style="background:var(--hs-l)">🔔</div>
+            <div class="m-step-content">
+              <h5 style="color:var(--hs)">HubSpot — 1 dag van tevoren</h5>
+              <p>Automatische herinnering aan de klant</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="montage-card">
+        <h3 style="color:var(--es)">Montage = Nee</h3>
+        <p>Wanneer montage niet is geselecteerd, ontvangt de klant automatisch een leveringsbevestiging zodra de status in BC op "Geleverd" wordt gezet.</p>
+        <div class="montage-steps">
+          <div class="m-step">
+            <div class="m-step-icon" style="background:var(--es-l)">📦</div>
+            <div class="m-step-content">
+              <h5 style="color:var(--es)">Elfsquad</h5>
+              <p>Geen montage geselecteerd — klant installeert zelf</p>
+            </div>
+          </div>
+          <div class="timeline-line"></div>
+          <div class="m-step">
+            <div class="m-step-icon" style="background:var(--bc-l)">✅</div>
+            <div class="m-step-content">
+              <h5 style="color:var(--bc)">Business Central</h5>
+              <p>Financiën zet status op "Geleverd" in BC</p>
+            </div>
+          </div>
+          <div class="timeline-line"></div>
+          <div class="m-step">
+            <div class="m-step-icon" style="background:var(--hs-l)">📬</div>
+            <div class="m-step-content">
+              <h5 style="color:var(--hs)">HubSpot — automatisch</h5>
+              <p>Leveringsbevestiging verstuurd naar klant</p>
+            </div>
+          </div>
+        </div>
+        <div style="background:var(--g50);border-radius:10px;padding:12px;margin-top:16px;font-size:12px;color:var(--g500);line-height:1.5;border:1px solid var(--g200)">
+          <strong style="color:var(--g700)">Let op:</strong> alle statuswijzigingen in BC syncen automatisch terug naar HubSpot en Elfsquad — medewerkers hoeven niets handmatig bij te werken.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SYNCHRONISATIE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">05 — Synchronisatie</div>
+      <div class="section-title">Wie is leidend per status?</div>
+      <div class="section-sub">Elk systeem is leidend voor zijn eigen domein. De rest volgt automatisch.</div>
+    </div>
+    <div class="sync-grid">
+      <div class="sync-card">
+        <div class="sync-card-header">
+          <div class="sync-card-dot" style="background:var(--hs)">HS</div>
+          <div>
+            <h3 style="color:var(--hs)">HubSpot is leidend voor</h3>
+            <p style="color:var(--g500)">Sales-statussen</p>
+          </div>
+        </div>
+        <div class="sync-items">
+          <div class="sync-item"><span>Offerte aangevraagd</span><span class="sync-item-arrow">→ ES + BC</span></div>
+          <div class="sync-item"><span>Offerte verzonden</span><span class="sync-item-arrow">→ ES + BC</span></div>
+          <div class="sync-item"><span>Geaccepteerd</span><span class="sync-item-arrow">→ ES + BC</span></div>
+        </div>
+      </div>
+      <div class="sync-card">
+        <div class="sync-card-header">
+          <div class="sync-card-dot" style="background:var(--bc)">BC</div>
+          <div>
+            <h3 style="color:var(--bc)">BC is leidend voor</h3>
+            <p style="color:var(--g500)">Operationele statussen</p>
+          </div>
+        </div>
+        <div class="sync-items">
+          <div class="sync-item"><span>In productie</span><span class="sync-item-arrow">→ HS + ES</span></div>
+          <div class="sync-item"><span>Geleverd</span><span class="sync-item-arrow">→ HS + ES</span></div>
+          <div class="sync-item"><span>Gefactureerd</span><span class="sync-item-arrow">→ HS + ES</span></div>
+          <div class="sync-item"><span>Montagedatum</span><span class="sync-item-arrow">→ HS (mail)</span></div>
+        </div>
+      </div>
+      <div class="sync-card">
+        <div class="sync-card-header">
+          <div class="sync-card-dot" style="background:var(--es)">ES</div>
+          <div>
+            <h3 style="color:var(--es)">Elfsquad is leidend voor</h3>
+            <p style="color:var(--g500)">Offerte-inhoud</p>
+          </div>
+        </div>
+        <div class="sync-items">
+          <div class="sync-item"><span>Productconfiguratie</span><span class="sync-item-arrow">→ HS</span></div>
+          <div class="sync-item"><span>Offerte-PDF + bedrag</span><span class="sync-item-arrow">→ HS</span></div>
+          <div class="sync-item"><span>Montage ja/nee</span><span class="sync-item-arrow">→ HS + BC</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPELREGELS -->
+  <div class="section" id="spelregels">
+    <div class="section-header">
+      <div class="section-label">06 — Spelregels</div>
+      <div class="section-title">De 5 regels die iedereen moet kennen</div>
+    </div>
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-num" style="background:var(--hs)">1</div>
+        <div class="rule-content">
+          <h4>Sales werkt in HubSpot</h4>
+          <p>Alle statuswijzigingen worden in HubSpot gezet door sales. Nooit direct iets aanpassen in Elfsquad of BC zonder via HubSpot te gaan.</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num" style="background:var(--es)">2</div>
+        <div class="rule-content">
+          <h4>Offerte altijd via Elfsquad</h4>
+          <p>Elke offerte wordt aangemaakt, geconfigureerd en opgemaakt in Elfsquad. Nooit direct in BC een offerte aanmaken.</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num" style="background:var(--bc)">3</div>
+        <div class="rule-content">
+          <h4>BC = alleen echte orders</h4>
+          <p>BC ontvangt pas data bij een gewonnen deal. Geen losse offertes meer in BC — die vervuilen de administratie en rapportages.</p>
+        </div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-num" style="background:var(--pu)">4</div>
+        <div class="rule-content">
+          <h4>Statussen syncen automatisch</h4>
+          <p>Nooit handmatig een status overtypen van het ene naar het andere systeem. Als iets niet automatisch synct, meld het dan als fout.</p>
+        </div>
+      </div>
+      <div class="rule-card" style="grid-column:1/-1">
+        <div class="rule-num" style="background:var(--or)">5</div>
+        <div class="rule-content">
+          <h4>Montage = automatische klantcommunicatie</h4>
+          <p>Bij montage = ja in Elfsquad en een ingevulde montagedatum in BC, verstuurt HubSpot automatisch de klantmails. De werkvoorbereider hoeft dit niet handmatig te doen — alleen de datum invoeren in BC is genoeg.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Intern document — Easy Noise Control · Systeem Transitie HubSpot · Elfsquad · Business Central</p>
+</footer>
+
+<script>
+// Navigation scroll
+function scrollTo(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+}
+
+// Status highlight
+function highlightStatus(el){
+  document.querySelectorAll('.status-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Demo data
+var scenarios = {
+  offline:[
+    {sys:'HubSpot',color:'var(--hs)',step:'Klant aanmaken',desc:'Binnendienst ontvangt de telefoon van Easy Noise Control. Ze maakt direct een nieuw bedrijf + deal aan in HubSpot en vult alle gegevens in: naam, adres, BTW-nummer, taal en valuta.',details:['Bedrijf: Easy Noise Control','4 plafondeilanden + montage','Contactpersoon: Jan de Vries','Taal: NL · Valuta: EUR'],active:['hs'],flow:['hs','','es','','bc']},
+    {sys:'HubSpot → Elfsquad',color:'var(--hs)',step:'Status: Offerte aangevraagd',desc:'Sales zet de status op "Offerte aangevraagd" in HubSpot. Alle klantgegevens vliegen automatisch naar Elfsquad. Geen handmatig overtypen — de koppeling doet het werk.',details:['Klantdata automatisch verstuurd','Naam, adres, BTW, taal, valuta','Deal-ID als unieke referentie','Elfsquad ontvangt alle data'],active:['hs','es'],flow:['hs','→','es','','bc']},
+    {sys:'Elfsquad',color:'var(--es)',step:'Offerte opmaken',desc:'In Elfsquad wordt de offerte opgemaakt: 4 plafondeilanden geconfigureerd, prijzen berekend. Montage = ja wordt geselecteerd. Dit vlaggetje gaat later mee voor de automatische klantmails.',details:['4x Plafondeiland XL geconfigureerd','Prijs automatisch berekend','Montage = ja geselecteerd','PDF gegenereerd en klaar'],active:['es'],flow:['hs','','es','','bc']},
+    {sys:'Elfsquad → HubSpot',color:'var(--es)',step:'PDF terugkoppeling',desc:'Zodra de offerte klaar is in Elfsquad, stuurt het systeem automatisch de offerte-ID, het totaalbedrag en de PDF terug naar HubSpot. De PDF verschijnt als bijlage in de deal.',details:['Offerte-ID teruggestuurd','Totaalbedrag: €8.400 excl. BTW','PDF gekoppeld als bijlage','Status in HubSpot bijgewerkt'],active:['hs','es'],flow:['hs','←','es','','bc']},
+    {sys:'HubSpot',color:'var(--hs)',step:'Offerte versturen',desc:'Sales verstuurt de offerte vanuit HubSpot naar Easy Noise Control. De status wordt gezet op "Offerte verzonden". Elfsquad synct automatisch mee.',details:['Mail verstuurd naar jan@enc.nl','Status: Offerte verzonden','Elfsquad status: Verzonden','Bijlage: Offerte_ENC_v1.pdf'],active:['hs'],flow:['hs','','es','','bc']},
+    {sys:'HubSpot → BC',color:'var(--hs)',step:'Klant akkoord — status Gewonnen',desc:'Easy Noise Control gaat akkoord. Sales zet de deal op "Geaccepteerd" in HubSpot. De order schiet automatisch naar Business Central. BC maakt het klantnummer en de order aan.',details:['Status: Geaccepteerd (Gewonnen)','Order automatisch naar BC','BC ordernummer: 24-003812','Klantnummer aangemaakt in BC'],active:['hs','bc'],flow:['hs','→','es','→','bc']},
+    {sys:'Business Central',color:'var(--bc)',step:'Werkvoorbereider plant montage',desc:'De werkvoorbereider pakt de order op in BC. Voorraad wordt gecheckt, montage wordt gepland. De montagedatum wordt ingevoerd in BC — HubSpot ontvangt die datum automatisch en verstuurt de klantmails.',details:['Montagedate ingevoerd: 15 jan','Voorraad OK — geen bestelling','HubSpot mail klant: 8 jan','HubSpot herinnering: 14 jan'],active:['bc'],flow:['hs','←','es','','bc']},
+  ],
+  online:[
+    {sys:'Website',color:'var(--pu)',step:'Klant configureert op website',desc:'Easy Noise Control bezoekt de website en configureert zelf de plafondeilanden in de Elfsquad-configurator. Ze vult naam en e-mailadres in om de offerte aan te vragen.',details:['Configuratie: 4 plafondeilanden','Naam: Easy Noise Control','Email: info@enc.nl','Aanvraag verstuurd'],active:[],flow:['ws','→','es','','bc']},
+    {sys:'HubSpot',color:'var(--hs)',step:'Automatisch deal aangemaakt',desc:'Zodra de klant de aanvraag verstuurt, wordt er automatisch een deal aangemaakt in HubSpot. Sales ziet de nieuwe lead direct in hun overzicht — geen handmatig aanmaken nodig.',details:['Deal automatisch aangemaakt','Lead zichtbaar voor sales','Klantdata overgenomen','Status: Offerte aangevraagd'],active:['hs'],flow:['hs','←','es','','bc']},
+    {sys:'Elfsquad',color:'var(--es)',step:'Offerte automatisch klaar',desc:'De configuratie van de website is al opgeslagen in Elfsquad. Sales opent de offerte, controleert, past eventueel aan en maakt hem definitief.',details:['Configuratie overgenomen','Sales controleert en keurt goed','Prijs bevestigd','Montage ja/nee aanpasbaar'],active:['es'],flow:['hs','','es','','bc']},
+    {sys:'HubSpot',color:'var(--hs)',step:'Sales verstuurt offerte',desc:'Sales verstuurt de offerte vanuit HubSpot. De PDF van Elfsquad zit automatisch als bijlage. Status wordt "Offerte verzonden".',details:['Mail verstuurd naar info@enc.nl','PDF als bijlage toegevoegd','Status: Offerte verzonden','Klant ontvangt offerte'],active:['hs'],flow:['hs','','es','','bc']},
+    {sys:'HubSpot → BC',color:'var(--hs)',step:'Akkoord → order naar BC',desc:'Klant gaat akkoord. Zelfde flow als een offline deal: status Gewonnen → automatisch naar BC.',details:['Status: Geaccepteerd','Order naar BC','BC ordernummer ontvangen','Werkvoorbereider pakt over'],active:['hs','bc'],flow:['hs','→','es','→','bc']},
+  ]
+};
+
+var currentScenario = 'offline';
+var currentStep = 0;
+
+function switchScenario(s, btn){
+  currentScenario = s;
+  currentStep = 0;
+  document.querySelectorAll('.demo-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderDemo();
+}
+
+function renderDemo(){
+  var steps = scenarios[currentScenario];
+  var step = steps[currentStep];
+
+  // Steps list
+  var sl = document.getElementById('steps-list');
+  sl.innerHTML = '';
+  steps.forEach(function(s,i){
+    var el = document.createElement('div');
+    el.className = 'step-item' + (i===currentStep?' active':'') + (i<currentStep?' done':'');
+    el.onclick = (function(idx){return function(){currentStep=idx;renderDemo();}})(i);
+    el.innerHTML = '<div class="step-circle '+(i<currentStep?'done-circle':'')+'" style="background:'+(i<currentStep?'var(--g300)':s.color)+'">'+(i<currentStep?'✓':(i+1))+'</div><div class="step-text"><div class="step-sys" style="color:'+s.color+'">'+s.sys+'</div><div class="step-desc">'+s.step+'</div></div>';
+    sl.appendChild(el);
+  });
+
+  // Scene
+  var scene = document.getElementById('demo-scene');
+  var flowHtml = '';
+  var flowItems = step.flow;
+  var sysNames = currentScenario==='online'&&currentStep===0
+    ? ['Website','','Elfsquad','','BC']
+    : ['HubSpot','','Elfsquad','','BC'];
+  var sysColors = currentScenario==='online'&&currentStep===0
+    ? ['var(--pu)','','var(--es)','','var(--bc)']
+    : ['var(--hs)','','var(--es)','','var(--bc)'];
+  var sysBgs = currentScenario==='online'&&currentStep===0
+    ? ['var(--pu-l)','','var(--es-l)','','var(--bc-l)']
+    : ['var(--hs-l)','','var(--es-l)','','var(--bc-l)'];
+  var activeList = step.active;
+  var activeMap = {'hs':0,'es':2,'bc':4,'ws':0};
+
+  [0,1,2,3,4].forEach(function(i){
+    if(i%2===1){
+      var arrowChar = flowItems[i]||'';
+      var isActive = arrowChar!=='';
+      flowHtml += '<div class="demo-arrow-anim'+(isActive?' active-arrow':'')+'">'+arrowChar+'</div>';
+    } else {
+      var idx = i;
+      var isActiveSys = activeList.some(function(a){return (activeMap[a]||0)===idx||(a==='es'&&idx===2)||(a==='bc'&&idx===4);});
+      flowHtml += '<div class="demo-sys-box'+(isActiveSys?' active-sys':'')+'" style="background:'+sysBgs[i]+';color:'+sysColors[i]+';border-color:'+(isActiveSys?sysColors[i]:'transparent')+'">'+sysNames[i]+'</div>';
+    }
+  });
+
+  var detailItems = step.details.map(function(d){return '<div class="demo-detail-item">'+d+'</div>';}).join('');
+
+  scene.innerHTML = '<div class="fade-in"><div class="demo-step-title">Stap '+(currentStep+1)+': '+step.step+'</div><div class="demo-step-sub">'+step.desc+'</div><div class="demo-flow-visual">'+flowHtml+'</div><div class="demo-detail-box"><h4>Details van deze stap</h4><div class="demo-detail-items">'+detailItems+'</div></div></div>';
+
+  // Progress
+  var prog = document.getElementById('demo-progress');
+  prog.innerHTML = '';
+  steps.forEach(function(_,i){
+    var d = document.createElement('div');
+    d.className = 'demo-dot'+(i===currentStep?' active':'')+(i<currentStep?' done-dot':'');
+    prog.appendChild(d);
+  });
+
+  document.getElementById('btn-prev').disabled = currentStep===0;
+  document.getElementById('btn-next').textContent = currentStep===steps.length-1 ? '↺ Opnieuw' : 'Volgende →';
+}
+
+function nextStep(){
+  var steps = scenarios[currentScenario];
+  if(currentStep<steps.length-1){currentStep++;renderDemo();}
+  else{currentStep=0;renderDemo();}
+}
+function prevStep(){
+  if(currentStep>0){currentStep--;renderDemo();}
+}
+
+renderDemo();
+</script>
+</body>
+</html>
