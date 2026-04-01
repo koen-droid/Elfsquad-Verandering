@@ -163,18 +163,18 @@ body{font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:var(-
     <span class="ttitle">Systeem Transitie — Implementatieplanning</span>
     <span class="tsub">HubSpot · Elfsquad · Business Central</span>
   </div>
-  <div class="tright">6 maanden · 15+ personen · 24 weken</div>
+  <div class="tright">40 weken · 15+ personen</div>
 </div>
 <div class="layout">
   <aside class="sidebar" id="sidebar"></aside>
   <main class="main" id="main"></main>
 </div>
 <script>
-const W=24;
+const W=40;
 const PH=[
   {
     id:0,emoji:"🔍",name:"Fase 1 — Fundament leggen",color:"#1A56DB",bg:"#EBF1FF",
-    weeks:"Week 1 – 4",ws:0,wd:4,
+    weeks:"Week 1 – 7",ws:0,wd:7,
     intro:"Voordat er iets technisch gebouwd wordt, moet het fundament op orde zijn. In deze fase weet je precies wat er moet, wie het gaat doen, en begrijpt het team waarom deze verandering nodig is.",
     dod:{
       tech:[
@@ -194,7 +194,7 @@ const PH=[
     },
     tasks:[
       {
-        id:"1-1",name:"Technische partij selecteren voor HubSpot-koppelingen",week:"Week 1 – 2",ws:0,wd:2,who:"mgmt",
+        id:"1-1",name:"Technische partij selecteren voor HubSpot-koppelingen",week:"Week 1 – 3",ws:0,wd:3,who:"mgmt",
         desc:"Je hebt een externe partij nodig die de automatische koppelingen bouwt tussen HubSpot, Elfsquad en Business Central. Dit is gespecialiseerd maatwerk — het gaat om API-verbindingen die foutloos moeten werken. Zonder een bevestigde partij staat alles stil.",
         why:"Dit is de meest urgente actie van het hele project. Zonder technische partij kan de bouw niet starten, schuift alles op en mis je je deadline van 6 maanden.",
         actions:[
@@ -210,7 +210,7 @@ const PH=[
         dod:{tech:["Partij gekozen, schriftelijk bevestigd, eerste werksessie ingepland"],adoptie:[]}
       },
       {
-        id:"1-2",name:"Technische partij selecteren voor Business Central",week:"Week 1 – 2",ws:0,wd:2,who:"mgmt",
+        id:"1-2",name:"Technische partij selecteren voor Business Central",week:"Week 1 – 3",ws:0,wd:3,who:"mgmt",
         desc:"Business Central vereist een gecertificeerde Microsoft-partner. Dit kan dezelfde partij zijn als voor HubSpot, maar dat hoeft niet. Vraag eerst je huidige BC-leverancier of zij dit ook kunnen.",
         why:"BC is een Microsoft-product met specifieke kennis vereist. Een partij die dit niet kent maakt fouten in de orderadministratie — dat kost je veel meer tijd dan het selectieproces nu.",
         actions:[
@@ -224,7 +224,7 @@ const PH=[
         dod:{tech:["BC-partij gekozen en bevestigd","Afstemming tussen HubSpot-partij en BC-partij heeft plaatsgevonden"],adoptie:[]}
       },
       {
-        id:"1-3",name:"Intern projectverantwoordelijke aanwijzen",week:"Week 1",ws:0,wd:1,who:"mgmt",
+        id:"1-3",name:"Intern projectverantwoordelijke aanwijzen",week:"Week 1",ws:0,wd:2,who:"mgmt",
         desc:"Één persoon intern stuurt dit project aan. Niet technisch per se, maar iemand met overzicht, beslissingsbevoegdheid en voldoende tijd. Bij 15+ medewerkers en meerdere externe partijen is dit geen luxe maar noodzaak.",
         why:"Zonder intern aanspreekpunt gaat communicatie verloren, worden beslissingen uitgesteld en komen externe partijen vragen stellen bij de verkeerde persoon. Dat vertraagt alles.",
         actions:[
@@ -237,7 +237,7 @@ const PH=[
         dod:{tech:[],adoptie:["Projectverantwoordelijke aangewezen en gecommuniceerd aan team en externe partijen"]}
       },
       {
-        id:"1-4",name:"Vastleggen welke gegevens tussen systemen worden uitgewisseld",week:"Week 2 – 3",ws:1,wd:2,who:"mgmt",
+        id:"1-4",name:"Vastleggen welke gegevens tussen systemen worden uitgewisseld",week:"Week 2 – 4",ws:1,wd:3,who:"mgmt",
         desc:"Voordat de technische partij ook maar één regel code schrijft, moet helder zijn welke gegevens van welk systeem naar welk systeem gaan. Dit is de blauwdruk voor alles wat erna komt.",
         why:"Als dit niet op papier staat, gaan de technische partijen aannames maken. Aannames leiden tot fouten. Fouten kosten tijd en geld om achteraf te herstellen.",
         actions:[
@@ -253,7 +253,7 @@ const PH=[
         dod:{tech:["Gegevensoverzicht klaar, bevestigd door technische partijen"],adoptie:[]}
       },
       {
-        id:"1-5",name:"Kick-off sessie met het hele team",week:"Week 2 – 3",ws:1,wd:2,who:"adopt",
+        id:"1-5",name:"Kick-off sessie met het hele team",week:"Week 2 – 4",ws:1,wd:3,who:"adopt",
         desc:"15+ mensen die verrast worden door een nieuwe werkwijze is een recept voor weerstand. Vroeg communiceren, het waarom uitleggen en ruimte geven voor vragen maakt het verschil tussen adoptie en sabotage.",
         why:"Weerstand bij de livegang is bijna altijd te herleiden naar mensen die zich niet gehoord voelden. Voorkom dit nu, niet achteraf.",
         actions:[
@@ -270,7 +270,7 @@ const PH=[
         dod:{tech:[],adoptie:["Kick-off gehouden, alle medewerkers aanwezig of achteraf bijgepraat","Poll afgenomen en resultaten besproken","Extra gesprekken gepland voor medewerkers met score onder 3"]}
       },
       {
-        id:"1-6",name:"Nieuwe rollen en taken per medewerker vastleggen",week:"Week 3 – 4",ws:2,wd:2,who:"mgmt",
+        id:"1-6",name:"Nieuwe rollen en taken per medewerker vastleggen",week:"Week 4 – 6",ws:3,wd:3,who:"mgmt",
         desc:"Iedereen moet weten wat zijn of haar nieuwe rol precies inhoudt. Niet globaal, maar concreet: welke stap doe jij, wanneer geef je het over aan de volgende, en wat doe je niet meer.",
         why:"Onduidelijkheid over rollen leidt tot fouten, dubbel werk en conflicten. Leg het nu vast zodat er tijdens de training geen discussie over is.",
         actions:[
@@ -288,7 +288,7 @@ const PH=[
   },
   {
     id:1,emoji:"⚙️",name:"Fase 2 — Technische bouw",color:"#0B7B5A",bg:"#E3F5EE",
-    weeks:"Week 5 – 12",ws:4,wd:8,
+    weeks:"Week 8 – 20",ws:7,wd:13,
     intro:"De technische partijen bouwen de koppelingen. Jouw rol als opdrachtgever is de voortgang bewaken, tussendoor testen en ervoor zorgen dat het team ziet wat er wordt gebouwd. De bouw duurt langer dan je denkt — plan buffer in.",
     dod:{
       tech:[
@@ -308,7 +308,7 @@ const PH=[
     },
     tasks:[
       {
-        id:"2-1",name:"HubSpot inrichten: dealstages, velden en workflows",week:"Week 5 – 7",ws:4,wd:3,who:"tech",
+        id:"2-1",name:"HubSpot inrichten: dealstages, velden en workflows",week:"Week 8 – 11",ws:7,wd:4,who:"tech",
         desc:"HubSpot is het startpunt van de hele keten. Als hier iets niet klopt, werkt alles erachter ook niet. De technische partij voert de inrichting uit — jij controleert of het aansluit op hoe jullie werken.",
         why:"Een goed ingerichte HubSpot voorkomt dat medewerkers handmatig velden moeten bijhouden of fouten maken die doorwerken in Elfsquad en BC.",
         actions:[
@@ -325,7 +325,7 @@ const PH=[
         dod:{tech:["Alle velden aanwezig en correct ingesteld","Validaties blokkeren de status Gewonnen bij ontbrekende velden","Workflow vergrendelt velden bij Gewonnen","Testdeal succesvol doorlopen"],adoptie:["Binnendienst heeft de schermen gezien en feedback gegeven"]}
       },
       {
-        id:"2-2",name:"Koppeling bouwen: HubSpot naar Elfsquad",week:"Week 6 – 9",ws:5,wd:4,who:"tech",
+        id:"2-2",name:"Koppeling bouwen: HubSpot naar Elfsquad",week:"Week 9 – 13",ws:8,wd:5,who:"tech",
         desc:"Zodra een salesperson in HubSpot aangeeft dat er een offerte nodig is, gaan alle klant- en dealgegevens automatisch naar Elfsquad. Geen handmatig overtypen meer.",
         why:"Elke keer dat iemand gegevens handmatig overtypt ontstaan fouten. Een klant met een verkeerd BTW-nummer of adres op de offerte geeft een slechte indruk en kost tijd om te corrigeren.",
         actions:[
@@ -342,7 +342,7 @@ const PH=[
         dod:{tech:["Testdata correct aangekomen in Elfsquad","Foutpreventie werkt: tweede trigger maakt geen duplicaat","Foutmelding zichtbaar bij ontbrekende velden"],adoptie:[]}
       },
       {
-        id:"2-3",name:"Koppeling bouwen: Elfsquad naar HubSpot",week:"Week 8 – 10",ws:7,wd:3,who:"tech",
+        id:"2-3",name:"Koppeling bouwen: Elfsquad naar HubSpot",week:"Week 13 – 16",ws:12,wd:4,who:"tech",
         desc:"Zodra Elfsquad iets wijzigt aan een offerte — de status, het bedrag, of de PDF — komt die informatie automatisch terug in het deal-record in HubSpot. Sales hoeft niet in Elfsquad te kijken.",
         why:"Als de offertestatus en PDF niet automatisch terugkomen in HubSpot, moeten medewerkers handmatig schakelen tussen twee systemen. Dat is precies wat je wilt voorkomen.",
         actions:[
@@ -357,7 +357,7 @@ const PH=[
         dod:{tech:["Offerte-ID, status, versie en bedrag komen correct terug in HubSpot","PDF is zichtbaar als bijlage in de deal","Versienummer wordt correct bijgewerkt"],adoptie:[]}
       },
       {
-        id:"2-4",name:"Koppeling bouwen: HubSpot naar Business Central",week:"Week 10 – 12",ws:9,wd:3,who:"tech",
+        id:"2-4",name:"Koppeling bouwen: HubSpot naar Business Central",week:"Week 16 – 19",ws:15,wd:4,who:"tech",
         desc:"Alleen wanneer een deal in HubSpot de status Gewonnen krijgt, wordt er automatisch een order aangemaakt in BC. BC bevat daarna alleen echte orders — geen offertes die nooit orders worden.",
         why:"Op dit moment vervuilt BC met offertes die nooit order worden. Dat maakt rapportages onbetrouwbaar en zorgt voor verwarring. De nieuwe koppeling maakt BC schoon.",
         actions:[
@@ -373,7 +373,7 @@ const PH=[
         dod:{tech:["Order correct aangemaakt in BC bij status Gewonnen","BC ordernummer verschijnt in HubSpot","Geen dubbele orders bij herhaalde trigger"],adoptie:[]}
       },
       {
-        id:"2-5",name:"Live demo voor het hele team",week:"Week 11 – 12",ws:10,wd:2,who:"adopt",
+        id:"2-5",name:"Live demo voor het hele team",week:"Week 19 – 20",ws:18,wd:2,who:"adopt",
         desc:"Halverwege de bouw laat je het team de volledige nieuwe flow zien. Ze hoeven nu nog niets zelf te doen — alleen kijken, vragen stellen en feedback geven. Dit verlaagt de drempel voor de training later.",
         why:"Medewerkers die voor het eerst de nieuwe flow zien tijdens de training hebben weinig tijd om te wennen. Een vroege demo maakt de training efficiënter en vermindert weerstand.",
         actions:[
@@ -390,7 +390,7 @@ const PH=[
   },
   {
     id:2,emoji:"🎓",name:"Fase 3 — Training & adoptie",color:"#B45309",bg:"#FEF3C7",
-    weeks:"Week 13 – 18",ws:12,wd:6,
+    weeks:"Week 21 – 30",ws:20,wd:10,
     intro:"Dit is de meest kritische fase. Met 15+ medewerkers is adoptie het zwaarste deel van het project. Techniek werkt alleen als mensen er goed mee omgaan. Neem hier ruim de tijd voor.",
     dod:{
       tech:[
@@ -410,7 +410,7 @@ const PH=[
     },
     tasks:[
       {
-        id:"3-1",name:"Werkinstructies en overzichtskaarten maken",week:"Week 13 – 14",ws:12,wd:2,who:"mgmt",
+        id:"3-1",name:"Werkinstructies en overzichtskaarten maken",week:"Week 21 – 23",ws:20,wd:3,who:"mgmt",
         desc:"Medewerkers willen geen uitgebreid handboek raadplegen als ze een vraag hebben. Ze willen een simpele kaart die ze op hun bureau kunnen leggen of op hun telefoon opslaan.",
         why:"Hoe makkelijker de instructie, hoe sneller mensen zelfstandig werken. Investeer nu een dag in een goede instructie en bespaar daarna weken aan vragen en fouten.",
         actions:[
@@ -427,7 +427,7 @@ const PH=[
         dod:{tech:["Werkinstructies en overzichtskaarten klaar, gereviewed en gedistribueerd"],adoptie:["Minimaal één medewerker per rol heeft de instructie gevalideerd"]}
       },
       {
-        id:"3-2",name:"Training binnendienst",week:"Week 14 – 15",ws:13,wd:2,who:"adopt",
+        id:"3-2",name:"Training binnendienst",week:"Week 23 – 25",ws:22,wd:3,who:"adopt",
         desc:"Een praktijkgerichte training van twee uur voor alle binnendienst-medewerkers. Geen theorie over systemen — oefenen met echte scenario's in de testomgeving.",
         why:"De binnendienst heeft het meeste contact met alle drie de systemen en is het eerste aanspreekpunt voor klanten. Fouten hier zijn direct zichtbaar voor de klant.",
         actions:[
@@ -445,7 +445,7 @@ const PH=[
         dod:{tech:[],adoptie:["Alle binnendienst-medewerkers hebben de training gevolgd","Elk persoon heeft het volledige scenario zelfstandig doorlopen","Knelpunten gedocumenteerd en verwerkt in de instructie"]}
       },
       {
-        id:"3-3",name:"Training buitendienst",week:"Week 14 – 15",ws:13,wd:2,who:"adopt",
+        id:"3-3",name:"Training buitendienst",week:"Week 23 – 25",ws:22,wd:3,who:"adopt",
         desc:"Een praktijkgerichte training van twee uur voor alle buitendienst-medewerkers. Focus op Elfsquad voor offertes en HubSpot voor dealopvolging.",
         why:"De buitendienst is veel onderweg en heeft weinig tijd voor systemen. De training moet snel, praktisch en direct toepasbaar zijn.",
         actions:[
@@ -462,7 +462,7 @@ const PH=[
         dod:{tech:[],adoptie:["Alle buitendienst-medewerkers hebben de training gevolgd","Elfsquad offerte aanmaken en versturen geoefend","Dealopvolging in HubSpot geoefend"]}
       },
       {
-        id:"3-4",name:"Training werkvoorbereider",week:"Week 15 – 16",ws:14,wd:2,who:"adopt",
+        id:"3-4",name:"Training werkvoorbereider",week:"Week 25 – 27",ws:24,wd:3,who:"adopt",
         desc:"Een gerichte training van anderhalf uur voor de werkvoorbereiders. Focus op het ontvangen van een gewonnen deal en wat je daarmee doet.",
         why:"De werkvoorbereider is de schakel tussen commercieel en operationeel. Als de overdracht hier niet goed gaat, worden fouten pas zichtbaar bij de klant.",
         actions:[
@@ -478,7 +478,7 @@ const PH=[
         dod:{tech:[],adoptie:["Werkvoorbereider heeft de training gevolgd","BC-gebruik en facturatie-check geoefend","Overdrachtsproces duidelijk voor alle betrokkenen"]}
       },
       {
-        id:"3-5",name:"Oefenweek: zelfstandig oefenen in testomgeving",week:"Week 16 – 17",ws:15,wd:2,who:"adopt",
+        id:"3-5",name:"Oefenweek: zelfstandig oefenen in testomgeving",week:"Week 27 – 29",ws:26,wd:3,who:"adopt",
         desc:"Training is geen garantie voor beheersing. Medewerkers moeten de kans hebben zelfstandig te oefenen en te ontdekken waar ze vastlopen — vóórdat het live gaat.",
         why:"Bij 15+ medewerkers wil je niet dat iedereen op de eerste dag na livegang tegelijk met vragen komt. Een oefenweek voorkomt dat.",
         actions:[
@@ -492,7 +492,7 @@ const PH=[
         dod:{tech:["Testomgeving stabiel en toegankelijk voor alle medewerkers"],adoptie:["Alle medewerkers hebben de drie scenario's doorlopen","FAQ-document opgesteld en gedeeld"]}
       },
       {
-        id:"3-6",name:"Readiness check: go of geen go?",week:"Week 18",ws:17,wd:1,who:"mgmt",
+        id:"3-6",name:"Readiness check: go of geen go?",week:"Week 30",ws:29,wd:1,who:"mgmt",
         desc:"Je gaat niet live op gevoel. Je gaat live op basis van een eerlijk beeld van hoe klaar het team is. Een lage score betekent dat je de training uitbreidt — niet dat je doordubt.",
         why:"Eén medewerker die niet weet wat hij of zij doet bij livegang kan klantproblemen, foute orders of verloren data veroorzaken. Dat kost meer dan een extra trainingsweek.",
         actions:[
@@ -512,7 +512,7 @@ const PH=[
   },
   {
     id:3,emoji:"🚀",name:"Fase 4 — Testfase & livegang",color:"#9B1C1C",bg:"#FEE2E2",
-    weeks:"Week 19 – 24",ws:18,wd:6,
+    weeks:"Week 31 – 40",ws:30,wd:10,
     intro:"Pas als het team klaar is en de techniek is goedgekeurd, ga je testen met echte data. De livegang is een bewuste beslissing — niet een sprong in het diepe. Zorg voor een zachte landing.",
     dod:{
       tech:[
@@ -531,7 +531,7 @@ const PH=[
     },
     tasks:[
       {
-        id:"4-1",name:"Interne testfase: zoek actief naar fouten",week:"Week 19 – 21",ws:18,wd:3,who:"tech",
+        id:"4-1",name:"Interne testfase: zoek actief naar fouten",week:"Week 31 – 34",ws:30,wd:4,who:"tech",
         desc:"Doorloop de volledige keten met testdata. Zoek actief naar fouten — ga er vanuit dat er iets mis gaat en bewijs het tegendeel. Documenteer alles.",
         why:"De eerste keer dat iets echt fout gaat mag niet bij een echte klant zijn. Test nu grondig zodat de pilotfase soepel verloopt.",
         actions:[
@@ -547,7 +547,7 @@ const PH=[
         dod:{tech:["Drie scenario's zonder blokkerende fouten doorlopen","Probleemlijst opgesteld, alle blokkerende problemen opgelost"],adoptie:["Medewerkers hebben meegedaan en bevindingen zijn gedocumenteerd"]}
       },
       {
-        id:"4-2",name:"Pilotfase: eerste echte deals via nieuwe flow",week:"Week 21 – 23",ws:20,wd:3,who:"adopt",
+        id:"4-2",name:"Pilotfase: eerste echte deals via nieuwe flow",week:"Week 35 – 38",ws:34,wd:4,who:"adopt",
         desc:"Selecteer bewust twee of drie eenvoudige, echte deals voor de pilot. Begeleid de medewerkers actief. Documenteer alles wat niet soepel loopt.",
         why:"De stap van testdata naar productie is groot. Een gecontroleerde pilot geeft je de kans problemen te vinden en op te lossen zonder dat het alle 15+ medewerkers tegelijk raakt.",
         actions:[
@@ -563,7 +563,7 @@ const PH=[
         dod:{tech:["Minimaal drie echte deals verwerkt zonder blokkerende fouten"],adoptie:["Medewerkers hebben de pilot zelfstandig uitgevoerd met begeleiding","Bevindingen gedocumenteerd en besproken"]}
       },
       {
-        id:"4-3",name:"Livegang en de eerste weken daarna",week:"Week 23 – 24",ws:22,wd:2,who:"mgmt",
+        id:"4-3",name:"Livegang en de eerste weken daarna",week:"Week 39 – 40",ws:38,wd:2,who:"mgmt",
         desc:"Vanaf de livegang gaan alle nieuwe deals via de nieuwe werkwijze. Zorg voor een zachte landing: duidelijke communicatie, een aanspreekpunt en een plan voor als er iets mis gaat.",
         why:"De livegang is geen eindpunt — het is het begin van de nieuwe werkwijze. De eerste twee weken zijn cruciaal voor het vertrouwen van het team.",
         actions:[
@@ -633,7 +633,7 @@ function renderOV(){
   h+="<div class=\"stats\">\n    <div class=\"sc\"><div class=\"n\">4</div><div class=\"l\">Fasen</div></div>\n    <div class=\"sc\"><div class=\"n\">24</div><div class=\"l\">Weken totaal</div></div>\n    <div class=\"sc\"><div class=\"n\">"+(tot)+"</div><div class=\"l\">Concrete acties</div></div>\n    <div class=\"sc\"><div class=\"n\">"+(done)+"/"+(tot)+"</div><div class=\"l\">Afgerond</div></div>\n  </div>";
   h+="<div class=\"alert\"><div class=\"ai\">⚠️</div><div class=\"at\"><strong>Start hier:</strong> De meest urgente actie is het selecteren van een technische partij voor de HubSpot-koppelingen. Zonder een bevestigde partij kan de bouw niet beginnen en schuift de deadline van 6 maanden op.</div></div>";
 
-  h+="<div class=\"gantt-card\"><h2>Tijdlijn — 24 weken</h2><div class=\"gi\">";
+  h+="<div class=\"gantt-card\"><h2>Tijdlijn — 40 weken</h2><div class=\"gi\">";
   h+="<div class=\"gwh\"><div></div><div class=\"gws\">";
   for(let w=1;w<=W;w++) h+="<div class=\"gwl\">W"+(w)+"</div>";
   h+="</div></div>";
