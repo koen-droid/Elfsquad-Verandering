@@ -1,506 +1,647 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Procesflowchart - HubSpot &middot; Elfsquad &middot; Business Central</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
---hs:#1A56DB;--hs-l:#EBF1FF;--hs-d:#1240a8;
---es:#0B7B5A;--es-l:#E3F5EE;--es-d:#065F46;
---bc:#B45309;--bc-l:#FEF3C7;--bc-d:#92400E;
---auto:#6D28D9;--auto-l:#EDE9FE;
---g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g300:#CBD5E1;
---g400:#94A3B8;--g500:#64748B;--g600:#475569;--g700:#334155;--g800:#1E293B;--g900:#0F172A;
---green:#16A34A;--green-l:#DCFCE7;
---shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
---shadow-md:0 4px 12px rgba(0,0,0,.08);
-}
-html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--g100);color:var(--g900)}
-.hdr{height:52px;background:var(--g900);display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:200}
-.hdr-logo{width:30px;height:30px;background:var(--hs);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:white;flex-shrink:0}
-.hdr-title{font-size:13px;font-weight:600;color:white}
-.hdr-div{width:1px;height:18px;background:rgba(255,255,255,.12);margin:0 2px}
-.hdr-sub{font-size:12px;color:#94A3B8}
-.main{display:grid;grid-template-columns:1fr 340px;height:calc(100vh - 52px);overflow:hidden}
-.chart-wrap{overflow:auto;padding:24px;background:var(--g100)}
-.chart-card{background:white;border-radius:14px;border:1px solid var(--g200);padding:24px;min-width:560px;box-shadow:var(--shadow)}
-.sc-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
-.sc-tab{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--g200);background:white;color:var(--g500);transition:all .15s;font-family:inherit}
-.sc-tab:hover{border-color:var(--g400);color:var(--g700)}
-.sc-tab.on{background:var(--g900);color:white;border-color:var(--g900)}
-.legend{display:flex;gap:16px;margin-bottom:20px;padding:10px 14px;background:var(--g50);border-radius:8px;border:1px solid var(--g200);flex-wrap:wrap}
-.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g600)}
-.leg-manual{width:14px;height:14px;border-radius:4px;border:2px solid var(--g400);background:white;flex-shrink:0}
-.leg-auto{width:14px;height:14px;border-radius:4px;background:var(--auto-l);border:2px solid var(--auto);flex-shrink:0}
-.leg-decision{width:14px;height:14px;transform:rotate(45deg);background:var(--green-l);border:2px solid var(--green);flex-shrink:0}
-.leg-hs{width:10px;height:10px;border-radius:2px;background:var(--hs);flex-shrink:0}
-.leg-es{width:10px;height:10px;border-radius:2px;background:var(--es);flex-shrink:0}
-.leg-bc{width:10px;height:10px;border-radius:2px;background:var(--bc);flex-shrink:0}
-.slt{width:100%;border-collapse:collapse;position:relative}
-.slt-head th{padding:8px 12px;font-size:11px;font-weight:700;text-align:center;border-bottom:2px solid}
-.th-hs{background:var(--hs-l);color:var(--hs-d);border-color:var(--hs)}
-.th-es{background:var(--es-l);color:var(--es-d);border-color:var(--es)}
-.th-bc{background:var(--bc-l);color:var(--bc-d);border-color:var(--bc)}
-.th-icon{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;font-size:9px;font-weight:800;color:white;margin-right:5px;vertical-align:middle}
-.slt td{padding:6px 10px;vertical-align:top;width:33.33%;border-right:1px solid var(--g100)}
-.slt td:last-child{border-right:none}
-.lane-hs{background:rgba(26,86,219,.02)}
-.lane-es{background:rgba(11,123,90,.02)}
-.lane-bc{background:rgba(180,83,9,.02)}
-.slt tr.sep-row td{height:6px;padding:0;background:var(--g50)}
-.fc-node{border-radius:9px;padding:10px 12px;cursor:pointer;border:1.5px solid;transition:all .15s;position:relative;text-align:left;width:100%;background:white;font-family:inherit}
-.fc-node:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
-.fc-node.active{box-shadow:0 0 0 3px rgba(26,86,219,.2)}
-.fc-node.dimmed{opacity:.28;filter:grayscale(.3)}
-.fn-manual{border-color:var(--g300);background:white}
-.fn-manual.fc-node-hs.active{border-color:var(--hs);box-shadow:0 0 0 3px var(--hs-l)}
-.fn-manual.fc-node-es.active{border-color:var(--es);box-shadow:0 0 0 3px var(--es-l)}
-.fn-manual.fc-node-bc.active{border-color:var(--bc);box-shadow:0 0 0 3px var(--bc-l)}
-.fn-auto{border-color:var(--auto);background:var(--auto-l)}
-.fn-auto .fn-label{color:var(--auto)}
-.fn-decision{border-color:var(--green);background:var(--green-l)}
-.fn-decision .fn-label{color:#15803D}
-.fn-type-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;opacity:.6}
-.fn-label{font-size:11px;font-weight:600;line-height:1.3;color:var(--g800)}
-.fn-sub{font-size:10px;color:var(--g500);margin-top:2px;line-height:1.3}
-.ni-manual::before{content:'&#128100;';font-size:9px;margin-right:2px}
-.ni-auto::before{content:'';font-size:9px;margin-right:2px}
-.ni-decision::before{content:'&#9670;';font-size:8px;margin-right:2px;color:var(--green)}
-.lane-empty{height:100%;display:flex;align-items:center;justify-content:center}
-.lane-dot-line{border-top:1.5px dashed var(--g200);width:80%;margin:auto}
-.conn-cell{height:24px;position:relative;padding:0}
-.conn-svg{width:100%;height:100%;overflow:visible;display:block}
-.detail{background:white;border-left:1px solid var(--g200);display:flex;flex-direction:column;overflow:hidden}
-.dp-top{padding:20px 20px 0;border-bottom:1px solid var(--g100)}
-.dp-scenario{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:6px}
-.dp-title{font-size:17px;font-weight:700;color:var(--g900);line-height:1.3;margin-bottom:8px}
-.dp-sys-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:10px}
-.dp-progress{padding:12px 20px;border-bottom:1px solid var(--g100)}
-.dp-prog-label{display:flex;justify-content:space-between;font-size:10px;color:var(--g400);margin-bottom:5px;font-weight:500}
-.dp-prog-track{height:4px;background:var(--g100);border-radius:2px;overflow:hidden}
-.dp-prog-fill{height:100%;border-radius:2px;transition:width .3s ease;background:var(--hs)}
-.dp-body{flex:1;overflow-y:auto;padding:16px 20px}
-.dp-sect{margin-bottom:18px}
-.dp-sect-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:8px}
-.dp-desc{font-size:13px;color:var(--g600);line-height:1.7}
-.dp-items{display:flex;flex-direction:column;gap:4px}
-.dp-item{display:flex;align-items:flex-start;gap:8px;padding:7px 10px;border-radius:7px;font-size:12px;color:var(--g700);background:var(--g50);border:1px solid var(--g100);line-height:1.4}
-.dp-item-icon{flex-shrink:0;font-size:11px;margin-top:1px;color:var(--g400)}
-.dp-type-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:500;margin-bottom:14px}
-.dp-nav{padding:14px 20px;border-top:1px solid var(--g100);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.dp-nav-count{font-size:11px;color:var(--g400);font-weight:500}
-.dp-nav-btns{display:flex;gap:6px}
-.dp-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
-.dp-btn-s{background:var(--g100);color:var(--g700)}.dp-btn-s:hover{background:var(--g200)}
-.dp-btn-p{background:var(--hs);color:white}.dp-btn-p:hover{background:var(--hs-d)}
-.dp-pills{padding:10px 20px;border-top:1px solid var(--g100);display:flex;flex-wrap:wrap;gap:4px;flex-shrink:0}
-.dp-pill{padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--g200);background:white;color:var(--g500);transition:all .12s;font-family:inherit}
-.dp-pill:hover{border-color:var(--g400);color:var(--g700)}
-.dp-pill.on{background:var(--g900);color:white;border-color:var(--g900)}
-.dp-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;color:var(--g400)}
-.dp-empty-icon{width:48px;height:48px;border-radius:12px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
-.dp-empty p{font-size:13px;line-height:1.6;max-width:200px}
-@media(max-width:880px){
-.main{grid-template-columns:1fr;height:auto}
-.detail{height:420px;border-left:none;border-top:1px solid var(--g200)}
-.chart-wrap{height:auto;overflow:visible}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactieve procesflowchart voor HubSpot, Elfsquad en Business Central.">
+  <title>Procesflowchart - HubSpot · Elfsquad · Business Central</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --hs:#1A56DB; --hs-l:#EBF1FF; --hs-d:#1240a8;
+      --es:#0B7B5A; --es-l:#E3F5EE; --es-d:#065F46;
+      --bc:#B45309; --bc-l:#FEF3C7; --bc-d:#92400E;
+      --auto:#6D28D9; --auto-l:#EDE9FE;
+      --g50:#F8FAFC; --g100:#F1F5F9; --g200:#E2E8F0; --g300:#CBD5E1;
+      --g400:#94A3B8; --g500:#64748B; --g600:#475569; --g700:#334155; --g800:#1E293B; --g900:#0F172A;
+      --green:#16A34A; --green-l:#DCFCE7;
+      --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+      --shadow-md:0 4px 12px rgba(0,0,0,.08);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--g100);
+      color: var(--g900);
+    }
+
+    .hdr {
+      height: 52px;
+      background: var(--g900);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .hdr-logo {
+      width: 30px;
+      height: 30px;
+      background: var(--hs);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .hdr-title { font-size: 13px; font-weight: 600; color: white; }
+    .hdr-div { width: 1px; height: 18px; background: rgba(255,255,255,.12); margin: 0 2px; }
+    .hdr-sub { font-size: 12px; color: #94A3B8; }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      height: calc(100vh - 52px);
+      overflow: hidden;
+    }
+
+    .chart-wrap {
+      overflow: auto;
+      padding: 24px;
+      background: var(--g100);
+    }
+
+    .chart-card {
+      background: white;
+      border-radius: 14px;
+      border: 1px solid var(--g200);
+      padding: 24px;
+      min-width: 560px;
+      box-shadow: var(--shadow);
+    }
+
+    .sc-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+
+    .sc-tab {
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid var(--g200);
+      background: white;
+      color: var(--g500);
+      transition: all .15s;
+      font-family: inherit;
+    }
+
+    .sc-tab:hover { border-color: var(--g400); color: var(--g700); }
+    .sc-tab.on { background: var(--g900); color: white; border-color: var(--g900); }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding: 10px 14px;
+      background: var(--g50);
+      border-radius: 8px;
+      border: 1px solid var(--g200);
+      flex-wrap: wrap;
+    }
+
+    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--g600); }
+    .leg-manual { width: 14px; height: 14px; border-radius: 4px; border: 2px solid var(--g400); background: white; flex-shrink: 0; }
+    .leg-auto { width: 14px; height: 14px; border-radius: 4px; background: var(--auto-l); border: 2px solid var(--auto); flex-shrink: 0; }
+    .leg-decision { width: 14px; height: 14px; transform: rotate(45deg); background: var(--green-l); border: 2px solid var(--green); flex-shrink: 0; }
+    .leg-hs, .leg-es, .leg-bc { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .leg-hs { background: var(--hs); }
+    .leg-es { background: var(--es); }
+    .leg-bc { background: var(--bc); }
+
+    .slt { width: 100%; border-collapse: collapse; position: relative; }
+    .slt-head th { padding: 8px 12px; font-size: 11px; font-weight: 700; text-align: center; border-bottom: 2px solid; }
+    .th-hs { background: var(--hs-l); color: var(--hs-d); border-color: var(--hs); }
+    .th-es { background: var(--es-l); color: var(--es-d); border-color: var(--es); }
+    .th-bc { background: var(--bc-l); color: var(--bc-d); border-color: var(--bc); }
+
+    .th-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      font-size: 9px;
+      font-weight: 800;
+      color: white;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .slt td { padding: 6px 10px; vertical-align: top; width: 33.33%; border-right: 1px solid var(--g100); }
+    .slt td:last-child { border-right: none; }
+    .lane-hs { background: rgba(26,86,219,.02); }
+    .lane-es { background: rgba(11,123,90,.02); }
+    .lane-bc { background: rgba(180,83,9,.02); }
+    .slt tr.sep-row td { height: 6px; padding: 0; background: var(--g50); }
+
+    .fc-node {
+      border-radius: 9px;
+      padding: 10px 12px;
+      cursor: pointer;
+      border: 1.5px solid;
+      transition: all .15s;
+      position: relative;
+      text-align: left;
+      width: 100%;
+      background: white;
+      font-family: inherit;
+    }
+
+    .fc-node:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .fc-node.active { box-shadow: 0 0 0 3px rgba(26,86,219,.2); }
+    .fc-node.dimmed { opacity: .28; filter: grayscale(.3); }
+    .fn-manual { border-color: var(--g300); background: white; }
+    .fn-manual.fc-node-hs.active { border-color: var(--hs); box-shadow: 0 0 0 3px var(--hs-l); }
+    .fn-manual.fc-node-es.active { border-color: var(--es); box-shadow: 0 0 0 3px var(--es-l); }
+    .fn-manual.fc-node-bc.active { border-color: var(--bc); box-shadow: 0 0 0 3px var(--bc-l); }
+    .fn-auto { border-color: var(--auto); background: var(--auto-l); }
+    .fn-auto .fn-label { color: var(--auto); }
+    .fn-decision { border-color: var(--green); background: var(--green-l); }
+    .fn-decision .fn-label { color: #15803D; }
+
+    .fn-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      margin-bottom: 4px;
+      opacity: .6;
+    }
+
+    .fn-label { font-size: 11px; font-weight: 600; line-height: 1.3; color: var(--g800); }
+    .fn-sub { font-size: 10px; color: var(--g500); margin-top: 2px; line-height: 1.3; }
+    .ni-manual::before { content: '👤'; font-size: 9px; margin-right: 2px; }
+    .ni-decision::before { content: '◆'; font-size: 8px; margin-right: 2px; color: var(--green); }
+
+    .lane-empty { height: 100%; display: flex; align-items: center; justify-content: center; }
+    .lane-dot-line { border-top: 1.5px dashed var(--g200); width: 80%; margin: auto; }
+    .conn-cell { height: 24px; position: relative; padding: 0; }
+    .conn-svg { width: 100%; height: 100%; overflow: visible; display: block; }
+
+    .detail {
+      background: white;
+      border-left: 1px solid var(--g200);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .dp-top { padding: 20px 20px 0; border-bottom: 1px solid var(--g100); }
+    .dp-scenario { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--g400); margin-bottom: 6px; }
+    .dp-title { font-size: 17px; font-weight: 700; color: var(--g900); line-height: 1.3; margin-bottom: 8px; }
+    .dp-sys-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; margin-bottom: 10px; }
+    .dp-progress { padding: 12px 20px; border-bottom: 1px solid var(--g100); }
+    .dp-prog-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--g400); margin-bottom: 5px; font-weight: 500; }
+    .dp-prog-track { height: 4px; background: var(--g100); border-radius: 2px; overflow: hidden; }
+    .dp-prog-fill { height: 100%; border-radius: 2px; transition: width .3s ease; background: var(--hs); }
+    .dp-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+    .dp-sect { margin-bottom: 18px; }
+    .dp-sect-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--g400); margin-bottom: 8px; }
+    .dp-desc { font-size: 13px; color: var(--g600); line-height: 1.7; }
+    .dp-items { display: flex; flex-direction: column; gap: 4px; }
+    .dp-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border-radius: 7px; font-size: 12px; color: var(--g700); background: var(--g50); border: 1px solid var(--g100); line-height: 1.4; }
+    .dp-item-icon { flex-shrink: 0; font-size: 11px; margin-top: 1px; color: var(--g400); }
+    .dp-type-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; margin-bottom: 14px; }
+    .dp-nav { padding: 14px 20px; border-top: 1px solid var(--g100); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .dp-nav-count { font-size: 11px; color: var(--g400); font-weight: 500; }
+    .dp-nav-btns { display: flex; gap: 6px; }
+
+    .dp-btn {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all .15s;
+    }
+
+    .dp-btn-s { background: var(--g100); color: var(--g700); }
+    .dp-btn-s:hover { background: var(--g200); }
+    .dp-btn-p { background: var(--hs); color: white; }
+    .dp-btn-p:hover { background: var(--hs-d); }
+
+    .dp-pills { padding: 10px 20px; border-top: 1px solid var(--g100); display: flex; flex-wrap: wrap; gap: 4px; flex-shrink: 0; }
+
+    .dp-pill {
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--g200);
+      background: white;
+      color: var(--g500);
+      transition: all .12s;
+      font-family: inherit;
+    }
+
+    .dp-pill:hover { border-color: var(--g400); color: var(--g700); }
+    .dp-pill.on { background: var(--g900); color: white; border-color: var(--g900); }
+
+    .dp-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      text-align: center;
+      color: var(--g400);
+    }
+
+    .dp-empty-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--g100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
+
+    .dp-empty p { font-size: 13px; line-height: 1.6; max-width: 200px; }
+
+    @media (max-width: 880px) {
+      .main { grid-template-columns: 1fr; height: auto; }
+      .detail { height: 420px; border-left: none; border-top: 1px solid var(--g200); }
+      .chart-wrap { height: auto; overflow: visible; }
+      .chart-card { min-width: auto; }
+    }
+  </style>
 </head>
 <body>
-<div class="hdr">
-<div class="hdr-logo">E</div>
-<span class="hdr-title">ENC - Systeem Transitie</span>
-<div class="hdr-div"></div>
-<span class="hdr-sub">Interactieve procesflowchart</span>
-</div>
-<div class="main">
-<div class="chart-wrap">
-<div class="chart-card">
-<div class="sc-tabs" id="sc-tabs">
-<button class="sc-tab on" onclick="setScenario('offline',this)">Offline deal</button>
-<button class="sc-tab" onclick="setScenario('online',this)">Online deal (website)</button>
-<button class="sc-tab" onclick="setScenario('montage',this)">Met montage</button>
-</div>
-<div class="legend">
-<div class="leg-item"><div class="leg-manual"></div>Handmatig (mens)</div>
-<div class="leg-item"><div class="leg-auto"></div>Automatisch (systeem)</div>
-<div class="leg-item"><div class="leg-decision"></div>Beslismoment</div>
-<div class="leg-item"><div class="leg-hs"></div>HubSpot</div>
-<div class="leg-item"><div class="leg-es"></div>Elfsquad</div>
-<div class="leg-item"><div class="leg-bc"></div>Business Central</div>
-</div>
-<div id="fc-root"></div>
-</div>
-</div>
-<div class="detail" id="detail-panel">
-<div class="dp-empty" id="dp-empty">
-<div class="dp-empty-icon">&larr;</div>
-<p>Klik op een stap in de flowchart om de details te zien</p>
-</div>
-<div id="dp-filled" style="display:none;flex-direction:column;flex:1;overflow:hidden;display:none"></div>
-<div class="dp-pills" id="dp-pills"></div>
-</div>
-</div>
-<script>
-// -- DATA --------------------------------------------------
-// type: 'manual' | 'auto' | 'decision'
-// lane: 'hs' | 'es' | 'bc'
-var SC = {
-offline:{
-label:'Offline deal',
-steps:[
-{id:'o1',lane:'hs',type:'manual',
-label:'Klant + deal aanmaken',sub:'Binnendienst',
-sys:'HubSpot',
-title:'Klant en deal aanmaken in HubSpot',
-typeNote:'Handmatige actie - binnendienst',
-desc:'De binnendienst ontvangt een aanvraag van Easy Noise Control (bijv. telefonisch of per mail). Ze maakt direct een nieuw bedrijf en deal aan in HubSpot met alle benodigde gegevens.',
-items:['Bedrijfsnaam: Easy Noise Control','Factuuradres + BTW-nummer invullen','Taal: NL &middot; Valuta: EUR','Contactpersoon: Jan de Vries koppelen','Deal: "4 plafondeilanden" aanmaken']},
-{id:'o2',lane:'hs',type:'decision',
-label:'Status: Offerte aangevraagd',sub:'Trigger naar Elfsquad',
-sys:'HubSpot',
-title:'Status instellen: Offerte aangevraagd',
-typeNote:'Beslismoment - sales zet status',
-desc:'Sales zet de dealstatus op "Offerte aangevraagd". Dit is het offici&euml;le startpunt van de offerteflow. HubSpot valideert of alle verplichte velden zijn ingevuld voordat de trigger afgaat.',
-items:['Alle verplichte velden gecontroleerd','Status gezet op "Offerte aangevraagd"','Klantdata automatisch klaargemaakt voor Elfsquad','Trigger geactiveerd - koppeling start']},
-{id:'o3',lane:'hs',type:'auto',
-label:'Klantdata -&gt; Elfsquad',sub:'Automatische koppeling',
-sys:'HubSpot -&gt; Elfsquad',
-title:'Klantdata automatisch naar Elfsquad',
-typeNote:'Automatisch - koppeling HubSpot -&gt; Elfsquad',
-desc:'HubSpot stuurt automatisch alle klant- en dealgegevens door naar Elfsquad. Geen handmatig overtypen - de koppeling doet het werk in seconden.',
-items:['Bedrijfsnaam, adres, BTW naar Elfsquad','Taal en valuta correct meegestuurd','Deal-ID als unieke referentie meegestuurd','Contactpersoon (naam + e-mail) meegestuurd','Elfsquad klaar voor offerte opmaak']},
-{id:'o4',lane:'es',type:'manual',
-label:'Offerte opmaken',sub:'4 plafondeilanden + opties',
-sys:'Elfsquad',
-title:'Offerte opmaken in Elfsquad',
-typeNote:'Handmatige actie - sales of binnendienst',
-desc:'In Elfsquad worden de producten geconfigureerd: 4 plafondeilanden geselecteerd, afmetingen en opties ingesteld. De prijs wordt automatisch berekend. Montage kan hier worden aan- of uitgevinkt.',
-items:['4x Plafondeiland XL geconfigureerd','Afmetingen en akoestische opties geselecteerd','Prijs automatisch berekend: &euro;8.400 excl. BTW','Montage: ja of nee selecteren','PDF automatisch gegenereerd']},
-{id:'o5',lane:'es',type:'auto',
-label:'PDF + bedrag -&gt; HubSpot',sub:'Automatische terugkoppeling',
-sys:'Elfsquad -&gt; HubSpot',
-title:'Offerte terugkoppeling naar HubSpot',
-typeNote:'Automatisch - koppeling Elfsquad -&gt; HubSpot',
-desc:'Zodra de offerte klaar is stuurt Elfsquad automatisch het offerte-ID, het totaalbedrag en de PDF terug naar het deal-record in HubSpot. Sales hoeft niets handmatig over te nemen.',
-items:['Offerte-ID teruggestuurd naar HubSpot','Totaalbedrag &euro;8.400 in deal bijgewerkt','PDF automatisch als bijlage in HubSpot','Dealstatus bijgewerkt','Sales kan offerte nu direct versturen']},
-{id:'o6',lane:'hs',type:'manual',
-label:'Offerte versturen',sub:'Status: Offerte verzonden',
-sys:'HubSpot',
-title:'Offerte versturen naar de klant',
-typeNote:'Handmatige actie - sales',
-desc:'Sales verstuurt de offerte vanuit HubSpot via e-mail naar Easy Noise Control. De PDF zit automatisch als bijlage. De status wordt bijgewerkt naar "Offerte verzonden" - Elfsquad synct automatisch mee.',
-items:['E-mail verstuurd naar jan@enc.nl','PDF automatisch als bijlage','Status: "Offerte verzonden"','Elfsquad status synct automatisch mee','Klant ontvangt professionele offerte']},
-{id:'o7',lane:'hs',type:'decision',
-label:'Klant akkoord?',sub:'Status: Geaccepteerd / Gewonnen',
-sys:'HubSpot',
-title:'Beslismoment: klant akkoord?',
-typeNote:'Beslismoment - sales zet uitkomst',
-desc:'Sales ontvangt de reactie van de klant. Bij akkoord zet sales de status op "Geaccepteerd / Gewonnen". Dit is de trigger voor de automatische push naar Business Central. Bij afwijzing gaat de deal op "Verloren".',
-items:['Klant reageert per mail of telefoon','Akkoord: status -&gt; "Geaccepteerd / Gewonnen"','Verloren: status -&gt; "Verloren" (geen push naar BC)','Alle verplichte velden worden gecontroleerd','Bij Gewonnen: automatische push naar BC start']},
-{id:'o8',lane:'hs',type:'auto',
-label:'Order -&gt; Business Central',sub:'Automatische push bij Gewonnen',
-sys:'HubSpot -&gt; BC',
-title:'Order automatisch naar Business Central',
-typeNote:'Automatisch - koppeling HubSpot -&gt; BC',
-desc:'Bij de status "Gewonnen" stuurt HubSpot automatisch de orderdata naar Business Central. BC controleert of de klant al bestaat en maakt de order aan. Het ordernummer komt automatisch terug in HubSpot.',
-items:['Klantgegevens + orderdata naar BC gestuurd','BC herkent bestaande klant op klant-ID','Order aangemaakt in BC: #24-003812','Orderregels: 4 plafondeilanden, prijs, BTW','BC-ordernummer teruggestuurd naar HubSpot']},
-{id:'o9',lane:'bc',type:'manual',
-label:'Werkvoorbereider pakt over',sub:'Voorraad &middot; planning &middot; levering',
-sys:'Business Central',
-title:'Werkvoorbereider handelt de order af',
-typeNote:'Handmatige actie - werkvoorbereider',
-desc:'De werkvoorbereider ontvangt de order in BC. Voorraad wordt gecheckt, eventueel besteld. Levering of montage wordt gepland. Alle statuswijzigingen in BC syncen automatisch terug naar HubSpot en Elfsquad.',
-items:['Order ontvangen en klantdata gecontroleerd','Voorraad 4 plafondeilanden: beschikbaar','Leveringsdatum gepland','Status "In productie" gezet in BC','Status synct automatisch naar HubSpot + Elfsquad']},
-]
-},
-online:{
-label:'Online deal (website)',
-steps:[
-{id:'w1',lane:'es',type:'manual',
-label:'Klant configureert op website',sub:'Elfsquad configurator',
-sys:'Website / Elfsquad',
-title:'Klant configureert product via de website',
-typeNote:'Handmatige actie - klant zelf',
-desc:'Easy Noise Control bezoekt de website en configureert zelf de gewenste plafondeilanden via de Elfsquad-configurator. Na de configuratie vult de klant naam en e-mailadres in om een offerte aan te vragen.',
-items:['Klant opent configurator op website','4 plafondeilanden geconfigureerd','Naam en e-mailadres ingevuld','Offerte aangevraagd via de website','Configuratie opgeslagen in Elfsquad']},
-{id:'w2',lane:'hs',type:'auto',
-label:'Deal auto-aangemaakt in HubSpot',sub:'Lead direct zichtbaar voor sales',
-sys:'HubSpot',
-title:'Deal automatisch aangemaakt in HubSpot',
-typeNote:'Automatisch - koppeling website -&gt; HubSpot',
-desc:'Zodra de klant de aanvraag via de website verstuurt, wordt automatisch een nieuwe deal aangemaakt in HubSpot. Sales ziet de lead direct in hun dashboard - geen handmatig aanmaken nodig.',
-items:['Deal automatisch aangemaakt in HubSpot','Klantgegevens vanuit website overgenomen','Status: "Offerte aangevraagd" automatisch gezet','Offerte al klaargemaakt in Elfsquad','Lead direct zichtbaar voor sales']},
-{id:'w3',lane:'hs',type:'manual',
-label:'Sales controleert & verstuurt',sub:'Offerte versturen vanuit HubSpot',
-sys:'HubSpot',
-title:'Sales controleert en verstuurt de offerte',
-typeNote:'Handmatige actie - sales',
-desc:'Sales opent de deal in HubSpot, controleert de automatisch aangemaakte offerte en verstuurt die naar de klant. De PDF van Elfsquad zit al als bijlage. Eventuele aanpassingen kunnen in Elfsquad worden doorgevoerd.',
-items:['Offerte gecontroleerd door sales','Eventuele aanpassingen in Elfsquad doorgevoerd','PDF automatisch als bijlage beschikbaar','Offerte verstuurd vanuit HubSpot','Status: "Offerte verzonden"']},
-{id:'w4',lane:'hs',type:'decision',
-label:'Klant akkoord?',sub:'Gewonnen of Verloren',
-sys:'HubSpot',
-title:'Beslismoment: klant akkoord?',
-typeNote:'Beslismoment - sales zet uitkomst',
-desc:'Klant reageert op de offerte. Bij akkoord zet sales de status op "Gewonnen" - de order gaat automatisch naar BC. Exact dezelfde flow als een offline deal.',
-items:['Akkoord: status -&gt; "Gewonnen"','Verloren: status -&gt; "Verloren"','Bij Gewonnen: automatische push naar BC','Order aangemaakt in BC','Werkvoorbereider pakt over']},
-{id:'w5',lane:'bc',type:'manual',
-label:'Afhandeling in BC',sub:'Zelfde flow als offline',
-sys:'Business Central',
-title:'Afhandeling in Business Central',
-typeNote:'Handmatige actie - werkvoorbereider',
-desc:'Werkvoorbereider handelt de order af in BC: voorraad, planning, levering of montage. Alle statuswijzigingen syncen automatisch terug naar HubSpot en Elfsquad. Identiek aan de offline flow.',
-items:['Order ontvangen in BC','Voorraad en planning geregeld','Status bijgehouden in BC','Alle statussen syncen naar HubSpot','Klant ontvangt automatische communicatie']},
-]
-},
-montage:{
-label:'Met montage',
-steps:[
-{id:'m1',lane:'hs',type:'manual',
-label:'Deal aanmaken + offerte aanvragen',sub:'HubSpot start de flow',
-sys:'HubSpot',
-title:'Deal aanmaken en offerte aanvragen',
-typeNote:'Handmatige actie - binnendienst',
-desc:'Zelfde start als een offline deal: binnendienst maakt klant + deal aan in HubSpot, zet status op "Offerte aangevraagd". Klantdata vliegt automatisch naar Elfsquad.',
-items:['Klant + deal aangemaakt in HubSpot','Alle velden ingevuld','Status: "Offerte aangevraagd"','Klantdata automatisch naar Elfsquad','Elfsquad klaar voor offerte']},
-{id:'m2',lane:'es',type:'manual',
-label:'Offerte + montage = JA',sub:'Montage geselecteerd in Elfsquad',
-sys:'Elfsquad',
-title:'Offerte opmaken - montage geselecteerd',
-typeNote:'Handmatige actie - sales of binnendienst',
-desc:'In Elfsquad worden de producten geconfigureerd. Montage wordt bewust geselecteerd als extra optie. Dit "montage-vlag" reist mee door de hele keten en triggert later de automatische klantmails.',
-items:['4 plafondeilanden geconfigureerd','Montage = JA bewust geselecteerd','Montagekosten toegevoegd aan prijs','Montage-vlag wordt meegestuurd naar HubSpot','PDF inclusief montage-omschrijving gegenereerd']},
-{id:'m3',lane:'es',type:'auto',
-label:'PDF + montage-vlag -&gt; HubSpot',sub:'Terugkoppeling met montage-indicator',
-sys:'Elfsquad -&gt; HubSpot',
-title:'Terugkoppeling inclusief montage-vlag',
-typeNote:'Automatisch - koppeling Elfsquad -&gt; HubSpot',
-desc:'Elfsquad stuurt de PDF, het bedrag &eacute;n de montage-indicator terug naar HubSpot. HubSpot registreert dat er montage bij zit en zal later - bij het ontvangen van de montagedatum - automatisch de klantmails sturen.',
-items:['Offerte-ID en bedrag teruggestuurd','PDF als bijlage in HubSpot','Montage-veld in HubSpot: JA','HubSpot klaar om klantmails te triggeren','Sales kan offerte versturen']},
-{id:'m4',lane:'hs',type:'decision',
-label:'Klant akkoord -&gt; Gewonnen',sub:'Order + montage naar BC',
-sys:'HubSpot',
-title:'Klant akkoord - order naar BC',
-typeNote:'Beslismoment + automatische trigger',
-desc:'Sales zet de status op "Gewonnen". De order wordt automatisch naar BC gestuurd, inclusief de montage-indicator. BC weet daarmee dat er een montagedatum ingepland moet worden.',
-items:['Status: "Geaccepteerd / Gewonnen"','Order + montage-indicator naar BC gestuurd','BC maakt klant en order aan','Ordernummer teruggestuurd naar HubSpot','Werkvoorbereider ziet montage-indicatie in BC']},
-{id:'m5',lane:'bc',type:'manual',
-label:'Werkvoorbereider plant montage',sub:'Montagedatum invoeren in BC',
-sys:'Business Central',
-title:'Werkvoorbereider plant de montagedatum',
-typeNote:'Handmatige actie - werkvoorbereider',
-desc:'De werkvoorbereider ziet de order in BC met de montage-indicatie. Hij/zij plant de montage en voert de datum in BC in. Dit is de enige handmatige stap die de rest automatisch in gang zet.',
-items:['Order ontvangen met montage-indicatie','Voorraad gecheckt en montage ingepland','Montagedatum ingevoerd: bijv. 15 januari','Montageteam bevestigd','BC stuurt datum automatisch door naar HubSpot']},
-{id:'m6',lane:'bc',type:'auto',
-label:'Montagedatum -&gt; HubSpot',sub:'BC synct datum terug',
-sys:'BC -&gt; HubSpot',
-title:'Montagedatum automatisch naar HubSpot',
-typeNote:'Automatisch - koppeling BC -&gt; HubSpot',
-desc:'BC stuurt de montagedatum automatisch naar HubSpot via de bestaande koppeling. HubSpot ontvangt de datum en triggert direct de planning van twee automatische e-mails.',
-items:['Montagedatum 15 januari ontvangen van BC','HubSpot workflow getriggerd','Mail 1 ingepland: 8 jan (1 week van tevoren)','Mail 2 ingepland: 14 jan (1 dag van tevoren)','Niemand hoeft iets handmatig te doen']},
-{id:'m7',lane:'hs',type:'auto',
-label:'Automatische mails naar klant',sub:'1 week + 1 dag van tevoren',
-sys:'HubSpot',
-title:'Automatische klantcommunicatie verstuurd',
-typeNote:'Automatisch - HubSpot workflow',
-desc:'HubSpot verstuurt automatisch twee herinneringsmails naar de klant op het juiste moment. Geen handmatig werk nodig - alleen de montagedatum in BC invoeren was voldoende om dit te triggeren.',
-items:['Mail 1 (8 jan): montagedatum + voorbereidingsinstructies','Mail 2 (14 jan): herinnering een dag van tevoren','Inhoud: tijdstip, toegang regelen, wat klant moet doen','Na montage: status "Geleverd" triggert leveringsbevestiging','Volledige communicatie geautomatiseerd']},
-]
-}
-};
-// -- STATE --
-var curSc = 'offline';
-var curStep = null;
-// -- RENDER CHART --
-function renderChart(){
-var sc = SC[curSc];
-var n = sc.steps.length;
-// Group steps by lane
-var byLane = {hs:[],es:[],bc:[]};
-sc.steps.forEach(function(s){ byLane[s.lane].push(s); });
-// Build a grid: each step occupies a row, placed in its lane column
-// rows = steps in order; each row has at most one node
-var html = '<table class="slt" id="slt"><thead class="slt-head"><tr>'
-+ '<th class="th-hs"><span class="th-icon" style="background:#1A56DB">HS</span>HubSpot</th>'
-+ '<th class="th-es"><span class="th-icon" style="background:#0B7B5A">ES</span>Elfsquad</th>'
-+ '<th class="th-bc"><span class="th-icon" style="background:#B45309">BC</span>Business Central</th>'
-+ '</tr></thead><tbody>';
-sc.steps.forEach(function(step, i){
-// Main row
-html += '<tr id="row-'+i+'">';
-['hs','es','bc'].forEach(function(lane){
-html += '<td class="lane-'+lane+'">';
-if(step.lane === lane){
-html += nodeHtml(step);
-} else {
-html += '<div class="lane-empty"><div class="lane-dot-line"></div></div>';
-}
-html += '</td>';
-});
-html += '</tr>';
-// Connector row (between steps)
-if(i < n-1){
-var next = sc.steps[i+1];
-html += '<tr class="sep-row" id="conn-'+i+'"><td class="lane-hs conn-cell" id="cc-hs-'+i+'"></td><td class="lane-es conn-cell" id="cc-es-'+i+'"></td><td class="lane-bc conn-cell" id="cc-bc-'+i+'"></td></tr>';
-}
-});
-html += '</tbody></table>';
-document.getElementById('fc-root').innerHTML = html;
-// Draw connectors after DOM is ready
-setTimeout(function(){ drawConnectors(sc); }, 60);
-}
-function nodeHtml(step){
-var typeCls = step.type === 'auto' ? 'fn-auto' : step.type === 'decision' ? 'fn-decision' : 'fn-manual';
-var nodeScCls = 'fc-node-'+step.lane;
-var typeIcon = step.type === 'auto' ? '<span class="ni-auto"></span>Automatisch' : step.type === 'decision' ? '<span class="ni-decision"></span>Beslissing' : '<span class="ni-manual"></span>Handmatig';
-var isDimmed = curStep && curStep !== step.id ? ' dimmed' : '';
-var isActive = curStep === step.id ? ' active' : '';
-return '<button class="fc-node '+typeCls+' '+nodeScCls+isActive+isDimmed+'" id="node-'+step.id+'" onclick="selectStep(\''+step.id+'\')">'
-+ '<div class="fn-type-badge">'+typeIcon+'</div>'
-+ '<div class="fn-label">'+step.label+'</div>'
-+ '<div class="fn-sub">'+step.sub+'</div>'
-+ '</button>';
-}
-// -- DRAW SVG CONNECTORS --
-function drawConnectors(sc){
-var LANES = ['hs','es','bc'];
-for(var i=0; i < sc.steps.length-1; i++){
-var curr = sc.steps[i];
-var next = sc.steps[i+1];
-// Fill each connector cell
-LANES.forEach(function(lane){
-var cell = document.getElementById('cc-'+lane+'-'+i);
-if(!cell) return;
-if(curr.lane === lane && next.lane === lane){
-// Straight down connector in same lane
-cell.innerHTML = '<svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">'
-+ '<defs><marker id="arr'+lane+i+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></marker></defs>'
-+ '<line x1="50" y1="0" x2="50" y2="24" stroke="#CBD5E1" stroke-width="2" marker-end="url(#arr'+lane+i+')"/>'
-+ '</svg>';
-} else if(curr.lane === lane){
-// Line goes out of this lane to another lane
-var toRight = laneOrder(next.lane) > laneOrder(curr.lane);
-cell.innerHTML = '<svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">'
-+ '<line x1="50" y1="0" x2="50" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"/>'
-+ '<line x1="50" y1="12" x2="'+(toRight?'110':'-10')+'" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"/>'
-+ '</svg>';
-} else if(next.lane === lane){
-// Line enters from another lane
-var fromLeft = laneOrder(curr.lane) < laneOrder(next.lane);
-var arrid = 'arr2'+lane+i;
-cell.innerHTML = '<svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none" overflow="visible">'
-+ '<defs><marker id="'+arrid+'" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"/></marker></defs>'
-+ '<line x1="'+(fromLeft?'-10':'110')+'" y1="12" x2="50" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#'+arrid+')"/>'
-+ '<line x1="50" y1="12" x2="50" y2="24" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"/>'
-+ '</svg>';
-} else {
-// Pass-through lane
-cell.innerHTML = '<svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">'
-+ '<line x1="0" y1="12" x2="100" y2="12" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="3,4"/>'
-+ '</svg>';
-}
-});
-}
-}
-function laneOrder(l){ return {hs:0,es:1,bc:2}[l]; }
-// -- SELECT STEP --
-function selectStep(id){
-curStep = id;
-// Update node classes
-var sc = SC[curSc];
-sc.steps.forEach(function(s){
-var el = document.getElementById('node-'+s.id);
-if(!el) return;
-el.classList.remove('active','dimmed');
-if(s.id === id) el.classList.add('active');
-else el.classList.add('dimmed');
-});
-renderDetail();
-renderPills();
-}
-// -- RENDER DETAIL --
-function renderDetail(){
-var sc = SC[curSc];
-var step = sc.steps.find(function(s){return s.id===curStep;});
-if(!step) return;
-var idx = sc.steps.indexOf(step);
-var total = sc.steps.length;
-var pct = Math.round((idx+1)/total*100);
-var sysColors = {hs:'#1A56DB',es:'#0B7B5A',bc:'#B45309'};
-var col = sysColors[step.lane] || '#6D28D9';
-var typeColors = {manual:'#334155',auto:'#6D28D9',decision:'#16A34A'};
-var typeBgs = {manual:'#F1F5F9',auto:'#EDE9FE',decision:'#DCFCE7'};
-var typeLabels = {manual:'Handmatig - menselijke actie vereist','auto':'Automatisch - systeem handelt af','decision':'Beslismoment - status wordt gezet'};
-var itemsHtml = step.items.map(function(it){
-return '<div class="dp-item"><span class="dp-item-icon">-&gt;</span>'+it+'</div>';
-}).join('');
-var html = '<div class="dp-top">'
-+ '<div class="dp-scenario">'+sc.label+' &middot; Stap '+(idx+1)+' van '+total+'</div>'
-+ '<div class="dp-title">'+step.title+'</div>'
-+ '<div class="dp-sys-pill" style="background:'+col+'18;color:'+col+'">'+step.sys+'</div>'
-+ '</div>'
-+ '<div class="dp-progress">'
-+ '<div class="dp-prog-label"><span>Voortgang</span><span>'+(idx+1)+' / '+total+'</span></div>'
-+ '<div class="dp-prog-track"><div class="dp-prog-fill" style="width:'+pct+'%;background:'+col+'"></div></div>'
-+ '</div>'
-+ '<div class="dp-body">'
-+ '<div class="dp-type-row" style="background:'+typeBgs[step.type]+';color:'+typeColors[step.type]+'">'+typeLabels[step.type]+'</div>'
-+ '<div class="dp-sect"><div class="dp-sect-lbl">Wat er gebeurt</div><div class="dp-desc">'+step.desc+'</div></div>'
-+ '<div class="dp-sect"><div class="dp-sect-lbl">Details</div><div class="dp-items">'+itemsHtml+'</div></div>'
-+ '</div>'
-+ '<div class="dp-nav">'
-+ '<span class="dp-nav-count">'+(idx+1)+' / '+total+'</span>'
-+ '<div class="dp-nav-btns">'
-+ (idx>0?'<button class="dp-btn dp-btn-s" onclick="selectStep(\''+sc.steps[idx-1].id+'\')">&larr; Vorige</button>':'')
-+ (idx<total-1?'<button class="dp-btn dp-btn-p" onclick="selectStep(\''+sc.steps[idx+1].id+'\')">Volgende -&gt;</button>':'<button class="dp-btn dp-btn-p" onclick="resetChart()">&#8634; Opnieuw</button>')
-+ '</div></div>';
-var filled = document.getElementById('dp-filled');
-filled.innerHTML = html;
-filled.style.display = 'flex';
-filled.style.flexDirection = 'column';
-filled.style.flex = '1';
-filled.style.overflow = 'hidden';
-document.getElementById('dp-empty').style.display = 'none';
-}
-function renderPills(){
-var sc = SC[curSc];
-var html = sc.steps.map(function(s){
-return '<button class="dp-pill'+(curStep===s.id?' on':'')+'" onclick="selectStep(\''+s.id+'\')">'+s.label+'</button>';
-}).join('');
-document.getElementById('dp-pills').innerHTML = html;
-}
-function resetChart(){
-curStep = null;
-var sc = SC[curSc];
-sc.steps.forEach(function(s){
-var el = document.getElementById('node-'+s.id);
-if(el){el.classList.remove('active','dimmed');}
-});
-document.getElementById('dp-filled').style.display = 'none';
-document.getElementById('dp-empty').style.display = 'flex';
-renderPills();
-}
-function setScenario(key, btn){
-curSc = key;
-curStep = null;
-document.querySelectorAll('.sc-tab').forEach(function(t){t.classList.remove('on');});
-btn.classList.add('on');
-renderChart();
-document.getElementById('dp-filled').style.display = 'none';
-document.getElementById('dp-empty').style.display = 'flex';
-renderPills();
-}
-// -- INIT --
-renderChart();
-renderPills();
-window.addEventListener('resize', function(){
-setTimeout(function(){ drawConnectors(SC[curSc]); }, 100);
-});
-</script>
+  <div class="hdr">
+    <div class="hdr-logo">E</div>
+    <span class="hdr-title">ENC - Systeem Transitie</span>
+    <div class="hdr-div"></div>
+    <span class="hdr-sub">Interactieve procesflowchart</span>
+  </div>
+
+  <div class="main">
+    <div class="chart-wrap">
+      <div class="chart-card">
+        <div class="sc-tabs" id="sc-tabs"></div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-manual"></div>Handmatig (mens)</div>
+          <div class="leg-item"><div class="leg-auto"></div>Automatisch (systeem)</div>
+          <div class="leg-item"><div class="leg-decision"></div>Beslismoment</div>
+          <div class="leg-item"><div class="leg-hs"></div>HubSpot</div>
+          <div class="leg-item"><div class="leg-es"></div>Elfsquad</div>
+          <div class="leg-item"><div class="leg-bc"></div>Business Central</div>
+        </div>
+        <div id="fc-root"></div>
+      </div>
+    </div>
+
+    <div class="detail" id="detail-panel">
+      <div class="dp-empty" id="dp-empty">
+        <div class="dp-empty-icon">←</div>
+        <p>Klik op een stap in de flowchart om de details te zien</p>
+      </div>
+      <div id="dp-filled" style="display:none;flex-direction:column;flex:1;overflow:hidden;"></div>
+      <div class="dp-pills" id="dp-pills"></div>
+    </div>
+  </div>
+
+  <script>
+    const SC = {
+      offline: {
+        label: 'Offline deal',
+        steps: [
+          {id:'o1',lane:'hs',type:'manual',label:'Klant + deal aanmaken',sub:'Binnendienst',sys:'HubSpot',title:'Klant en deal aanmaken in HubSpot',desc:'De binnendienst ontvangt een aanvraag van Easy Noise Control (bijv. telefonisch of per mail). Ze maakt direct een nieuw bedrijf en deal aan in HubSpot met alle benodigde gegevens.',items:['Bedrijfsnaam: Easy Noise Control','Factuuradres + BTW-nummer invullen','Taal: NL · Valuta: EUR','Contactpersoon: Jan de Vries koppelen','Deal: "4 plafondeilanden" aanmaken']},
+          {id:'o2',lane:'hs',type:'decision',label:'Status: Offerte aangevraagd',sub:'Trigger naar Elfsquad',sys:'HubSpot',title:'Status instellen: Offerte aangevraagd',desc:'Sales zet de dealstatus op "Offerte aangevraagd". Dit is het officiële startpunt van de offerteflow. HubSpot valideert of alle verplichte velden zijn ingevuld voordat de trigger afgaat.',items:['Alle verplichte velden gecontroleerd','Status gezet op "Offerte aangevraagd"','Klantdata automatisch klaargemaakt voor Elfsquad','Trigger geactiveerd - koppeling start']},
+          {id:'o3',lane:'hs',type:'auto',label:'Klantdata → Elfsquad',sub:'Automatische koppeling',sys:'HubSpot → Elfsquad',title:'Klantdata automatisch naar Elfsquad',desc:'HubSpot stuurt automatisch alle klant- en dealgegevens door naar Elfsquad. Geen handmatig overtypen - de koppeling doet het werk in seconden.',items:['Bedrijfsnaam, adres, BTW naar Elfsquad','Taal en valuta correct meegestuurd','Deal-ID als unieke referentie meegestuurd','Contactpersoon (naam + e-mail) meegestuurd','Elfsquad klaar voor offerte opmaak']},
+          {id:'o4',lane:'es',type:'manual',label:'Offerte opmaken',sub:'4 plafondeilanden + opties',sys:'Elfsquad',title:'Offerte opmaken in Elfsquad',desc:'In Elfsquad worden de producten geconfigureerd: 4 plafondeilanden geselecteerd, afmetingen en opties ingesteld. De prijs wordt automatisch berekend. Montage kan hier worden aan- of uitgevinkt.',items:['4x Plafondeiland XL geconfigureerd','Afmetingen en akoestische opties geselecteerd','Prijs automatisch berekend: €8.400 excl. BTW','Montage: ja of nee selecteren','PDF automatisch gegenereerd']},
+          {id:'o5',lane:'es',type:'auto',label:'PDF + bedrag → HubSpot',sub:'Automatische terugkoppeling',sys:'Elfsquad → HubSpot',title:'Offerte terugkoppeling naar HubSpot',desc:'Zodra de offerte klaar is stuurt Elfsquad automatisch het offerte-ID, het totaalbedrag en de PDF terug naar het deal-record in HubSpot. Sales hoeft niets handmatig over te nemen.',items:['Offerte-ID teruggestuurd naar HubSpot','Totaalbedrag €8.400 in deal bijgewerkt','PDF automatisch als bijlage in HubSpot','Dealstatus bijgewerkt','Sales kan offerte nu direct versturen']},
+          {id:'o6',lane:'hs',type:'manual',label:'Offerte versturen',sub:'Status: Offerte verzonden',sys:'HubSpot',title:'Offerte versturen naar de klant',desc:'Sales verstuurt de offerte vanuit HubSpot via e-mail naar Easy Noise Control. De PDF zit automatisch als bijlage. De status wordt bijgewerkt naar "Offerte verzonden" - Elfsquad synct automatisch mee.',items:['E-mail verstuurd naar jan@enc.nl','PDF automatisch als bijlage','Status: "Offerte verzonden"','Elfsquad status synct automatisch mee','Klant ontvangt professionele offerte']},
+          {id:'o7',lane:'hs',type:'decision',label:'Klant akkoord?',sub:'Status: Geaccepteerd / Gewonnen',sys:'HubSpot',title:'Beslismoment: klant akkoord?',desc:'Sales ontvangt de reactie van de klant. Bij akkoord zet sales de status op "Geaccepteerd / Gewonnen". Dit is de trigger voor de automatische push naar Business Central. Bij afwijzing gaat de deal op "Verloren".',items:['Klant reageert per mail of telefoon','Akkoord: status → "Geaccepteerd / Gewonnen"','Verloren: status → "Verloren" (geen push naar BC)','Alle verplichte velden worden gecontroleerd','Bij Gewonnen: automatische push naar BC start']},
+          {id:'o8',lane:'hs',type:'auto',label:'Order → Business Central',sub:'Automatische push bij Gewonnen',sys:'HubSpot → BC',title:'Order automatisch naar Business Central',desc:'Bij de status "Gewonnen" stuurt HubSpot automatisch de orderdata naar Business Central. BC controleert of de klant al bestaat en maakt de order aan. Het ordernummer komt automatisch terug in HubSpot.',items:['Klantgegevens + orderdata naar BC gestuurd','BC herkent bestaande klant op klant-ID','Order aangemaakt in BC: #24-003812','Orderregels: 4 plafondeilanden, prijs, BTW','BC-ordernummer teruggestuurd naar HubSpot']},
+          {id:'o9',lane:'bc',type:'manual',label:'Werkvoorbereider pakt over',sub:'Voorraad · planning · levering',sys:'Business Central',title:'Werkvoorbereider handelt de order af',desc:'De werkvoorbereider ontvangt de order in BC. Voorraad wordt gecheckt, eventueel besteld. Levering of montage wordt gepland. Alle statuswijzigingen in BC syncen automatisch terug naar HubSpot en Elfsquad.',items:['Order ontvangen en klantdata gecontroleerd','Voorraad 4 plafondeilanden: beschikbaar','Leveringsdatum gepland','Status "In productie" gezet in BC','Status synct automatisch naar HubSpot + Elfsquad']}
+        ]
+      },
+      online: {
+        label: 'Online deal (website)',
+        steps: [
+          {id:'w1',lane:'es',type:'manual',label:'Klant configureert op website',sub:'Elfsquad configurator',sys:'Website / Elfsquad',title:'Klant configureert product via de website',desc:'Easy Noise Control bezoekt de website en configureert zelf de gewenste plafondeilanden via de Elfsquad-configurator. Na de configuratie vult de klant naam en e-mailadres in om een offerte aan te vragen.',items:['Klant opent configurator op website','4 plafondeilanden geconfigureerd','Naam en e-mailadres ingevuld','Offerte aangevraagd via de website','Configuratie opgeslagen in Elfsquad']},
+          {id:'w2',lane:'hs',type:'auto',label:'Deal auto-aangemaakt in HubSpot',sub:'Lead direct zichtbaar voor sales',sys:'HubSpot',title:'Deal automatisch aangemaakt in HubSpot',desc:'Zodra de klant de aanvraag via de website verstuurt, wordt automatisch een nieuwe deal aangemaakt in HubSpot. Sales ziet de lead direct in hun dashboard - geen handmatig aanmaken nodig.',items:['Deal automatisch aangemaakt in HubSpot','Klantgegevens vanuit website overgenomen','Status: "Offerte aangevraagd" automatisch gezet','Offerte al klaargemaakt in Elfsquad','Lead direct zichtbaar voor sales']},
+          {id:'w3',lane:'hs',type:'manual',label:'Sales controleert & verstuurt',sub:'Offerte versturen vanuit HubSpot',sys:'HubSpot',title:'Sales controleert en verstuurt de offerte',desc:'Sales opent de deal in HubSpot, controleert de automatisch aangemaakte offerte en verstuurt die naar de klant. De PDF van Elfsquad zit al als bijlage. Eventuele aanpassingen kunnen in Elfsquad worden doorgevoerd.',items:['Offerte gecontroleerd door sales','Eventuele aanpassingen in Elfsquad doorgevoerd','PDF automatisch als bijlage beschikbaar','Offerte verstuurd vanuit HubSpot','Status: "Offerte verzonden"']},
+          {id:'w4',lane:'hs',type:'decision',label:'Klant akkoord?',sub:'Gewonnen of Verloren',sys:'HubSpot',title:'Beslismoment: klant akkoord?',desc:'Klant reageert op de offerte. Bij akkoord zet sales de status op "Gewonnen" - de order gaat automatisch naar BC. Exact dezelfde flow als een offline deal.',items:['Akkoord: status → "Gewonnen"','Verloren: status → "Verloren"','Bij Gewonnen: automatische push naar BC','Order aangemaakt in BC','Werkvoorbereider pakt over']},
+          {id:'w5',lane:'bc',type:'manual',label:'Afhandeling in BC',sub:'Zelfde flow als offline',sys:'Business Central',title:'Afhandeling in Business Central',desc:'Werkvoorbereider handelt de order af in BC: voorraad, planning, levering of montage. Alle statuswijzigingen syncen automatisch terug naar HubSpot en Elfsquad. Identiek aan de offline flow.',items:['Order ontvangen in BC','Voorraad en planning geregeld','Status bijgehouden in BC','Alle statussen syncen naar HubSpot','Klant ontvangt automatische communicatie']}
+        ]
+      },
+      montage: {
+        label: 'Met montage',
+        steps: [
+          {id:'m1',lane:'hs',type:'manual',label:'Deal aanmaken + offerte aanvragen',sub:'HubSpot start de flow',sys:'HubSpot',title:'Deal aanmaken en offerte aanvragen',desc:'Zelfde start als een offline deal: binnendienst maakt klant + deal aan in HubSpot, zet status op "Offerte aangevraagd". Klantdata vliegt automatisch naar Elfsquad.',items:['Klant + deal aangemaakt in HubSpot','Alle velden ingevuld','Status: "Offerte aangevraagd"','Klantdata automatisch naar Elfsquad','Elfsquad klaar voor offerte']},
+          {id:'m2',lane:'es',type:'manual',label:'Offerte + montage = JA',sub:'Montage geselecteerd in Elfsquad',sys:'Elfsquad',title:'Offerte opmaken - montage geselecteerd',desc:'In Elfsquad worden de producten geconfigureerd. Montage wordt bewust geselecteerd als extra optie. Dit "montage-vlag" reist mee door de hele keten en triggert later de automatische klantmails.',items:['4 plafondeilanden geconfigureerd','Montage = JA bewust geselecteerd','Montagekosten toegevoegd aan prijs','Montage-vlag wordt meegestuurd naar HubSpot','PDF inclusief montage-omschrijving gegenereerd']},
+          {id:'m3',lane:'es',type:'auto',label:'PDF + montage-vlag → HubSpot',sub:'Terugkoppeling met montage-indicator',sys:'Elfsquad → HubSpot',title:'Terugkoppeling inclusief montage-vlag',desc:'Elfsquad stuurt de PDF, het bedrag én de montage-indicator terug naar HubSpot. HubSpot registreert dat er montage bij zit en zal later - bij het ontvangen van de montagedatum - automatisch de klantmails sturen.',items:['Offerte-ID en bedrag teruggestuurd','PDF als bijlage in HubSpot','Montage-veld in HubSpot: JA','HubSpot klaar om klantmails te triggeren','Sales kan offerte versturen']},
+          {id:'m4',lane:'hs',type:'decision',label:'Klant akkoord → Gewonnen',sub:'Order + montage naar BC',sys:'HubSpot',title:'Klant akkoord - order naar BC',desc:'Sales zet de status op "Gewonnen". De order wordt automatisch naar BC gestuurd, inclusief de montage-indicator. BC weet daarmee dat er een montagedatum ingepland moet worden.',items:['Status: "Geaccepteerd / Gewonnen"','Order + montage-indicator naar BC gestuurd','BC maakt klant en order aan','Ordernummer teruggestuurd naar HubSpot','Werkvoorbereider ziet montage-indicatie in BC']},
+          {id:'m5',lane:'bc',type:'manual',label:'Werkvoorbereider plant montage',sub:'Montagedatum invoeren in BC',sys:'Business Central',title:'Werkvoorbereider plant de montagedatum',desc:'De werkvoorbereider ziet de order in BC met de montage-indicatie. Hij/zij plant de montage en voert de datum in BC in. Dit is de enige handmatige stap die de rest automatisch in gang zet.',items:['Order ontvangen met montage-indicatie','Voorraad gecheckt en montage ingepland','Montagedatum ingevoerd: bijv. 15 januari','Montageteam bevestigd','BC stuurt datum automatisch door naar HubSpot']},
+          {id:'m6',lane:'bc',type:'auto',label:'Montagedatum → HubSpot',sub:'BC synct datum terug',sys:'BC → HubSpot',title:'Montagedatum automatisch naar HubSpot',desc:'BC stuurt de montagedatum automatisch naar HubSpot via de bestaande koppeling. HubSpot ontvangt de datum en triggert direct de planning van twee automatische e-mails.',items:['Montagedatum 15 januari ontvangen van BC','HubSpot workflow getriggerd','Mail 1 ingepland: 8 jan (1 week van tevoren)','Mail 2 ingepland: 14 jan (1 dag van tevoren)','Niemand hoeft iets handmatig te doen']},
+          {id:'m7',lane:'hs',type:'auto',label:'Automatische mails naar klant',sub:'1 week + 1 dag van tevoren',sys:'HubSpot',title:'Automatische klantcommunicatie verstuurd',desc:'HubSpot verstuurt automatisch twee herinneringsmails naar de klant op het juiste moment. Geen handmatig werk nodig - alleen de montagedatum in BC invoeren was voldoende om dit te triggeren.',items:['Mail 1 (8 jan): montagedatum + voorbereidingsinstructies','Mail 2 (14 jan): herinnering een dag van tevoren','Inhoud: tijdstip, toegang regelen, wat klant moet doen','Na montage: status "Geleverd" triggert leveringsbevestiging','Volledige communicatie geautomatiseerd']}
+        ]
+      }
+    };
+
+    let curSc = 'offline';
+    let curStep = null;
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function laneOrder(lane) {
+      return { hs: 0, es: 1, bc: 2 }[lane];
+    }
+
+    function renderTabs() {
+      const tabs = document.getElementById('sc-tabs');
+      tabs.innerHTML = '';
+
+      Object.keys(SC).forEach((key) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `sc-tab${key === curSc ? ' on' : ''}`;
+        button.textContent = SC[key].label;
+        button.addEventListener('click', () => setScenario(key));
+        tabs.appendChild(button);
+      });
+    }
+
+    function nodeHtml(step) {
+      const typeCls = step.type === 'auto' ? 'fn-auto' : step.type === 'decision' ? 'fn-decision' : 'fn-manual';
+      const nodeScCls = `fc-node-${step.lane}`;
+      const typeIcon = step.type === 'auto'
+        ? '<span class="ni-auto"></span>Automatisch'
+        : step.type === 'decision'
+          ? '<span class="ni-decision"></span>Beslissing'
+          : '<span class="ni-manual"></span>Handmatig';
+      const isDimmed = curStep && curStep !== step.id ? ' dimmed' : '';
+      const isActive = curStep === step.id ? ' active' : '';
+
+      return `
+        <button type="button" class="fc-node ${typeCls} ${nodeScCls}${isActive}${isDimmed}" data-step-id="${escapeHtml(step.id)}">
+          <div class="fn-type-badge">${typeIcon}</div>
+          <div class="fn-label">${escapeHtml(step.label)}</div>
+          <div class="fn-sub">${escapeHtml(step.sub)}</div>
+        </button>
+      `;
+    }
+
+    function drawConnectors(sc) {
+      const lanes = ['hs', 'es', 'bc'];
+
+      for (let i = 0; i < sc.steps.length - 1; i += 1) {
+        const curr = sc.steps[i];
+        const next = sc.steps[i + 1];
+
+        lanes.forEach((lane) => {
+          const cell = document.getElementById(`cc-${lane}-${i}`);
+          if (!cell) return;
+
+          if (curr.lane === lane && next.lane === lane) {
+            cell.innerHTML = `
+              <svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">
+                <defs>
+                  <marker id="arr${lane}${i}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                    <path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"></path>
+                  </marker>
+                </defs>
+                <line x1="50" y1="0" x2="50" y2="24" stroke="#CBD5E1" stroke-width="2" marker-end="url(#arr${lane}${i})"></line>
+              </svg>
+            `;
+          } else if (curr.lane === lane) {
+            const toRight = laneOrder(next.lane) > laneOrder(curr.lane);
+            cell.innerHTML = `
+              <svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">
+                <line x1="50" y1="0" x2="50" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"></line>
+                <line x1="50" y1="12" x2="${toRight ? '110' : '-10'}" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"></line>
+              </svg>
+            `;
+          } else if (next.lane === lane) {
+            const fromLeft = laneOrder(curr.lane) < laneOrder(next.lane);
+            const arrId = `arr2${lane}${i}`;
+            cell.innerHTML = `
+              <svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none" overflow="visible">
+                <defs>
+                  <marker id="${arrId}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                    <path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round"></path>
+                  </marker>
+                </defs>
+                <line x1="${fromLeft ? '-10' : '110'}" y1="12" x2="50" y2="12" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#${arrId})"></line>
+                <line x1="50" y1="12" x2="50" y2="24" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="4,2"></line>
+              </svg>
+            `;
+          } else {
+            cell.innerHTML = `
+              <svg class="conn-svg" viewBox="0 0 100 24" preserveAspectRatio="none">
+                <line x1="0" y1="12" x2="100" y2="12" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="3,4"></line>
+              </svg>
+            `;
+          }
+        });
+      }
+    }
+
+    function renderChart() {
+      const sc = SC[curSc];
+      let html = `
+        <table class="slt" id="slt">
+          <thead class="slt-head">
+            <tr>
+              <th class="th-hs"><span class="th-icon" style="background:#1A56DB">HS</span>HubSpot</th>
+              <th class="th-es"><span class="th-icon" style="background:#0B7B5A">ES</span>Elfsquad</th>
+              <th class="th-bc"><span class="th-icon" style="background:#B45309">BC</span>Business Central</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      sc.steps.forEach((step, i) => {
+        html += `<tr id="row-${i}">`;
+
+        ['hs', 'es', 'bc'].forEach((lane) => {
+          html += `<td class="lane-${lane}">`;
+          html += step.lane === lane
+            ? nodeHtml(step)
+            : '<div class="lane-empty"><div class="lane-dot-line"></div></div>';
+          html += `</td>`;
+        });
+
+        html += `</tr>`;
+
+        if (i < sc.steps.length - 1) {
+          html += `
+            <tr class="sep-row" id="conn-${i}">
+              <td class="lane-hs conn-cell" id="cc-hs-${i}"></td>
+              <td class="lane-es conn-cell" id="cc-es-${i}"></td>
+              <td class="lane-bc conn-cell" id="cc-bc-${i}"></td>
+            </tr>
+          `;
+        }
+      });
+
+      html += '</tbody></table>';
+      document.getElementById('fc-root').innerHTML = html;
+
+      document.querySelectorAll('[data-step-id]').forEach((button) => {
+        button.addEventListener('click', () => selectStep(button.dataset.stepId));
+      });
+
+      window.requestAnimationFrame(() => drawConnectors(sc));
+    }
+
+    function renderDetail() {
+      const sc = SC[curSc];
+      const step = sc.steps.find((s) => s.id === curStep);
+      if (!step) return;
+
+      const idx = sc.steps.indexOf(step);
+      const total = sc.steps.length;
+      const pct = Math.round(((idx + 1) / total) * 100);
+      const sysColors = { hs:'#1A56DB', es:'#0B7B5A', bc:'#B45309' };
+      const col = sysColors[step.lane] || '#6D28D9';
+      const typeColors = { manual:'#334155', auto:'#6D28D9', decision:'#16A34A' };
+      const typeBgs = { manual:'#F1F5F9', auto:'#EDE9FE', decision:'#DCFCE7' };
+      const typeLabels = {
+        manual:'Handmatig - menselijke actie vereist',
+        auto:'Automatisch - systeem handelt af',
+        decision:'Beslismoment - status wordt gezet'
+      };
+
+      const itemsHtml = step.items.map((item) => `
+        <div class="dp-item"><span class="dp-item-icon">→</span>${escapeHtml(item)}</div>
+      `).join('');
+
+      const html = `
+        <div class="dp-top">
+          <div class="dp-scenario">${escapeHtml(sc.label)} · Stap ${idx + 1} van ${total}</div>
+          <div class="dp-title">${escapeHtml(step.title)}</div>
+          <div class="dp-sys-pill" style="background:${col}18;color:${col}">${escapeHtml(step.sys)}</div>
+        </div>
+        <div class="dp-progress">
+          <div class="dp-prog-label"><span>Voortgang</span><span>${idx + 1} / ${total}</span></div>
+          <div class="dp-prog-track"><div class="dp-prog-fill" style="width:${pct}%;background:${col}"></div></div>
+        </div>
+        <div class="dp-body">
+          <div class="dp-type-row" style="background:${typeBgs[step.type]};color:${typeColors[step.type]}">${typeLabels[step.type]}</div>
+          <div class="dp-sect">
+            <div class="dp-sect-lbl">Wat er gebeurt</div>
+            <div class="dp-desc">${escapeHtml(step.desc)}</div>
+          </div>
+          <div class="dp-sect">
+            <div class="dp-sect-lbl">Details</div>
+            <div class="dp-items">${itemsHtml}</div>
+          </div>
+        </div>
+        <div class="dp-nav">
+          <span class="dp-nav-count">${idx + 1} / ${total}</span>
+          <div class="dp-nav-btns">
+            ${idx > 0 ? `<button type="button" class="dp-btn dp-btn-s" id="prev-step">← Vorige</button>` : ''}
+            ${idx < total - 1 ? `<button type="button" class="dp-btn dp-btn-p" id="next-step">Volgende →</button>` : `<button type="button" class="dp-btn dp-btn-p" id="reset-chart">↺ Opnieuw</button>`}
+          </div>
+        </div>
+      `;
+
+      const filled = document.getElementById('dp-filled');
+      filled.innerHTML = html;
+      filled.style.display = 'flex';
+      document.getElementById('dp-empty').style.display = 'none';
+
+      const prev = document.getElementById('prev-step');
+      const next = document.getElementById('next-step');
+      const reset = document.getElementById('reset-chart');
+
+      if (prev) prev.addEventListener('click', () => selectStep(sc.steps[idx - 1].id));
+      if (next) next.addEventListener('click', () => selectStep(sc.steps[idx + 1].id));
+      if (reset) reset.addEventListener('click', resetChart);
+    }
+
+    function renderPills() {
+      const sc = SC[curSc];
+      const container = document.getElementById('dp-pills');
+      container.innerHTML = '';
+
+      sc.steps.forEach((step) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `dp-pill${curStep === step.id ? ' on' : ''}`;
+        button.textContent = step.label;
+        button.addEventListener('click', () => selectStep(step.id));
+        container.appendChild(button);
+      });
+    }
+
+    function selectStep(id) {
+      curStep = id;
+
+      const sc = SC[curSc];
+      sc.steps.forEach((step) => {
+        const el = document.querySelector(`[data-step-id="${step.id}"]`);
+        if (!el) return;
+        el.classList.remove('active', 'dimmed');
+        if (step.id === id) {
+          el.classList.add('active');
+        } else {
+          el.classList.add('dimmed');
+        }
+      });
+
+      renderDetail();
+      renderPills();
+    }
+
+    function resetChart() {
+      curStep = null;
+      document.querySelectorAll('[data-step-id]').forEach((el) => el.classList.remove('active', 'dimmed'));
+      document.getElementById('dp-filled').style.display = 'none';
+      document.getElementById('dp-empty').style.display = 'flex';
+      renderPills();
+    }
+
+    function setScenario(key) {
+      curSc = key;
+      curStep = null;
+      renderTabs();
+      renderChart();
+      document.getElementById('dp-filled').style.display = 'none';
+      document.getElementById('dp-empty').style.display = 'flex';
+      renderPills();
+    }
+
+    function init() {
+      renderTabs();
+      renderChart();
+      renderPills();
+      window.addEventListener('resize', () => window.requestAnimationFrame(() => drawConnectors(SC[curSc])));
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 </body>
 </html>
