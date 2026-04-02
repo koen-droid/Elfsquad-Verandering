@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procesflowchart - ENC Systeem Transitie</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --hs:#1A56DB;--hs-l:#EBF1FF;--hs-d:#1240a8;
+  --es:#0B7B5A;--es-l:#E3F5EE;--es-d:#065F46;
+  --bc:#B45309;--bc-l:#FEF3C7;--bc-d:#92400E;
+  --g50:#F8FAFC;--g100:#F1F5F9;--g200:#E2E8F0;--g300:#CBD5E1;
+  --g400:#94A3B8;--g500:#64748B;--g600:#475569;--g700:#334155;--g800:#1E293B;--g900:#0F172A;
+  --green:#16A34A;--green-l:#DCFCE7;
+  --purple:#6D28D9;--purple-l:#EDE9FE;
+  --orange:#EA580C;--orange-l:#FFF7ED;
+}
+html,body{font-family:'Inter',system-ui,sans-serif;background:var(--g100);color:var(--g900);min-height:100vh}
+
+/* HEADER */
+.hdr{height:52px;background:var(--g900);display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:200}
+.hdr-logo{width:30px;height:30px;background:var(--hs);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:white;flex-shrink:0}
+.hdr-title{font-size:13px;font-weight:600;color:white}
+.hdr-div{width:1px;height:18px;background:rgba(255,255,255,.12);margin:0 4px}
+.hdr-sub{font-size:12px;color:#94A3B8}
+
+/* MAIN */
+.main{display:grid;grid-template-columns:1fr 340px;height:calc(100vh - 52px);overflow:hidden}
+.chart-wrap{overflow:auto;padding:20px;background:var(--g100)}
+.chart-card{background:white;border-radius:14px;border:1px solid var(--g200);padding:20px;min-width:600px}
+
+/* TABS */
+.sc-tabs{display:flex;gap:6px;margin-bottom:14px}
+.sc-tab{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--g200);background:white;color:var(--g500);transition:all .15s;font-family:inherit}
+.sc-tab:hover{border-color:var(--g400);color:var(--g700)}
+.sc-tab.on{background:var(--g900);color:white;border-color:var(--g900)}
+
+/* LEGEND */
+.legend{display:flex;gap:14px;margin-bottom:14px;padding:9px 14px;background:var(--g50);border-radius:8px;border:1px solid var(--g200);flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g600)}
+.leg-box{width:13px;height:13px;border-radius:3px;flex-shrink:0}
+
+/* SYNC NOTE */
+.sync-note{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:9px 14px;margin-bottom:14px;font-size:11px;color:#15803D;line-height:1.5}
+.sync-note strong{font-weight:700}
+
+/* PHASE DIVIDER */
+.phase-div{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:10px 0 6px}
+.phase-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:5px 10px;border-radius:6px;text-align:center}
+.ph-comm{background:#EBF1FF;color:#1240a8}
+.ph-oper{background:#E3F5EE;color:#065F46}
+.ph-fin{background:#FEF3C7;color:#92400E}
+.phase-div-full{grid-template-columns:1fr}
+
+/* SWIMLANE */
+.slt{width:100%;border-collapse:collapse}
+.slt thead th{padding:8px 12px;font-size:11px;font-weight:700;text-align:center;border-bottom:2px solid}
+.th-hs{background:var(--hs-l);color:var(--hs-d);border-color:var(--hs)}
+.th-es{background:var(--es-l);color:var(--es-d);border-color:var(--es)}
+.th-bc{background:var(--bc-l);color:var(--bc-d);border-color:var(--bc)}
+.th-icon{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;font-size:9px;font-weight:800;color:white;margin-right:5px;vertical-align:middle}
+
+.slt td{padding:4px 6px;vertical-align:top;width:33.33%}
+.lane-hs{background:rgba(26,86,219,.025)}
+.lane-es{background:rgba(11,123,90,.025)}
+.lane-bc{background:rgba(180,83,9,.025)}
+
+/* NODE */
+.fc-node{position:relative;border-radius:16px;padding:12px 13px 13px;cursor:pointer;border:1px solid var(--g200);transition:transform .16s ease, box-shadow .18s ease, border-color .18s ease, opacity .18s ease, filter .18s ease;text-align:left;width:100%;font-family:inherit;display:block;box-shadow:0 8px 18px rgba(15,23,42,.06),0 2px 6px rgba(15,23,42,.04);overflow:hidden}
+.fc-node:before{content:'';position:absolute;left:0;right:0;top:0;height:4px;border-radius:16px 16px 0 0;background:var(--g300);opacity:.95}
+.fc-node:hover{transform:translateY(-2px) scale(1.01);box-shadow:0 16px 30px rgba(15,23,42,.10),0 6px 14px rgba(15,23,42,.06)}
+.fc-node.active{transform:translateY(-1px);box-shadow:0 0 0 4px rgba(26,86,219,.12),0 18px 34px rgba(15,23,42,.12),0 8px 18px rgba(15,23,42,.08)}
+.fc-node.dimmed{opacity:.30;filter:grayscale(.18)}
+.fn-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.fn-badge{display:inline-flex;align-items:center;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.55px;padding:3px 6px;border-radius:999px;line-height:1}
+.fn-sys{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;font-size:9px;font-weight:700;letter-spacing:.02em;background:rgba(255,255,255,.72);border:1px solid rgba(148,163,184,.24);color:var(--g600);backdrop-filter:blur(4px)}
+.fn-label{font-size:12px;font-weight:700;line-height:1.35;color:var(--g900);letter-spacing:-.01em}
+.fn-sub{font-size:10px;color:var(--g500);margin-top:4px;line-height:1.45}
+/* node type styles */
+.fn-manual{border-color:#D8E0EA;background:linear-gradient(180deg,#FFFFFF 0%,#F8FAFC 100%)}
+.fn-manual:before{background:linear-gradient(90deg,#94A3B8 0%,#CBD5E1 100%)}
+.fn-auto{border-color:rgba(109,40,217,.22);background:linear-gradient(180deg,#F5F3FF 0%,#EDE9FE 100%)}
+.fn-auto:before{background:linear-gradient(90deg,#8B5CF6 0%,#6D28D9 100%)}
+.fn-decision{border-color:rgba(22,163,74,.25);background:linear-gradient(180deg,#F0FDF4 0%,#DCFCE7 100%)}
+.fn-decision:before{background:linear-gradient(90deg,#22C55E 0%,#16A34A 100%)}
+.fn-mail{border-color:rgba(234,88,12,.24);background:linear-gradient(180deg,#FFF7ED 0%,#FFEDD5 100%)}
+.fn-mail:before{background:linear-gradient(90deg,#FB923C 0%,#EA580C 100%)}
+.badge-manual{background:#EEF2F7;color:#475569}
+.badge-auto{background:rgba(109,40,217,.12);color:var(--purple)}
+.badge-decision{background:rgba(22,163,74,.12);color:var(--green)}
+.badge-mail{background:rgba(234,88,12,.12);color:var(--orange)}
+.fc-node-hs .fn-sys{color:var(--hs-d)}
+.fc-node-es .fn-sys{color:var(--es-d)}
+.fc-node-bc .fn-sys{color:var(--bc-d)}
+/* active borders per lane */
+.fc-node-hs.fn-manual.active{border-color:rgba(26,86,219,.42);box-shadow:0 0 0 4px rgba(26,86,219,.10),0 18px 34px rgba(26,86,219,.14),0 8px 18px rgba(15,23,42,.08)}
+.fc-node-es.fn-manual.active{border-color:rgba(11,123,90,.42);box-shadow:0 0 0 4px rgba(11,123,90,.10),0 18px 34px rgba(11,123,90,.14),0 8px 18px rgba(15,23,42,.08)}
+.fc-node-bc.fn-manual.active{border-color:rgba(180,83,9,.42);box-shadow:0 0 0 4px rgba(180,83,9,.10),0 18px 34px rgba(180,83,9,.14),0 8px 18px rgba(15,23,42,.08)}
+.fn-auto.active{box-shadow:0 0 0 4px rgba(109,40,217,.10),0 18px 34px rgba(109,40,217,.14),0 8px 18px rgba(15,23,42,.08)}
+.fn-decision.active{box-shadow:0 0 0 4px rgba(22,163,74,.10),0 18px 34px rgba(22,163,74,.14),0 8px 18px rgba(15,23,42,.08)}
+.fn-mail.active{box-shadow:0 0 0 4px rgba(234,88,12,.10),0 18px 34px rgba(234,88,12,.14),0 8px 18px rgba(15,23,42,.08)}
+
+/* empty lane */
+.lane-empty{min-height:52px;display:flex;align-items:center;justify-content:center}
+.lane-dot{border-top:1.5px dashed var(--g200);width:70%}
+
+/* connector rows */
+.conn-row td{height:34px;padding:0;position:relative}
+.conn-svg{width:100%;height:34px;overflow:visible;display:block}
+.conn-path{fill:none;stroke:#CBD5E1;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.conn-path-soft{fill:none;stroke:#E2E8F0;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.conn-arrow{fill:#94A3B8}
+
+/* DETAIL PANEL */
+.detail{background:white;border-left:1px solid var(--g200);display:flex;flex-direction:column;overflow:hidden}
+.dp-top{padding:16px 18px 0;border-bottom:1px solid var(--g100);flex-shrink:0}
+.dp-sc{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:4px}
+.dp-title{font-size:15px;font-weight:700;color:var(--g900);line-height:1.3;margin-bottom:6px}
+.dp-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:10px}
+.dp-prog{padding:10px 18px;border-bottom:1px solid var(--g100);flex-shrink:0}
+.dp-prog-row{display:flex;justify-content:space-between;font-size:10px;color:var(--g400);margin-bottom:4px;font-weight:500}
+.dp-prog-track{height:5px;background:var(--g100);border-radius:3px;overflow:hidden}
+.dp-prog-fill{height:100%;border-radius:3px;transition:width .3s}
+.dp-body{flex:1;overflow-y:auto;padding:14px 18px}
+.dp-sect{margin-bottom:14px}
+.dp-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);margin-bottom:6px}
+.dp-type{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:7px;font-size:12px;font-weight:500;margin-bottom:10px}
+.dp-desc{font-size:13px;color:var(--g600);line-height:1.7}
+.dp-items{display:flex;flex-direction:column;gap:4px}
+.dp-item{display:flex;align-items:flex-start;gap:7px;padding:7px 10px;border-radius:7px;font-size:12px;color:var(--g700);background:var(--g50);border:1px solid var(--g100);line-height:1.4}
+.dp-arr{flex-shrink:0;color:var(--g400);font-size:10px;margin-top:2px}
+.dp-sync{margin-top:10px;padding:9px 12px;background:#F0FDF4;border-radius:8px;border:1px solid #BBF7D0;font-size:11px;color:#15803D;line-height:1.5}
+.dp-sync strong{font-weight:600}
+.dp-nav{padding:12px 18px;border-top:1px solid var(--g100);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.dp-count{font-size:11px;color:var(--g400);font-weight:500}
+.dp-btns{display:flex;gap:6px}
+.dp-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s}
+.dp-btn-s{background:var(--g100);color:var(--g700)}.dp-btn-s:hover{background:var(--g200)}
+.dp-btn-p{background:var(--hs);color:white}.dp-btn-p:hover{background:var(--hs-d)}
+.dp-pills{padding:8px 18px;border-top:1px solid var(--g100);display:flex;flex-wrap:wrap;gap:4px;flex-shrink:0}
+.dp-pill-btn{padding:3px 8px;border-radius:20px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--g200);background:white;color:var(--g500);transition:all .12s;font-family:inherit;line-height:1.6}
+.dp-pill-btn:hover{border-color:var(--g400);color:var(--g700)}
+.dp-pill-btn.on{background:var(--g900);color:white;border-color:var(--g900)}
+.dp-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;color:var(--g400)}
+.dp-empty-icon{width:48px;height:48px;border-radius:12px;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px}
+.dp-empty p{font-size:13px;line-height:1.6;max-width:200px}
+
+@media(max-width:900px){
+  .main{grid-template-columns:1fr;height:auto}
+  .detail{height:440px;border-left:none;border-top:1px solid var(--g200)}
+  .chart-wrap{height:auto;overflow:visible}
+}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-logo">E</div>
+  <span class="hdr-title">ENC - Systeem Transitie</span>
+  <div class="hdr-div"></div>
+  <span class="hdr-sub">Interactieve procesflowchart</span>
+</div>
+<div class="main">
+  <div class="chart-wrap">
+    <div class="chart-card">
+      <div class="sc-tabs">
+        <button class="sc-tab on" onclick="setScenario('offline',this)">Offline deal</button>
+        <button class="sc-tab" onclick="setScenario('online',this)">Online deal (website)</button>
+        <button class="sc-tab" onclick="setScenario('montage',this)">Montage flow</button>
+        <button class="sc-tab" onclick="setScenario('meting',this)">Akoestische meting</button>
+        <button class="sc-tab" onclick="setScenario('statussen',this)">Alle statussen</button>
+      </div>
+      <div class="legend">
+        <div class="leg-item"><div class="leg-box" style="border:2px solid #94A3B8;background:white"></div>Handmatig</div>
+        <div class="leg-item"><div class="leg-box" style="border:2px solid #6D28D9;background:#EDE9FE"></div>Automatisch</div>
+        <div class="leg-item"><div class="leg-box" style="border:2px solid #16A34A;background:#DCFCE7"></div>Beslismoment</div>
+        <div class="leg-item"><div class="leg-box" style="border:2px solid #EA580C;background:#FFF7ED"></div>Mail naar klant</div>
+        <div class="leg-item"><div style="width:26px;height:2px;border-top:2px dashed #CBD5E1"></div>Two-way sync</div>
+      </div>
+      <div class="sync-note"><strong>Two-way sync:</strong> Elke statuswijziging in HubSpot, Elfsquad of Business Central wordt automatisch gesynchroniseerd naar de andere twee systemen. Alle klantmails gaan altijd via HubSpot.</div>
+      <div id="fc-root"></div>
+    </div>
+  </div>
+  <div class="detail" id="detail">
+    <div class="dp-empty" id="dp-empty">
+      <div class="dp-empty-icon">&#8592;</div>
+      <p>Klik op een stap in de flowchart om de details te zien</p>
+    </div>
+    <div id="dp-filled" style="display:none;flex-direction:column;flex:1;overflow:hidden"></div>
+    <div class="dp-pills" id="dp-pills"></div>
+  </div>
+</div>
+<script>
+var PHASES = {
+  comm:{label:'Commercieel',cls:'ph-comm'},
+  oper:{label:'Operationeel',cls:'ph-oper'},
+  fin:{label:'Financieel',cls:'ph-fin'},
+  all:{label:'Volledig proces',cls:'ph-comm'}
+};
+
+var SC = {
+  offline:{
+    label:'Offline deal',
+    phases:[
+      {phase:'comm',rows:[
+        {id:'o1',lane:'hs',type:'manual',label:'Klant + deal aanmaken',sub:'Binnendienst in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Binnendienst ontvangt een aanvraag. Ze maakt een nieuw bedrijf en deal aan in HubSpot met alle klantgegevens.',
+         sync:'HubSpot synct naar Elfsquad + BC.',
+         items:['Bedrijf aanmaken: naam, adres, BTW, KvK','Taal: NL - Valuta: EUR','Contactpersoon koppelen','Deal aanmaken met omschrijving','Verplichte velden controleren']},
+        {id:'o2',lane:'hs',type:'decision',label:'Status: Offerte aangevraagd',sub:'Trigger naar Elfsquad',sys:'HubSpot',sc:'hs',
+         typeLabel:'Beslismoment - sales',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Sales zet de status op "Offerte aangevraagd". Dit valideert de verplichte velden en activeert de automatische koppeling naar Elfsquad.',
+         sync:'HubSpot synct status naar Elfsquad + BC.',
+         items:['Verplichte velden gecontroleerd','Status: "Offerte aangevraagd"','Koppeling naar Elfsquad geactiveerd','Elfsquad + BC ontvangen de statusupdate']},
+        {id:'o3',lane:'hs',type:'auto',label:'Klantdata naar Elfsquad',sub:'Automatische koppeling',sys:'HubSpot naar Elfsquad',sc:'hs',
+         typeLabel:'Automatisch - koppeling HubSpot naar Elfsquad',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'HubSpot stuurt automatisch alle klant- en dealgegevens naar Elfsquad. Geen handmatig overtypen.',
+         sync:'',
+         items:['Bedrijfsnaam, adres, BTW naar Elfsquad','Taal en valuta meegestuurd','HubSpot deal-ID als unieke referentie','Contactpersoon naam en e-mail meegestuurd']},
+        {id:'o4',lane:'es',type:'manual',label:'Offerte opmaken',sub:'Producten configureren',sys:'Elfsquad',sc:'es',
+         typeLabel:'Handmatig - sales of binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'In Elfsquad worden de producten geconfigureerd. Klantgegevens staan al ingevuld. Prijs wordt automatisch berekend en PDF gegenereerd.',
+         sync:'',
+         items:['Producten en opties configureren','Afmetingen en specificaties instellen','Prijs automatisch berekend','Montage: ja of nee selecteren','Offerte-PDF automatisch gegenereerd']},
+        {id:'o5',lane:'es',type:'auto',label:'PDF + bedrag naar HubSpot',sub:'Automatische terugkoppeling',sys:'Elfsquad naar HubSpot',sc:'es',
+         typeLabel:'Automatisch - koppeling Elfsquad naar HubSpot',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'Elfsquad stuurt automatisch het offerte-ID, totaalbedrag en PDF terug naar het deal-record in HubSpot.',
+         sync:'Elfsquad synct offertestatus naar HubSpot + BC.',
+         items:['Offerte-ID teruggestuurd','Totaalbedrag bijgewerkt in de deal','PDF als bijlage in HubSpot','Elfsquad synct status naar HubSpot + BC']},
+        {id:'o6',lane:'hs',type:'manual',label:'Offerte versturen',sub:'Via HubSpot naar klant',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - sales',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Sales verstuurt de offerte vanuit HubSpot. De PDF zit automatisch als bijlage. Status wordt bijgewerkt in alle drie de systemen.',
+         sync:'HubSpot synct "Offerte verzonden" naar Elfsquad + BC.',
+         items:['E-mail verstuurd vanuit HubSpot','PDF automatisch als bijlage','Status "Offerte verzonden" in alle systemen']},
+        {id:'o7',lane:'hs',type:'decision',label:'Klant akkoord?',sub:'Gewonnen of Verloren',sys:'HubSpot',sc:'hs',
+         typeLabel:'Beslismoment - sales',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Sales ontvangt de reactie van de klant. Akkoord = "Gewonnen" en automatische push naar BC. Afwijzing = "Verloren" en geen push naar BC.',
+         sync:'HubSpot synct "Gewonnen" of "Verloren" naar Elfsquad + BC.',
+         items:['Akkoord: status "Gewonnen" - push naar BC start','Verloren: status "Verloren" - geen push naar BC','Elfsquad + BC ontvangen de statusupdate']},
+        {id:'o8',lane:'hs',type:'auto',label:'Order naar Business Central',sub:'Automatische push bij Gewonnen',sys:'HubSpot naar BC',sc:'hs',
+         typeLabel:'Automatisch - koppeling HubSpot naar BC',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'Bij "Gewonnen" stuurt HubSpot automatisch de orderdata naar BC. BC maakt de order aan en stuurt het ordernummer terug naar HubSpot.',
+         sync:'BC synct ordernummer terug naar HubSpot + Elfsquad.',
+         items:['Klantdata + orderdata naar BC','BC herkent klant op klant-ID','Order aangemaakt in BC','BC-ordernummer teruggestuurd naar HubSpot']},
+      ]},
+      {phase:'oper',rows:[
+        {id:'o9',lane:'bc',type:'manual',label:'Voorraad checken',sub:'Werkvoorbereider in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Werkvoorbereider ontvangt de order in BC, controleert klant- en orderdata en checkt de voorraad.',
+         sync:'BC synct status "In behandeling" naar HubSpot + Elfsquad.',
+         items:['Order en klantdata gecontroleerd','Voorraad gecheckt voor alle orderregels','Ontbrekende onderdelen besteld indien nodig','Status: "In behandeling"']},
+        {id:'o10',lane:'bc',type:'manual',label:'Montage inplannen',sub:'Datum invoeren in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Werkvoorbereider plant de montage en voert de exacte datum in BC in. Dit triggert automatisch de mailworkflow in HubSpot.',
+         sync:'BC synct montagedatum naar HubSpot + Elfsquad. HubSpot start mailworkflow.',
+         items:['Montagedatum bepaald en ingevoerd in BC','Status: "Ingepland"','BC synct datum naar HubSpot + Elfsquad','HubSpot start automatisch de mailworkflow']},
+        {id:'o11',lane:'hs',type:'mail',label:'Automatische mails naar klant',sub:'Slimme maillogica vanuit HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Automatisch - HubSpot mailworkflow',typeColor:'#EA580C',typeBg:'#FFF7ED',
+         desc:'HubSpot verstuurt automatisch herinneringsmails op basis van de montagedatum. De logica is slim: meer dan 7 dagen vooruit = twee mails. Minder dan 7 dagen = alleen 1 dag van tevoren.',
+         sync:'',
+         items:['Meer dan 7 dagen vooruit: mail 1 week van tevoren + mail 1 dag van tevoren','Minder dan 7 dagen vooruit: alleen mail 1 dag van tevoren','Inhoud: datum, tijdstip en wat klant moet voorbereiden','Volledig automatisch - geen handmatige actie nodig']},
+        {id:'o12',lane:'bc',type:'manual',label:'Status: In productie',sub:'Montage gestart',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Op de dag van montage zet de werkvoorbereider de status op "In productie". Synct automatisch naar HubSpot en Elfsquad.',
+         sync:'BC synct "In productie" naar HubSpot + Elfsquad.',
+         items:['Montage gestart','Status: "In productie" in BC','HubSpot + Elfsquad ontvangen de statusupdate','Sales ziet in HubSpot dat de order in uitvoering is']},
+        {id:'o13',lane:'bc',type:'manual',label:'Status: Geleverd',sub:'Montage afgerond',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Na voltooiing zet de werkvoorbereider de status op "Geleverd". BC synct naar HubSpot dat automatisch een leveringsbevestiging stuurt.',
+         sync:'BC synct "Geleverd" naar HubSpot + Elfsquad. HubSpot stuurt leveringsbevestiging.',
+         items:['Montage succesvol afgerond','Status: "Geleverd" in BC','HubSpot + Elfsquad ontvangen de statusupdate','HubSpot stuurt automatisch leveringsbevestiging']},
+        {id:'o14',lane:'hs',type:'mail',label:'Leveringsbevestiging',sub:'Automatisch vanuit HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Automatisch - HubSpot mailworkflow',typeColor:'#EA580C',typeBg:'#FFF7ED',
+         desc:'HubSpot stuurt automatisch een leveringsbevestiging naar de klant zodra de status "Geleverd" binnenkomt vanuit BC.',
+         sync:'',
+         items:['Bevestiging dat montage of levering is afgerond','Eventuele instructies of garantie-informatie','Volledig automatisch vanuit HubSpot']},
+      ]},
+      {phase:'fin',rows:[
+        {id:'o15',lane:'bc',type:'manual',label:'Factuur aanmaken',sub:'Financiele afdeling in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - financiele afdeling',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De financiele afdeling maakt de factuur aan in BC en zet de status op "Gefactureerd". BC synct naar alle systemen.',
+         sync:'BC synct "Gefactureerd" naar HubSpot + Elfsquad.',
+         items:['Factuur aangemaakt in BC','Status: "Gefactureerd"','HubSpot + Elfsquad ontvangen de statusupdate','Sales ziet in HubSpot dat de klant is gefactureerd']},
+        {id:'o16',lane:'bc',type:'decision',label:'Betaald / Afgesloten',sub:'Deal volledig afgerond',sys:'Business Central',sc:'bc',
+         typeLabel:'Beslismoment - financiele afdeling',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Na ontvangst van betaling zet de financiele afdeling de status op "Betaald / Afgesloten". De deal is volledig afgerond in alle drie de systemen.',
+         sync:'BC synct "Betaald / Afgesloten" naar HubSpot + Elfsquad. Deal afgesloten.',
+         items:['Betaling ontvangen en verwerkt in BC','Status: "Betaald / Afgesloten"','HubSpot deal automatisch gesloten','Elfsquad offertestatus bijgewerkt','Volledige dealhistorie zichtbaar in HubSpot']},
+      ]}
+    ]
+  },
+
+  online:{
+    label:'Online deal (website)',
+    phases:[
+      {phase:'comm',rows:[
+        {id:'w1',lane:'es',type:'manual',label:'Klant configureert + betaalt',sub:'Via Elfsquad op de website',sys:'Website via Elfsquad',sc:'es',
+         typeLabel:'Actie door klant - geen offerte',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De klant bezoekt de website, configureert het product en betaalt direct. Er is geen offerte en geen beslismoment - de klant heeft al beslist.',
+         sync:'',
+         items:['Klant opent configurator op de website','Product geconfigureerd en opties geselecteerd','Klantgegevens en betaalgegevens ingevuld','Klant betaalt direct - order bevestigd']},
+        {id:'w2',lane:'es',type:'auto',label:'Order aangemaakt in Elfsquad',sub:'Direct na betaling',sys:'Elfsquad',sc:'es',
+         typeLabel:'Automatisch - Elfsquad verwerkt betaling',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'Na betaling maakt Elfsquad automatisch de order aan en synct naar HubSpot en BC.',
+         sync:'Elfsquad synct nieuwe order naar HubSpot + BC.',
+         items:['Order automatisch aangemaakt','Productconfiguratie opgeslagen','Klantgegevens opgeslagen','Elfsquad synct naar HubSpot + BC']},
+        {id:'w3',lane:'hs',type:'auto',label:'Deal auto-aangemaakt in HubSpot',sub:'Status direct: Gewonnen',sys:'HubSpot',sc:'hs',
+         typeLabel:'Automatisch - koppeling Elfsquad naar HubSpot',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'HubSpot ontvangt de order van Elfsquad en maakt automatisch een deal aan. Status is direct "Gewonnen" - geen offerte nodig.',
+         sync:'HubSpot synct "Gewonnen" naar Elfsquad + BC.',
+         items:['Deal automatisch aangemaakt in HubSpot','Status direct: "Gewonnen"','Geen offerte nodig - klant heeft al betaald','Push naar BC wordt automatisch geactiveerd']},
+        {id:'w4',lane:'bc',type:'auto',label:'Order naar Business Central',sub:'Automatisch via koppeling',sys:'HubSpot naar BC',sc:'bc',
+         typeLabel:'Automatisch - koppeling HubSpot naar BC',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'De order gaat automatisch naar BC. BC maakt de klant aan of herkent een bestaande klant en maakt de order aan.',
+         sync:'BC synct ordernummer terug naar HubSpot + Elfsquad.',
+         items:['Klantdata + orderdata naar BC','Klant aangemaakt of herkend in BC','Order aangemaakt in BC','Ordernummer teruggestuurd naar HubSpot']},
+      ]},
+      {phase:'oper',rows:[
+        {id:'w5',lane:'bc',type:'manual',label:'Werkvoorbereider: voorraad + planning',sub:'Identiek aan offline flow',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Vanaf hier is de flow identiek aan de offline deal. Werkvoorbereider checkt voorraad, plant in en voert de datum in. HubSpot triggert de klantmails.',
+         sync:'BC synct alle statuswijzigingen naar HubSpot + Elfsquad.',
+         items:['Voorraad gecheckt','Montagedatum ingevoerd in BC','HubSpot start mailworkflow automatisch','Status: In behandeling - Ingepland - In productie - Geleverd']},
+        {id:'w6',lane:'hs',type:'mail',label:'Automatische klantmails',sub:'Zelfde slimme maillogica',sys:'HubSpot',sc:'hs',
+         typeLabel:'Automatisch - HubSpot mailworkflow',typeColor:'#EA580C',typeBg:'#FFF7ED',
+         desc:'Zelfde slimme maillogica als de offline deal. Meer dan 7 dagen = 2 mails. Minder dan 7 dagen = 1 mail. Leveringsbevestiging bij status Geleverd.',
+         sync:'',
+         items:['Meer dan 7 dagen: mail 1 week + 1 dag van tevoren','Minder dan 7 dagen: alleen 1 dag van tevoren','Leveringsbevestiging automatisch bij Geleverd']},
+      ]},
+      {phase:'fin',rows:[
+        {id:'w7',lane:'bc',type:'decision',label:'Gefactureerd + Betaald',sub:'Financiele afdeling',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - financiele afdeling',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Identiek aan de offline flow. Factuur aangemaakt in BC, status naar Gefactureerd en na betaling naar Betaald / Afgesloten. Synct naar alle systemen.',
+         sync:'BC synct alle statussen naar HubSpot + Elfsquad.',
+         items:['Factuur aangemaakt in BC','Status: "Gefactureerd"','Betaling ontvangen: "Betaald / Afgesloten"','Alle systemen gesynchroniseerd','Deal volledig afgesloten']},
+      ]}
+    ]
+  },
+
+  montage:{
+    label:'Montage flow (gedetailleerd)',
+    phases:[
+      {phase:'comm',rows:[
+        {id:'m1',lane:'hs',type:'manual',label:'Deal aanmaken + offerte aanvragen',sub:'Zelfde start als offline',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Identieke start als de offline deal. Klant + deal aanmaken in HubSpot, status op "Offerte aangevraagd", klantdata vliegt naar Elfsquad.',
+         sync:'HubSpot synct naar Elfsquad + BC.',
+         items:['Klant + deal aangemaakt in HubSpot','Status: "Offerte aangevraagd"','Klantdata automatisch naar Elfsquad']},
+        {id:'m2',lane:'es',type:'manual',label:'Offerte opmaken - montage = JA',sub:'Montage geselecteerd in Elfsquad',sys:'Elfsquad',sc:'es',
+         typeLabel:'Handmatig - sales of binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'In Elfsquad worden de producten geconfigureerd en montage wordt bewust geselecteerd. Dit montage-vlag reist mee door de hele keten.',
+         sync:'',
+         items:['Producten geconfigureerd','Montage = JA geselecteerd','Montagekosten toegevoegd aan prijs','Montage-vlag wordt meegestuurd naar HubSpot + BC']},
+        {id:'m3',lane:'es',type:'auto',label:'PDF + montage-vlag naar HubSpot',sub:'Automatische terugkoppeling',sys:'Elfsquad naar HubSpot',sc:'es',
+         typeLabel:'Automatisch - koppeling Elfsquad naar HubSpot',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'Elfsquad stuurt PDF, bedrag en montage-indicator terug naar HubSpot. HubSpot weet nu dat er montage bij zit en zal later de klantmails triggeren.',
+         sync:'Elfsquad synct naar HubSpot + BC.',
+         items:['PDF + bedrag teruggestuurd','Montage-veld in HubSpot: JA','HubSpot klaar om mailworkflow te triggeren']},
+        {id:'m4',lane:'hs',type:'decision',label:'Klant akkoord - Gewonnen',sub:'Order + montage naar BC',sys:'HubSpot',sc:'hs',
+         typeLabel:'Beslismoment - sales',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Sales zet de status op "Gewonnen". Order wordt automatisch naar BC gestuurd inclusief de montage-indicator. BC weet dat er montage gepland moet worden.',
+         sync:'HubSpot synct "Gewonnen" naar Elfsquad + BC.',
+         items:['Status: "Gewonnen"','Order + montage-indicator naar BC','BC maakt order aan met montage-notitie']},
+      ]},
+      {phase:'oper',rows:[
+        {id:'m5',lane:'bc',type:'manual',label:'Werkvoorbereider: voorraad + montage',sub:'Montage-indicatie zichtbaar in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Werkvoorbereider ziet de montage-indicatie in BC. Voorraad gecheckt, montage gepland, montagedatum ingevoerd. Dat is de enige handmatige stap die de mailautomatisering start.',
+         sync:'BC synct montagedatum + "Ingepland" naar HubSpot + Elfsquad.',
+         items:['Order ontvangen met montage-indicatie','Voorraad gecheckt en klaargelegd','Montagedatum ingevoerd in BC','Status: "Ingepland"','BC synct datum naar HubSpot - mailworkflow start']},
+        {id:'m6',lane:'hs',type:'mail',label:'Slimme maillogica - automatisch',sub:'Meer of minder dan 7 dagen',sys:'HubSpot',sc:'hs',
+         typeLabel:'Automatisch - HubSpot mailworkflow',typeColor:'#EA580C',typeBg:'#FFF7ED',
+         desc:'HubSpot ontvangt de montagedatum van BC en berekent automatisch wanneer de mails verstuurd worden. Volledig automatisch - niemand hoeft iets te doen.',
+         sync:'',
+         items:['Meer dan 7 dagen vooruit: mail 1 week van tevoren (datum + voorbereiding)','Meer dan 7 dagen vooruit: mail 1 dag van tevoren (herinnering)','Minder dan 7 dagen vooruit: alleen mail 1 dag van tevoren','Inhoud: datum, tijdstip en wat klant moet regelen','Volledig automatisch']},
+        {id:'m7',lane:'bc',type:'manual',label:'In productie - Geleverd',sub:'Statuswijzigingen in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Werkvoorbereider werkt de status bij in BC naarmate de montage vordert. Elke statuswijziging synct naar HubSpot en Elfsquad.',
+         sync:'BC synct "In productie" en "Geleverd" naar HubSpot + Elfsquad.',
+         items:['Status "In productie" bij start montage','Status "Geleverd" na afronding montage','HubSpot + Elfsquad ontvangen elke update','HubSpot stuurt leveringsbevestiging bij Geleverd']},
+        {id:'m8',lane:'hs',type:'mail',label:'Leveringsbevestiging',sub:'Automatisch bij status Geleverd',sys:'HubSpot',sc:'hs',
+         typeLabel:'Automatisch - HubSpot mailworkflow',typeColor:'#EA580C',typeBg:'#FFF7ED',
+         desc:'Zodra BC de status op "Geleverd" zet, stuurt HubSpot automatisch een leveringsbevestiging naar de klant.',
+         sync:'',
+         items:['Bevestiging dat montage is afgerond','Instructies of garantie-informatie','Volledig automatisch - geen handmatige actie']},
+      ]},
+      {phase:'fin',rows:[
+        {id:'m9',lane:'bc',type:'decision',label:'Gefactureerd + Betaald',sub:'Deal afgesloten',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - financiele afdeling',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Financiele afdeling maakt factuur aan en verwerkt de betaling. Alle systemen worden automatisch bijgewerkt.',
+         sync:'BC synct naar HubSpot + Elfsquad. Deal volledig afgesloten.',
+         items:['Factuur aangemaakt in BC','Status: "Gefactureerd"','Betaling ontvangen: "Betaald / Afgesloten"','Alle systemen bijgewerkt','Deal volledig afgesloten']},
+      ]}
+    ]
+  }
+  ,meting:{
+    label:'Akoestische meting op locatie',
+    phases:[
+      {phase:'comm',rows:[
+        {id:'mt1',lane:'hs',type:'manual',label:'Klant belt op',sub:'Binnendienst neemt aan',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Een klant belt met een geluidsprobleem of akoestische vraag. De binnendienst neemt het gesprek aan en maakt direct een nieuw bedrijf en deal aan in HubSpot.',
+         sync:'HubSpot synct naar Elfsquad + BC.',
+         items:['Klant belt met akoestische vraag of probleem','Bedrijf + deal aanmaken in HubSpot','Klantgegevens invullen: naam, adres, contactpersoon','Probleemomschrijving noteren als notitie bij de deal','Status: "Meting aangevraagd"']},
+        {id:'mt2',lane:'hs',type:'manual',label:'Afspraak inplannen accountmanager',sub:'Binnendienst plant in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De binnendienst plant een afspraak in voor de accountmanager (buitendienst) via HubSpot. Datum, tijd en locatie worden vastgelegd bij de deal.',
+         sync:'HubSpot synct afspraakstatus naar Elfsquad + BC.',
+         items:['Beschikbaarheid accountmanager checken','Afspraak inplannen: datum, tijd en locatie','Afspraakbevestiging versturen naar klant vanuit HubSpot','Status: "Afspraak ingepland"','Accountmanager ontvangt notificatie via HubSpot']},
+        {id:'mt3',lane:'hs',type:'manual',label:'Accountmanager gaat op locatie',sub:'Akoestische meting uitvoeren',sys:'HubSpot - Buitendienst',sc:'hs',
+         typeLabel:'Handmatig - accountmanager (buitendienst)',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De accountmanager bezoekt de klant op locatie. Met speciale meetapparatuur wordt de akoestiek gemeten. Direct op locatie wordt advies gegeven over de beste oplossingen.',
+         sync:'',
+         items:['Accountmanager bezoekt klantlocatie','Akoestische meting uitgevoerd met meetapparatuur','Probleemanalyse en advies direct op locatie','Meetresultaten vastgelegd in het meetrapport-systeem','Klant ontvangt mondeling advies ter plekke']},
+        {id:'mt4',lane:'hs',type:'manual',label:'Meetrapport uploaden in HubSpot',sub:'Koppeling meetrapport-systeem naar deal',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - accountmanager',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Na de meting exporteert de accountmanager het rapport uit het meetrapport-systeem en uploadt dit als bijlage bij de deal in HubSpot. Zo is alles op een centrale plek zichtbaar voor het hele team.',
+         sync:'',
+         items:['Meetrapport geexporteerd uit meetrapport-systeem','Rapport geupload als bijlage bij de deal in HubSpot','Status: "Meting uitgevoerd"','Binnendienst ziet het rapport in HubSpot','Rapport beschikbaar voor offerte-opmaak']},
+        {id:'mt5',lane:'hs',type:'decision',label:'Rapport + offerte tegelijk of apart?',sub:'Situatie-afhankelijk beslismoment',sys:'HubSpot',sc:'hs',
+         typeLabel:'Beslismoment - accountmanager',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Op basis van de situatie beslist de accountmanager of het meetrapport en de offerte tegelijk of apart naar de klant gaan. Bij eenvoudige projecten gaan ze vaak samen. Bij complexe projecten krijgt de klant eerst het rapport om te verwerken.',
+         sync:'',
+         items:['Eenvoudig project: rapport + offerte gaan samen','Complex project: rapport eerst, offerte later','Accountmanager beoordeelt dit per situatie','In beide gevallen wordt de offerte aangemaakt in Elfsquad']},
+        {id:'mt6',lane:'es',type:'manual',label:'Offerte opmaken in Elfsquad',sub:'Accountmanager op basis van meetresultaten',sys:'Elfsquad',sc:'es',
+         typeLabel:'Handmatig - accountmanager',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De accountmanager maakt de offerte aan in Elfsquad op basis van de meetresultaten en het advies. De aanbevolen producten worden geconfigureerd en geprijsd.',
+         sync:'',
+         items:['Offerte aangemaakt in Elfsquad','Aanbevolen akoestische oplossingen geconfigureerd','Prijs automatisch berekend','Montage: ja of nee selecteren','PDF gegenereerd inclusief productspecificaties']},
+        {id:'mt7',lane:'es',type:'auto',label:'PDF + bedrag naar HubSpot',sub:'Automatische terugkoppeling',sys:'Elfsquad naar HubSpot',sc:'es',
+         typeLabel:'Automatisch - koppeling Elfsquad naar HubSpot',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'Elfsquad stuurt automatisch de offerte-PDF, het offerte-ID en het totaalbedrag terug naar het deal-record in HubSpot. De accountmanager kan nu de offerte versturen vanuit HubSpot.',
+         sync:'Elfsquad synct offertestatus naar HubSpot + BC.',
+         items:['Offerte-ID teruggestuurd naar HubSpot','Totaalbedrag bijgewerkt in de deal','PDF als bijlage in HubSpot','Elfsquad synct status naar HubSpot + BC']},
+        {id:'mt8',lane:'hs',type:'manual',label:'Offerte (+ rapport) versturen',sub:'Vanuit HubSpot naar klant',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - accountmanager of binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De offerte wordt verstuurd vanuit HubSpot. Afhankelijk van de situatie wordt het meetrapport meegestuurd als bijlage of was dat al eerder verstuurd. Status wordt bijgewerkt in alle systemen.',
+         sync:'HubSpot synct "Offerte verzonden" naar Elfsquad + BC.',
+         items:['Offerte-e-mail verstuurd vanuit HubSpot','Meetrapport meegestuurd als bijlage indien nog niet eerder verstuurd','Status: "Offerte verzonden" in alle systemen','Klant ontvangt professionele offerte met of zonder rapport']},
+        {id:'mt9',lane:'hs',type:'decision',label:'Klant akkoord?',sub:'Gewonnen of Verloren',sys:'HubSpot',sc:'hs',
+         typeLabel:'Beslismoment - accountmanager of binnendienst',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Klant reageert op de offerte. Bij akkoord zet de accountmanager of binnendienst de status op "Gewonnen". Dit triggert automatisch de push naar BC. Bij afwijzing gaat de deal op "Verloren".',
+         sync:'HubSpot synct "Gewonnen" of "Verloren" naar Elfsquad + BC.',
+         items:['Akkoord: status "Gewonnen" - push naar BC gestart','Verloren: status "Verloren" - geen push naar BC','Elfsquad + BC ontvangen de statusupdate','Bij Gewonnen: alle verplichte velden gecontroleerd']},
+        {id:'mt10',lane:'hs',type:'auto',label:'Order naar Business Central',sub:'Automatische push bij Gewonnen',sys:'HubSpot naar BC',sc:'hs',
+         typeLabel:'Automatisch - koppeling HubSpot naar BC',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'Bij status "Gewonnen" stuurt HubSpot automatisch de volledige orderdata naar BC. BC controleert of de klant al bestaat, maakt de order aan en stuurt het ordernummer terug naar HubSpot.',
+         sync:'BC synct ordernummer terug naar HubSpot + Elfsquad.',
+         items:['Klantdata + orderdata naar BC gestuurd','BC herkent klant op klant-ID of maakt nieuwe aan','Order aangemaakt in BC','Orderregels: akoestische producten + aantallen + prijzen','BC-ordernummer teruggestuurd naar HubSpot']},
+      ]},
+      {phase:'oper',rows:[
+        {id:'mt11',lane:'bc',type:'manual',label:'Werkvoorbereider: voorraad checken',sub:'Order controleren in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De werkvoorbereider ontvangt de order in BC. Hij controleert de klant- en orderdata, checkt de voorraad van de akoestische materialen en bestelt eventueel na.',
+         sync:'BC synct status "In behandeling" naar HubSpot + Elfsquad.',
+         items:['Order en klantdata gecontroleerd op correctheid','Voorraad gecheckt voor alle akoestische producten','Ontbrekende materialen besteld indien nodig','Status: "In behandeling"','HubSpot + Elfsquad ontvangen de statusupdate']},
+        {id:'mt12',lane:'bc',type:'manual',label:'Montage inplannen + datum invoeren',sub:'Planningsdatum in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De werkvoorbereider plant de montage en voert de exacte datum in BC in. Dit triggert automatisch de slimme mailworkflow in HubSpot naar de klant.',
+         sync:'BC synct montagedatum naar HubSpot + Elfsquad. HubSpot start mailworkflow.',
+         items:['Montagedatum bepaald op basis van beschikbaarheid monteurs','Datum ingevoerd in BC bij de order','Status: "Ingepland"','BC synct datum naar HubSpot + Elfsquad','HubSpot start automatisch de mailworkflow']},
+        {id:'mt13',lane:'hs',type:'mail',label:'Automatische mails naar klant',sub:'Slimme maillogica vanuit HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Automatisch - HubSpot mailworkflow',typeColor:'#EA580C',typeBg:'#FFF7ED',
+         desc:'HubSpot verstuurt automatisch herinneringsmails op basis van de montagedatum. Meer dan 7 dagen vooruit = twee mails. Minder dan 7 dagen = alleen de dagherinnering.',
+         sync:'',
+         items:['Meer dan 7 dagen: mail 1 week van tevoren + mail 1 dag van tevoren','Minder dan 7 dagen: alleen mail 1 dag van tevoren','Inhoud: datum, tijdstip en wat klant moet voorbereiden','Volledig automatisch - geen handmatige actie nodig']},
+        {id:'mt14',lane:'bc',type:'manual',label:'In productie - Geleverd',sub:'Statuswijzigingen door werkvoorbereider',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Werkvoorbereider werkt de status bij naarmate de montage vordert. Elke statuswijziging synct automatisch naar HubSpot en Elfsquad. HubSpot stuurt leveringsbevestiging bij "Geleverd".',
+         sync:'BC synct "In productie" en "Geleverd" naar HubSpot + Elfsquad.',
+         items:['Status "In productie" bij start montage','Status "Geleverd" na afronding montage','HubSpot + Elfsquad ontvangen elke update','HubSpot stuurt automatisch leveringsbevestiging bij Geleverd']},
+        {id:'mt15',lane:'hs',type:'mail',label:'Leveringsbevestiging',sub:'Automatisch bij status Geleverd',sys:'HubSpot',sc:'hs',
+         typeLabel:'Automatisch - HubSpot mailworkflow',typeColor:'#EA580C',typeBg:'#FFF7ED',
+         desc:'Zodra BC de status op "Geleverd" zet stuurt HubSpot automatisch een leveringsbevestiging naar de klant.',
+         sync:'',
+         items:['Bevestiging dat montage is afgerond','Eventuele instructies of garantie-informatie','Volledig automatisch - geen handmatige actie nodig']},
+      ]},
+      {phase:'fin',rows:[
+        {id:'mt16',lane:'bc',type:'manual',label:'Factuur aanmaken',sub:'Financiele afdeling in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - financiele afdeling',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De financiele afdeling maakt de factuur aan in BC op basis van de orderdata en zet de status op "Gefactureerd". BC synct naar alle systemen.',
+         sync:'BC synct "Gefactureerd" naar HubSpot + Elfsquad.',
+         items:['Factuur aangemaakt in BC','Status: "Gefactureerd"','HubSpot + Elfsquad ontvangen de statusupdate','Sales ziet in HubSpot dat de klant is gefactureerd']},
+        {id:'mt17',lane:'bc',type:'decision',label:'Betaald / Afgesloten',sub:'Deal volledig afgerond',sys:'Business Central',sc:'bc',
+         typeLabel:'Beslismoment - financiele afdeling',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Na ontvangst van betaling zet de financiele afdeling de status op "Betaald / Afgesloten". De deal is volledig afgerond in alle drie de systemen.',
+         sync:'BC synct "Betaald / Afgesloten" naar HubSpot + Elfsquad. Deal afgesloten.',
+         items:['Betaling ontvangen en verwerkt in BC','Status: "Betaald / Afgesloten"','HubSpot deal automatisch gesloten','Elfsquad offertestatus bijgewerkt','Volledige dealhistorie zichtbaar in HubSpot']},
+      ]}
+    ]
+  }
+  ,statussen:{
+    label:'Alle statussen overzicht',
+    phases:[
+      {phase:'comm',rows:[
+        {id:'st1',lane:'hs',type:'decision',label:'Meting aangevraagd',sub:'Binnendienst zet in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Klant heeft contact opgenomen. Binnendienst maakt deal aan en zet status op "Meting aangevraagd". Alleen van toepassing bij het meetscenario.',
+         sync:'HubSpot synct naar Elfsquad + BC.',
+         items:['Van toepassing: meetscenario','Wie zet het: binnendienst','Wat triggert het: afspraakinplanning voor accountmanager']},
+        {id:'st2',lane:'hs',type:'decision',label:'Afspraak ingepland',sub:'Binnendienst zet in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De afspraak voor de akoestische meting op locatie is ingepland. Klant ontvangt bevestiging vanuit HubSpot.',
+         sync:'HubSpot synct naar Elfsquad + BC.',
+         items:['Van toepassing: meetscenario','Wie zet het: binnendienst','Wat triggert het: bevestigingsmail naar klant']},
+        {id:'st3',lane:'hs',type:'decision',label:'Meting uitgevoerd',sub:'Accountmanager zet in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - accountmanager',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De akoestische meting op locatie is uitgevoerd. Rapport is geupload in HubSpot.',
+         sync:'HubSpot synct naar Elfsquad + BC.',
+         items:['Van toepassing: meetscenario','Wie zet het: accountmanager','Wat triggert het: rapport beschikbaar in HubSpot']},
+        {id:'st4',lane:'hs',type:'decision',label:'Offerte aangevraagd',sub:'Sales zet in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - sales of binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De offerte is aangevraagd. HubSpot stuurt automatisch alle klantdata door naar Elfsquad.',
+         sync:'HubSpot synct naar Elfsquad + BC.',
+         items:['Van toepassing: offline + meetscenario','Wie zet het: sales of binnendienst','Wat triggert het: automatische push klantdata naar Elfsquad']},
+        {id:'st5',lane:'es',type:'decision',label:'Offerte in opmaak',sub:'Elfsquad registreert dit',sys:'Elfsquad',sc:'es',
+         typeLabel:'Automatisch - Elfsquad',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'Elfsquad heeft de klantdata ontvangen en de offerte wordt opgemaakt door sales of binnendienst.',
+         sync:'Elfsquad synct naar HubSpot + BC.',
+         items:['Van toepassing: offline + meetscenario','Wie zet het: Elfsquad automatisch','Wat triggert het: offerte wordt zichtbaar in HubSpot']},
+        {id:'st6',lane:'hs',type:'decision',label:'Offerte verzonden',sub:'Sales zet in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - sales of accountmanager',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'De offerte is verstuurd naar de klant vanuit HubSpot. Elfsquad en BC worden automatisch bijgewerkt.',
+         sync:'HubSpot synct naar Elfsquad + BC.',
+         items:['Van toepassing: alle scenarios','Wie zet het: sales of accountmanager','Wat triggert het: statusupdate in Elfsquad + BC']},
+        {id:'st7',lane:'hs',type:'decision',label:'Gewonnen',sub:'Sales zet in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - sales of binnendienst',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Klant heeft de offerte geaccepteerd. Dit is het belangrijkste beslismoment - triggert automatisch de aanmaak van een order in BC.',
+         sync:'HubSpot synct naar Elfsquad + BC. Order wordt automatisch aangemaakt in BC.',
+         items:['Van toepassing: alle scenarios','Wie zet het: sales of binnendienst','Wat triggert het: automatische push order naar BC']},
+        {id:'st8',lane:'hs',type:'decision',label:'Verloren',sub:'Sales zet in HubSpot',sys:'HubSpot',sc:'hs',
+         typeLabel:'Handmatig - sales of binnendienst',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Klant heeft de offerte afgewezen. Geen push naar BC. Deal wordt afgesloten.',
+         sync:'HubSpot synct naar Elfsquad + BC. Geen order aangemaakt.',
+         items:['Van toepassing: alle scenarios','Wie zet het: sales of binnendienst','Wat triggert het: deal afgesloten - geen order in BC']},
+      ]},
+      {phase:'oper',rows:[
+        {id:'st9',lane:'bc',type:'decision',label:'Order aangemaakt',sub:'Automatisch in BC na Gewonnen',sys:'Business Central',sc:'bc',
+         typeLabel:'Automatisch - koppeling HubSpot naar BC',typeColor:'#6D28D9',typeBg:'#EDE9FE',
+         desc:'BC heeft automatisch een order aangemaakt na de status "Gewonnen" in HubSpot. BC-ordernummer is teruggestuurd naar HubSpot.',
+         sync:'BC synct ordernummer naar HubSpot + Elfsquad.',
+         items:['Van toepassing: alle scenarios','Wie zet het: automatisch via koppeling','Wat triggert het: werkvoorbereider ontvangt de order']},
+        {id:'st10',lane:'bc',type:'decision',label:'In behandeling',sub:'Werkvoorbereider zet in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Werkvoorbereider heeft de order gecontroleerd en de voorraad gecheckt. Order is in behandeling genomen.',
+         sync:'BC synct naar HubSpot + Elfsquad.',
+         items:['Van toepassing: alle scenarios','Wie zet het: werkvoorbereider','Wat triggert het: voorraad checken en inplannen']},
+        {id:'st11',lane:'bc',type:'decision',label:'Ingepland',sub:'Werkvoorbereider zet datum in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'De montagedatum is ingevoerd in BC. Dit triggert automatisch de slimme mailworkflow in HubSpot naar de klant.',
+         sync:'BC synct montagedatum naar HubSpot + Elfsquad. HubSpot start mailworkflow.',
+         items:['Van toepassing: alle scenarios met montage','Wie zet het: werkvoorbereider','Wat triggert het: automatische mails naar klant (1 week + 1 dag of alleen 1 dag)']},
+        {id:'st12',lane:'bc',type:'decision',label:'In productie',sub:'Werkvoorbereider zet in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Montage of productie is gestart. Status wordt bijgewerkt in alle drie de systemen.',
+         sync:'BC synct naar HubSpot + Elfsquad.',
+         items:['Van toepassing: alle scenarios','Wie zet het: werkvoorbereider','Wat triggert het: statusupdate in HubSpot + Elfsquad']},
+        {id:'st13',lane:'bc',type:'decision',label:'Geleverd',sub:'Werkvoorbereider zet in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - werkvoorbereider',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Montage of levering is afgerond. BC synct naar HubSpot dat automatisch een leveringsbevestiging stuurt naar de klant.',
+         sync:'BC synct naar HubSpot + Elfsquad. HubSpot stuurt automatisch leveringsbevestiging.',
+         items:['Van toepassing: alle scenarios','Wie zet het: werkvoorbereider','Wat triggert het: automatische leveringsbevestiging naar klant via HubSpot']},
+      ]},
+      {phase:'fin',rows:[
+        {id:'st14',lane:'bc',type:'decision',label:'Gefactureerd',sub:'Financiele afdeling zet in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - financiele afdeling',typeColor:'#334155',typeBg:'#F1F5F9',
+         desc:'Factuur is aangemaakt en verstuurd. Status wordt bijgewerkt in alle systemen.',
+         sync:'BC synct naar HubSpot + Elfsquad.',
+         items:['Van toepassing: alle scenarios','Wie zet het: financiele afdeling','Wat triggert het: statusupdate in HubSpot + Elfsquad']},
+        {id:'st15',lane:'bc',type:'decision',label:'Betaald / Afgesloten',sub:'Financiele afdeling zet in BC',sys:'Business Central',sc:'bc',
+         typeLabel:'Handmatig - financiele afdeling',typeColor:'#15803D',typeBg:'#DCFCE7',
+         desc:'Betaling ontvangen. Deal volledig afgesloten in alle drie de systemen. Volledige dealhistorie zichtbaar in HubSpot.',
+         sync:'BC synct naar HubSpot + Elfsquad. Deal volledig afgesloten.',
+         items:['Van toepassing: alle scenarios','Wie zet het: financiele afdeling','Wat triggert het: deal afgesloten in alle systemen']},
+      ]}
+    ]
+  }
+};
+
+var curSc = 'offline';
+var curStep = null;
+
+function allSteps(){
+  var arr = [];
+  SC[curSc].phases.forEach(function(ph){ ph.rows.forEach(function(r){ arr.push(r); }); });
+  return arr;
+}
+
+function laneOrder(l){ return {hs:0,es:1,bc:2}[l]; }
+
+function renderStatusTable(){
+  var sc = SC['statussen'];
+  var phaseColors = {comm:'#1A56DB',oper:'#0B7B5A',fin:'#B45309'};
+  var phaseLabels = {comm:'Commercieel',oper:'Operationeel',fin:'Financieel'};
+  var sysColors = {hs:'#1A56DB',es:'#0B7B5A',bc:'#B45309'};
+  var sysLabels = {hs:'HubSpot',es:'Elfsquad',bc:'Business Central'};
+  var html = '<table style="width:100%;border-collapse:collapse;font-size:12px">';
+  html += '<thead><tr style="background:#0F172A;color:white">'
+    +'<th style="padding:10px 12px;text-align:left;width:22%;border-radius:0">Status</th>'
+    +'<th style="padding:10px 12px;text-align:left;width:18%">Systeem</th>'
+    +'<th style="padding:10px 12px;text-align:left;width:20%">Wie zet het</th>'
+    +'<th style="padding:10px 12px;text-align:left;width:40%">Wat triggert het</th>'
+    +'</tr></thead><tbody>';
+  var rows = [
+    {ph:'comm',status:'Meting aangevraagd',sys:'HubSpot',wie:'Binnendienst',trigger:'Afspraakinplanning voor accountmanager',color:'#1A56DB'},
+    {ph:'comm',status:'Afspraak ingepland',sys:'HubSpot',wie:'Binnendienst',trigger:'Bevestigingsmail naar klant vanuit HubSpot',color:'#1A56DB'},
+    {ph:'comm',status:'Meting uitgevoerd',sys:'HubSpot',wie:'Accountmanager',trigger:'Meetrapport beschikbaar in HubSpot als bijlage',color:'#1A56DB'},
+    {ph:'comm',status:'Offerte aangevraagd',sys:'HubSpot',wie:'Sales of binnendienst',trigger:'Automatische push klantdata naar Elfsquad',color:'#1A56DB'},
+    {ph:'comm',status:'Offerte in opmaak',sys:'Elfsquad',wie:'Automatisch - Elfsquad',trigger:'Offerte zichtbaar en koppelbaar in HubSpot',color:'#0B7B5A'},
+    {ph:'comm',status:'Offerte verzonden',sys:'HubSpot',wie:'Sales of accountmanager',trigger:'Statusupdate in Elfsquad + BC - klant heeft offerte ontvangen',color:'#1A56DB'},
+    {ph:'comm',status:'Gewonnen',sys:'HubSpot',wie:'Sales of binnendienst',trigger:'Automatische aanmaak van order in BC - werkvoorbereider pakt over',color:'#16A34A'},
+    {ph:'comm',status:'Verloren',sys:'HubSpot',wie:'Sales of binnendienst',trigger:'Deal afgesloten - geen order in BC aangemaakt',color:'#9B1C1C'},
+    {ph:'oper',status:'Order aangemaakt',sys:'BC',wie:'Automatisch via koppeling',trigger:'Werkvoorbereider ontvangt de order - voorraad checken start',color:'#0B7B5A'},
+    {ph:'oper',status:'In behandeling',sys:'BC',wie:'Werkvoorbereider',trigger:'Voorraad gecheckt - planning gestart - statusupdate naar HubSpot + Elfsquad',color:'#B45309'},
+    {ph:'oper',status:'Ingepland',sys:'BC',wie:'Werkvoorbereider',trigger:'HubSpot start mailworkflow: meer dan 7 dagen = 2 mails, minder dan 7 dagen = 1 mail',color:'#16A34A'},
+    {ph:'oper',status:'In productie',sys:'BC',wie:'Werkvoorbereider',trigger:'Statusupdate naar HubSpot + Elfsquad - sales ziet voortgang',color:'#B45309'},
+    {ph:'oper',status:'Geleverd',sys:'BC',wie:'Werkvoorbereider',trigger:'HubSpot stuurt automatisch leveringsbevestiging naar klant',color:'#16A34A'},
+    {ph:'fin',status:'Gefactureerd',sys:'BC',wie:'Financiele afdeling',trigger:'Statusupdate naar HubSpot + Elfsquad - deal wacht op betaling',color:'#B45309'},
+    {ph:'fin',status:'Betaald / Afgesloten',sys:'BC',wie:'Financiele afdeling',trigger:'Deal volledig afgesloten in alle drie systemen - dealhistorie zichtbaar in HubSpot',color:'#16A34A'},
+  ];
+  var lastPh = '';
+  rows.forEach(function(r,i){
+    if(r.ph !== lastPh){
+      var phColor = {comm:'#1A56DB',oper:'#0B7B5A',fin:'#B45309'}[r.ph];
+      var phLabel = {comm:'Commercieel',oper:'Operationeel',fin:'Financieel'}[r.ph];
+      html += '<tr><td colspan="4" style="padding:8px 12px;background:'+phColor+'18;border-top:2px solid '+phColor+'">'
+        +'<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:'+phColor+'">'+phLabel+'</span>'
+        +'</td></tr>';
+      lastPh = r.ph;
+    }
+    var sysColor = r.sys==='HubSpot'?'#1A56DB':r.sys==='Elfsquad'?'#0B7B5A':'#B45309';
+    var bg = i%2===0?'white':'#F8FAFC';
+    var sid = 'str-'+i;
+    html += `<tr id="${sid}" style="background:${bg};cursor:pointer;transition:background .15s"
+      onclick="selectStatusRow(this, '${sid}')"
+      onmouseenter="this.style.background='#F1F5F9'"
+      onmouseleave="this.style.background='${bg}'">
+      <td style="padding:10px 12px;border-bottom:1px solid #F1F5F9">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${r.color};margin-right:7px;flex-shrink:0;vertical-align:middle"></span>
+        <span style="font-weight:600;color:#1E293B">${r.status}</span>
+      </td>
+      <td style="padding:10px 12px;border-bottom:1px solid #F1F5F9">
+        <span style="padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;background:${sysColor}18;color:${sysColor}">${r.sys}</span>
+      </td>
+      <td style="padding:10px 12px;border-bottom:1px solid #F1F5F9;color:#475569">${r.wie}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid #F1F5F9;color:#475569">${r.trigger}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('fc-root').innerHTML = html;
+}
+function selectStatusRow(el, id){
+  document.querySelectorAll('[id^="str-"]').forEach(function(r){
+    r.style.outline='none';
+  });
+  el.style.outline='2px solid #1A56DB';
+}
+function renderChart(){
+  if(curSc === 'statussen'){ renderStatusTable(); return; }
+  var sc = SC[curSc];
+  var html = '<table class="slt"><thead><tr>'
+    +'<th class="th-hs"><span class="th-icon" style="background:#1A56DB">HS</span>HubSpot</th>'
+    +'<th class="th-es"><span class="th-icon" style="background:#0B7B5A">ES</span>Elfsquad</th>'
+    +'<th class="th-bc"><span class="th-icon" style="background:#B45309">BC</span>Business Central</th>'
+    +'</tr></thead><tbody>';
+
+  sc.phases.forEach(function(ph, pi){
+    // Phase divider row
+    var phInfo = PHASES[ph.phase];
+    html += '<tr><td colspan="3" style="padding:8px 0 4px">'
+      +'<div class="phase-label '+phInfo.cls+'" style="text-align:left;display:inline-block">'+phInfo.label+'</div>'
+      +'</td></tr>';
+
+    ph.rows.forEach(function(step, i){
+      // Main row
+      html += '<tr>';
+      ['hs','es','bc'].forEach(function(lane){
+        html += '<td class="lane-'+lane+'">';
+        if(step.lane === lane){
+          html += nodeHtml(step);
+        } else {
+          html += '<div class="lane-empty"><div class="lane-dot"></div></div>';
+        }
+        html += '</td>';
+      });
+      html += '</tr>';
+
+      // Connector row (not after last row in last phase)
+      var isLastInPhase = i === ph.rows.length-1;
+      var isLastPhase = pi === sc.phases.length-1;
+      if(!isLastInPhase || !isLastPhase){
+        var nextStep = null;
+        if(!isLastInPhase){
+          nextStep = ph.rows[i+1];
+        } else if(!isLastPhase){
+          nextStep = sc.phases[pi+1].rows[0];
+        }
+        if(nextStep){
+          html += '<tr class="conn-row">';
+          ['hs','es','bc'].forEach(function(lane){
+            html += '<td class="lane-'+lane+'" id="cc-'+step.id+'-'+lane+'"></td>';
+          });
+          html += '</tr>';
+        }
+      }
+    });
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('fc-root').innerHTML = html;
+
+  // Draw connectors
+  var steps = allSteps();
+  setTimeout(function(){
+    for(var i=0; i<steps.length-1; i++){
+      drawConn(steps[i], steps[i+1]);
+    }
+  }, 50);
+}
+
+function nodeHtml(step){
+  var typeCls = 'fn-'+step.type;
+  var scCls = 'fc-node-'+step.lane;
+  var isDimmed = curStep && curStep !== step.id ? ' dimmed' : '';
+  var isActive = curStep === step.id ? ' active' : '';
+  var badgeLabels = {manual:'Handmatig',auto:'Automatisch',decision:'Beslissing',mail:'Mail'};
+  return '<button class="fc-node '+typeCls+' '+scCls+isActive+isDimmed+'" id="node-'+step.id+'" onclick="selectStep(\''+step.id+'\')">'
+    +'<span class="fn-badge badge-'+step.type+'">'+badgeLabels[step.type]+'</span>'
+    +'<div class="fn-label">'+step.label+'</div>'
+    +'<div class="fn-sub">'+step.sub+'</div>'
+    +'</button>';
+}
+
+function drawConn(curr, next){
+  ['hs','es','bc'].forEach(function(lane){
+    var cell = document.getElementById('cc-'+curr.id+'-'+lane);
+    if(!cell) return;
+    var cL = curr.lane, nL = next.lane;
+    var cI = laneOrder(cL), nI = laneOrder(nL), lI = laneOrder(lane);
+    var movingAcross = cI !== nI;
+    var between = movingAcross && ((lI > Math.min(cI, nI)) && (lI < Math.max(cI, nI)));
+
+    if(cL===lane && nL===lane){
+      cell.innerHTML = ''
+        + '<svg class="conn-svg" viewBox="0 0 100 34" preserveAspectRatio="none">'
+        +   '<path class="conn-path" d="M50 2 L50 23"/>'
+        +   '<path class="conn-arrow" d="M50 31 L44 22 L56 22 Z"/>'
+        + '</svg>';
+    } else if(cL===lane){
+      var goR = nI > cI;
+      var endX = goR ? 102 : -2;
+      var bendX = goR ? 56 : 44;
+      cell.innerHTML = ''
+        + '<svg class="conn-svg" viewBox="0 0 100 34" preserveAspectRatio="none">'
+        +   '<path class="conn-path" d="M50 0 L50 14 Q50 18 '+bendX+' 18 L'+endX+' 18"/>'
+        + '</svg>';
+    } else if(nL===lane){
+      var fromL = cI < nI;
+      var startX = fromL ? -2 : 102;
+      var bendX = fromL ? 44 : 56;
+      cell.innerHTML = ''
+        + '<svg class="conn-svg" viewBox="0 0 100 34" preserveAspectRatio="none">'
+        +   '<path class="conn-path" d="M'+startX+' 18 L'+bendX+' 18 Q50 18 50 22 L50 23"/>'
+        +   '<path class="conn-arrow" d="M50 31 L44 22 L56 22 Z"/>'
+        + '</svg>';
+    } else if(between){
+      cell.innerHTML = ''
+        + '<svg class="conn-svg" viewBox="0 0 100 34" preserveAspectRatio="none">'
+        +   '<path class="conn-path" d="M-2 18 L102 18"/>'
+        + '</svg>';
+    } else {
+      cell.innerHTML = ''
+        + '<svg class="conn-svg" viewBox="0 0 100 34" preserveAspectRatio="none">'
+        +   '<path class="conn-path-soft" d="M28 18 L72 18" stroke-dasharray="4 6"/>'
+        + '</svg>';
+    }
+  });
+}
+
+function selectStep(id){
+  curStep = id;
+  allSteps().forEach(function(s){
+    var el = document.getElementById('node-'+s.id);
+    if(!el) return;
+    el.classList.remove('active','dimmed');
+    if(s.id===id) el.classList.add('active');
+    else el.classList.add('dimmed');
+  });
+  renderDetail();
+  renderPills();
+}
+
+function renderDetail(){
+  var steps = allSteps();
+  var step = steps.find(function(s){return s.id===curStep;});
+  if(!step) return;
+  var idx = steps.indexOf(step);
+  var total = steps.length;
+  var pct = Math.round((idx+1)/total*100);
+  var sysColors = {hs:'#1A56DB',es:'#0B7B5A',bc:'#B45309'};
+  var col = sysColors[step.sc];
+  var items = step.items.map(function(it){
+    return '<div class="dp-item"><span class="dp-arr">-&gt;</span>'+it+'</div>';
+  }).join('');
+  var syncHtml = step.sync
+    ? '<div class="dp-sync"><strong>Two-way sync:</strong> '+step.sync+'</div>' : '';
+  var html = '<div class="dp-top">'
+    +'<div class="dp-sc">'+SC[curSc].label+' - Stap '+(idx+1)+' van '+total+'</div>'
+    +'<div class="dp-title">'+step.label+'</div>'
+    +'<div class="dp-pill" style="background:'+col+'18;color:'+col+'">'+step.sys+'</div>'
+    +'</div>'
+    +'<div class="dp-prog">'
+    +'<div class="dp-prog-row"><span>Voortgang</span><span>'+(idx+1)+' / '+total+'</span></div>'
+    +'<div class="dp-prog-track"><div class="dp-prog-fill" style="width:'+pct+'%;background:'+col+'"></div></div>'
+    +'</div>'
+    +'<div class="dp-body">'
+    +'<div class="dp-type" style="background:'+step.typeBg+';color:'+step.typeColor+'">'+step.typeLabel+'</div>'
+    +'<div class="dp-sect"><div class="dp-lbl">Wat er gebeurt</div><div class="dp-desc">'+step.desc+'</div></div>'
+    +'<div class="dp-sect"><div class="dp-lbl">Details</div><div class="dp-items">'+items+'</div></div>'
+    +syncHtml+'</div>'
+    +'<div class="dp-nav">'
+    +'<span class="dp-count">'+(idx+1)+' / '+total+'</span>'
+    +'<div class="dp-btns">'
+    +(idx>0?'<button class="dp-btn dp-btn-s" onclick="selectStep(\''+steps[idx-1].id+'\')">&#8592; Vorige</button>':'')
+    +(idx<total-1?'<button class="dp-btn dp-btn-p" onclick="selectStep(\''+steps[idx+1].id+'\')">Volgende &#8594;</button>':'<button class="dp-btn dp-btn-p" onclick="resetChart()">&#8635; Opnieuw</button>')
+    +'</div></div>';
+  var filled = document.getElementById('dp-filled');
+  filled.innerHTML = html;
+  filled.style.display = 'flex';
+  filled.style.flexDirection = 'column';
+  filled.style.flex = '1';
+  filled.style.overflow = 'hidden';
+  document.getElementById('dp-empty').style.display = 'none';
+}
+
+function renderPills(){
+  var steps = allSteps();
+  document.getElementById('dp-pills').innerHTML = steps.map(function(s){
+    return '<button class="dp-pill-btn'+(curStep===s.id?' on':'')+'" onclick="selectStep(\''+s.id+'\')">'+s.label+'</button>';
+  }).join('');
+}
+
+function resetChart(){
+  curStep = null;
+  allSteps().forEach(function(s){
+    var el=document.getElementById('node-'+s.id);
+    if(el){el.classList.remove('active','dimmed');}
+  });
+  document.getElementById('dp-filled').style.display='none';
+  document.getElementById('dp-empty').style.display='flex';
+  renderPills();
+}
+
+function setScenario(key,btn){
+  curSc=key;curStep=null;
+  document.querySelectorAll('.sc-tab').forEach(function(t){t.classList.remove('on');});
+  btn.classList.add('on');
+  renderChart();
+  document.getElementById('dp-filled').style.display='none';
+  document.getElementById('dp-empty').style.display='flex';
+  renderPills();
+}
+
+renderChart();
+renderPills();
+window.addEventListener('resize',function(){
+  var steps=allSteps();
+  setTimeout(function(){
+    for(var i=0;i<steps.length-1;i++){drawConn(steps[i],steps[i+1]);}
+  },100);
+});
+</script>
+</body>
+</html>
